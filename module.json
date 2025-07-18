@@ -1,0 +1,26 @@
+{
+  "id": "pazindor-gm-tools",
+  "title": "Pazindor's GM Tools",
+  "authors": [{
+    "name": "Pazindor",
+    "email": "xxpazindorxx@gmail.com",
+    "discord": "Patryk#6024"
+  }],
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.346"
+  },
+  "esmodules": ["module/pazindor-gm-tools.mjs"],
+  "styles": ["css/pazindor-gm-tools.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "flags": {
+  },
+  "description": "<p></p>"
+}

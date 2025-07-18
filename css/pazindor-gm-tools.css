@@ -1,0 +1,46 @@
+#request-dialog .selector-wrapper {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #8b8b8b73;
+  border-radius: 5px;
+  border: 1px solid var(--color-warm-2);
+  box-shadow: inset 0px 0px 10px 2px var(--color-warm-2);
+}
+
+#request-dialog .selector-wrapper .option {
+  padding-top: 5px;
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px dashed var(--color-warm-2);
+}
+
+#request-dialog .selector-wrapper .option:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+#request-dialog .selector-wrapper .option .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  font-size: 18px;
+  width: calc(100% - 40px);
+}
+
+#request-dialog .selector-wrapper .option .wrapper img {
+  width: 40px;
+  height: 40px;
+  object-position: 50% 0;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+#request-dialog .selector-wrapper .option .wrapper input {
+  background-color: transparent;
+  border: 0px;
+  margin-left: 10px;
+  color: white;
+  width: 100%;
+}
