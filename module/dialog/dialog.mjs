@@ -1,4 +1,4 @@
-import { getValueFromPath, setValueForPath } from "./utils.mjs";
+import { getValueFromPath, setValueForPath } from "../utils.mjs";
 
 export class PgtDialog extends foundry.applications.api.HandlebarsApplicationMixin(foundry.applications.api.ApplicationV2) {
 

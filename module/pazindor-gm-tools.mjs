@@ -1,13 +1,13 @@
-import { openRestRequest, openRollRequest } from "./request-dialog.mjs";
+import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
 
 Hooks.once("init", async function() {
   window.PGT = {
-    rollOptions: {placeholder: "No system detected", X: "NoXcted"},
+    rollOptions: {placeholder: "No system detected"},
     restOptions: {placeholder: "No system detected"},
     onRestRequest: (actors, selected) => {console.log("Pazindor's GM Tools[Roll Request]: NO SYSTEM DETECTED")},
     onRestRequest: (actors, selected) => {console.log("Pazindor's GM Tools[Rest Request]: NO SYSTEM DETECTED")}
   }
-})
+});
 
 Hooks.on("getSceneControlButtons", (controls) => {
 

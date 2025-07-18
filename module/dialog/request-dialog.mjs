@@ -1,5 +1,5 @@
 import { PgtDialog } from "./dialog.mjs";
-import { collectActorsFromActiveUsers } from "./utils.mjs";
+import { collectActorsFromActiveUsers } from "../utils.mjs";
 
 class RequestDialog extends PgtDialog {
 
