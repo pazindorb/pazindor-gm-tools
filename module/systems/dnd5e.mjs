@@ -1,4 +1,4 @@
-export function dnd5eRollOptions() {
+export function rollOptions() {
   const rollOptions = {};
   for (const [key, ability] of Object.entries(CONFIG.DND5E.abilities)) {
     rollOptions[`${key}.ability`] = `${ability.label} ${game.i18n.localize("PGMT.check")}`;
@@ -12,15 +12,15 @@ export function dnd5eRollOptions() {
   return rollOptions;
 }
 
-export function dnd5eRestOptions() {
-
-}
-
-export function dnd5eRestRequest(actor, selected) {
+export function restOptions() {
   
 }
 
-export function dnd5eRollRequest(actor, selected) {
+export function restRequest(actor, selected) {
+  
+}
+
+export function rollRequest(actor, selected) {
   const [key, type] = selected.split(".");
 
   switch(type) {
