@@ -11,6 +11,7 @@
     "minimum": "13",
     "verified": "13.346"
   },
+  "socket": true,
   "esmodules": ["module/pazindor-gm-tools.mjs"],
   "styles": ["css/pazindor-gm-tools.css"],
   "languages": [

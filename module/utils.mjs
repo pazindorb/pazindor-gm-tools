@@ -23,12 +23,12 @@ export function setValueForPath(object, path, value) {
   currentObject[keys[keys.length - 1]] = value;
 }
 
-export function collectActorsFromActiveUsers(pcOnly=true) {
+export function collectActorsFromActiveUsers() {
   const activePlayers = getActivePlayers(false);
 
   const actors = new Map();
   for (const player of activePlayers) {
-    const myActors = getActorsForPlayer(player, pcOnly);
+    const myActors = getActorsForPlayer(player);
     myActors.forEach(actor => actors.set(actor.id, actor));
   }
   return actors;
@@ -43,10 +43,7 @@ export function getActivePlayers(allowGM=false) {
       })
 }
 
-export function getActorsForPlayer(player, pcOnly=true) {
+export function getActorsForPlayer(player) {
   return game.actors.filter(actor => actor.ownership[player.id] === 3)
-              .filter(actor => {
-                if (pcOnly) return actor.type === "character";
-                else true;
-              })
+              .filter(actor => PGT.actorTypes.includes(actor.type))
 }

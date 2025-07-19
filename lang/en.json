@@ -7,5 +7,10 @@
 
   "PGMT.sendRequest": "Send Request",
   "PGMT.rollTitle": "Select Roll",
-  "PGMT.restTitle": "Select Rest"
+  "PGMT.restTitle": "Select Rest",
+  "PGMT.noActor": "No active player with Actors found.",
+  "PGMT.unsupportedType": "Request Type not supported, cannot send request",
+
+  "PGMT.check": "Check",
+  "PGMT.save": "Save"
 }

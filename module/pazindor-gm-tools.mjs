@@ -1,16 +1,38 @@
 import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
+import { registerModuleSocket } from "./socket.mjs";
+import { dnd5eRestOptions, dnd5eRestRequest, dnd5eRollOptions, dnd5eRollRequest } from "./systems/dnd5e.mjs";
 
 Hooks.once("init", async function() {
   window.PGT = {
     rollOptions: {placeholder: "No system detected"},
     restOptions: {placeholder: "No system detected"},
-    onRestRequest: (actors, selected) => {console.log("Pazindor's GM Tools[Roll Request]: NO SYSTEM DETECTED")},
-    onRestRequest: (actors, selected) => {console.log("Pazindor's GM Tools[Rest Request]: NO SYSTEM DETECTED")}
+    onRollRequest: (actor, selected) => {console.log("Pazindor's GM Tools[Roll Request]: NO SYSTEM DETECTED")},
+    onRestRequest: (actor, selected) => {console.log("Pazindor's GM Tools[Rest Request]: NO SYSTEM DETECTED")},
+    actorTypes: ["character"]
   }
 });
 
-Hooks.on("getSceneControlButtons", (controls) => {
+Hooks.once("ready", async function() {
+  registerModuleSocket();
 
+  switch (game.system.id) {
+    case "dnd5e":
+      PGT.rollOptions = dnd5eRollOptions();
+      PGT.restOptions = dnd5eRestOptions();
+      PGT.onRollRequest = dnd5eRollRequest;
+      PGT.onRestRequest = dnd5eRestRequest;
+      PGT.actorTypes = ["character"]
+      break;
+
+    case "pf2": 
+
+      break;
+  }
+
+
+});
+
+Hooks.on("getSceneControlButtons", (controls) => {
   controls.pazindorGmTools = {
     name: "pazindorGmTools",
     title: "PGMT.title",

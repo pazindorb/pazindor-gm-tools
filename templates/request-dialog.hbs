@@ -11,6 +11,11 @@
 
   {{!-- Selector --}}
   <div class="selector-wrapper">
+    {{#if noActor}}
+    <div class="option">
+      <label>{{localize "PGMT.noActor"}}</label>
+    </div>
+    {{else}}
     {{#each actorSelector as |option id|}}
     <div class="option">
       <div class="wrapper">
@@ -20,6 +25,7 @@
       <a class="fa-2x {{#if option.selected}}fa-solid fa-square-xmark{{else}}fa-regular fa-square{{/if}}" data-cType="activable" data-path="actorSelector.{{id}}.selected"></a>
     </div>
     {{/each}}
+    {{/if}}
   </div>
 
   <button class="close" data-action="sendRequest"><i class="fas {{icon}}"></i>{{localize "PGMT.sendRequest"}}</button>
