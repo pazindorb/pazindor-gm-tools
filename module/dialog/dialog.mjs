@@ -40,8 +40,14 @@ export class PgtDialog extends foundry.applications.api.HandlebarsApplicationMix
     this.window.content.addEventListener("drop", this._onDrop.bind(this));
   }
 
+  _getCtypeTarget(element) {
+    if (element.className === "window-content" || !element.parentElement) return element;
+    if (element.dataset.ctype) return element;
+    return this._getCtypeTarget(element.parentElement);
+  }
+
   _onChange(event) {
-    const target = event.target;
+    const target = this._getCtypeTarget(event.target);
     const dataset = target.dataset;
     const cType = dataset.ctype;
     const path = dataset.path;
@@ -51,12 +57,11 @@ export class PgtDialog extends foundry.applications.api.HandlebarsApplicationMix
       case "string": this._onChangeString(path, value, dataset); break;
       case "numeric": this._onChangeNumeric(path, value, false, dataset); break;
       case "numeric-nullable": this._onChangeNumeric(path, value, true, dataset); break;
-      case "boolean" : this._onChangeBoolean(path, dataset); break;
     }
   }
 
   _onClick(event) {
-    const target = event.target;
+    const target = this._getCtypeTarget(event.target);
     const dataset = target.dataset;
     const cType = dataset.ctype;
     const path = dataset.path;
@@ -81,12 +86,6 @@ export class PgtDialog extends foundry.applications.api.HandlebarsApplicationMix
     let numericValue = parseInt(value);
     if (nullable && isNaN(numericValue)) numericValue = null;
     setValueForPath(this, path, numericValue);
-    this.render();
-  }
-
-  _onChangeBoolean(path, dataset) {
-    const value = getValueFromPath(this, path);
-    setValueForPath(this, path, !value);
     this.render();
   }
 

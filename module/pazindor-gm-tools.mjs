@@ -1,3 +1,4 @@
+import { prepareConstants } from "./constant.mjs";
 import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
 import { registerModuleSocket } from "./socket.mjs";
 import * as dnd5e from "./systems/dnd5e.mjs";
@@ -7,10 +8,12 @@ Hooks.once("init", async function() {
   window.PGT = {
     rollOptions: {placeholder: "No system detected"},
     restOptions: {placeholder: "No system detected"},
-    onRollRequest: (actor, selected) => {console.log("Pazindor's GM Tools[Roll Request]: NO SYSTEM DETECTED")},
-    onRestRequest: (actor, selected) => {console.log("Pazindor's GM Tools[Rest Request]: NO SYSTEM DETECTED")},
-    actorTypes: ["character"]
+    onRollRequest: async (actor, selected) => {console.log("Pazindor's GM Tools[Roll Request]: NO SYSTEM DETECTED")},
+    onRestRequest: async (actor, selected) => {console.log("Pazindor's GM Tools[Rest Request]: NO SYSTEM DETECTED")},
+    actorTypes: ["character"],
+    systemId: null,
   }
+  PGT.CONST = prepareConstants()
 });
 
 Hooks.once("ready", async function() {
@@ -22,7 +25,8 @@ Hooks.once("ready", async function() {
       PGT.restOptions = dnd5e.restOptions();
       PGT.onRollRequest = dnd5e.rollRequest;
       PGT.onRestRequest = dnd5e.restRequest;
-      PGT.actorTypes = ["character"]
+      PGT.actorTypes = ["character"];
+      PGT.systemId = "dnd5e";
       break;
 
     case "pf2e": 
@@ -30,17 +34,20 @@ Hooks.once("ready", async function() {
       PGT.restOptions = pf2e.restOptions();
       PGT.onRollRequest = pf2e.rollRequest;
       PGT.onRestRequest = pf2e.restRequest;
-      PGT.actorTypes = ["character"]
+      PGT.actorTypes = ["character"];
+      PGT.systemId = "pf2e";
       break;
   }
-
-
 });
+
+Hooks.on("gameReady", () => {
+  if (!PGT.systemId) ui.notifications.warn(game.i18n.localize("PGT.ERROR.NO_SYSTEM"));
+})
 
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.pazindorGmTools = {
     name: "pazindorGmTools",
-    title: "PGMT.title",
+    title: "PGT.MENU.TITLE",
     layer: null,
     icon: "fas fa-screwdriver-wrench",
     visible: game.user.isGM,
@@ -48,21 +55,21 @@ Hooks.on("getSceneControlButtons", (controls) => {
     tools: {
       request: {
         name: "request",
-        title: "PGMT.roll",
+        title: "PGT.MENU.ROLL",
         icon: "fas fa-dice",
-        button: true,
+        button: !!PGT.onRollRequest,
         onChange: () => openRollRequest()
       },
       rest: {
         name: "rest",
-        title: "PGMT.rest",
+        title: "PGT.MENU.REST",
         icon: "fas fa-bed",
-        button: true,
+        button: !!PGT.onRestRequest,
         onChange: () => openRestRequest()
       },
       gmScreen: {
         name: "gmScreen",
-        title: "PGMT.gmScreen",
+        title: "PGT.MENU.GM_SCREEN",
         icon: "fas fa-screencast",
         button: true,
         onChange: () => console.log("GM_SCREEN")

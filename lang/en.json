@@ -1,16 +1,32 @@
 {
-  "PGMT.requestTitle": "Request",
-  "PGMT.title": "GM Tools",
-  "PGMT.roll": "Roll Request",
-  "PGMT.rest": "Rest Request",
-  "PGMT.gmScreen": "GM Screen",
+  "PGT.ERROR.NO_SYSTEM": "System you are using is not supported by Pazindor's GM Tools",
+  "PGT.ERROR.UNSUPPORTED_TYPE": "Request Type not supported, cannot send request",
 
-  "PGMT.sendRequest": "Send Request",
-  "PGMT.rollTitle": "Select Roll",
-  "PGMT.restTitle": "Select Rest",
-  "PGMT.noActor": "No active player with Actors found.",
-  "PGMT.unsupportedType": "Request Type not supported, cannot send request",
+  "PGT.MENU.TITLE": "GM Tools",
+  "PGT.MENU.ROLL": "Roll Request",
+  "PGT.MENU.REST": "Rest Request",
+  "PGT.gmScreen": "GM Screen",
 
-  "PGMT.check": "Check",
-  "PGMT.save": "Save"
+  "PGT.SELECT_ACTORS": "Select Actors",
+  "PGT.REST_REQUEST": "Select Rest",
+  "PGT.ROLL_REQUEST": "Select Roll",
+  "PGT.SEND": "Send Request",
+  "PGT.AWAITING_RESULT": "Awaiting Roll Result",
+  "PGT.ROLL_RESULT": "Roll Result",
+  "PGT.ROLL_DC": "Roll DC",
+  "PGT.CLOSE": "Close",
+
+  "PGT.NO_ACTOR": "NO ACTOR",
+
+  "PGT.CHECK": "Check",
+  "PGT.SAVE": "Save",
+
+  "PGT.CATEGORY.REST_TYPE": "Rest Type",
+
+  "PGT.CATEGORY.DND5E.ABILITY": "Ability Check",
+  "PGT.CATEGORY.DND5E.SAVE": "Saving Throw",
+  "PGT.CATEGORY.DND5E.SKILL": "Skill Check",
+
+  "PGT.REST.DND5E.LONG": "Long Rest",
+  "PGT.REST.DND5E.SHORT": "Short Rest"
 }

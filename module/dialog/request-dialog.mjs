@@ -1,16 +1,17 @@
 import { PgtDialog } from "./dialog.mjs";
 import { collectActorsFromActiveUsers } from "../utils.mjs";
-import { emitEvent } from "../socket.mjs";
+import { emitEvent, responseListener } from "../socket.mjs";
 
 class RequestDialog extends PgtDialog {
 
-  constructor(actors, dropdownOptions, requestType, options = {}) {
+  constructor(requestType, options = {}) {
     super(options);
-    this.actorSelector = this._actorSelector(actors);
-    this.dropdownOptions = dropdownOptions;
-    this.selected = Object.keys(dropdownOptions)[0];
     this.requestType = requestType;
-    this.icon = this._icon();
+    this.selectOptions = options.selectOptions || {};
+    
+    const actors = options.actors || collectActorsFromActiveUsers();
+    this.actorSelector = this._actorSelector(actors);
+    this._prepareDetails();
   }
 
   _actorSelector(actors) {
@@ -18,28 +19,43 @@ class RequestDialog extends PgtDialog {
     actors.forEach((actor, actorId) => {
       selector[actorId] = {
         selected: false,
+        selectable: true,
         actor: actor
       }
     })
     return selector;
   }
 
-  _icon() {
+  _prepareDetails() {
+    const emitTypes = PGT.CONST.SOCKET.EMIT;
     switch(this.requestType) {
-      case "roll":
-        return "fa-dice";
-      case "rest":
-        return "fa-bed";
+      case emitTypes.ROLL_REQUEST:
+        this.details = {
+          icon: "fa-dice",
+          label: game.i18n.localize("PGT.ROLL_REQUEST"),
+          rollDC: null,
+        }
+        this.isRoll = true;
+        break;
+
+      case emitTypes.REST_REQUEST:      
+        this.details = {
+          icon: "fa-bed",
+          label: game.i18n.localize("PGT.REST_REQUEST"),
+          rollDC: null,
+        }
+        this.isRest = true;
+        break;
     }
   }
 
   /** @override */
   static DEFAULT_OPTIONS = {
-    id: "dialog-request",
+    id: "actor-request",
     classes: ["pgt themed"],
-    position: {width: 500},
+    position: {width: "auto"},
     window: {
-      title: "PGMT.requestTitle",
+      title: "PGT.SEND",
       icon: "fa-solid fa-window",
     },
   }
@@ -60,52 +76,95 @@ class RequestDialog extends PgtDialog {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.actorSelector = this.actorSelector;
-    context.dropdownOptions = this.dropdownOptions;
-    context.selected = this.selected;
-    context.label = `PGMT.${this.requestType}`;
-    context.selectTitle = `PGMT.${this.requestType}Title`;
-    context.icon = this.icon;
-    context.noActor = Object.keys(this.actorSelector).length === 0;
+    context.hasActors = Object.keys(this.actorSelector).length !== 0;
+    context.noActorSelected = Object.values(this.actorSelector).filter(actor => actor.selected).length === 0;
+
+    context.selectOptions = this.selectOptions;
+    context.details = this.details;
+    context.rollRequest = context.hasActors && this.isRoll && !this.awaitingResult;
+    context.restRequest = context.hasActors && this.isRest;
+    context.awaitingResult = this.awaitingResult;
     return context;
   }
 
   async _onSendRequest(event) {
     event.preventDefault();
-    const actors = Object.values(this.actorSelector)
-                                    .filter(option => option.selected)
-                                    .map(option => option.actor);
+    this.awaitingResult = true;
+    const selected = event.target.dataset.key;
 
-    const eventType = this._eventType();
-    if (!eventType) {
-      ui.not.warn("PGMT.unsupportedType");
-      return;
+    const selectedActorIds = [];
+    const notSelectedActors = [];
+    for (const wrapper of Object.values(this.actorSelector)) {
+      if (wrapper.selected) {
+        selectedActorIds.push(wrapper.actor.id);
+
+        delete wrapper.selected;
+        delete wrapper.selectable;
+        wrapper.request = true;
+      }
+      else notSelectedActors.push(wrapper.actor.id);
     }
 
-    actors.forEach(actor => emitEvent(eventType, {
-      actorId: actor.id,
-      selected: this.selected
-    }));
-    this.close();
+    for (const actorId of notSelectedActors) {
+      delete this.actorSelector[actorId];
+    }
+
+    if (this.isRoll) {
+      this._rollRequest(selected, selectedActorIds);
+      this.render();
+    }
+    if (this.isRest) {
+      this._restRequest(selected, selectedActorIds);
+      this.close();
+    }
   }
 
-  _eventType() {
-    switch(this.requestType) {
-      case "roll":
-        return "ROLL_REQUEST";
-      case "rest":
-        return "REST_REQUEST";
+  async _restRequest(selected, actors) {
+    for (const actorId of actors) {
+      emitEvent(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {
+        actorId: actorId,
+        selected: selected,
+        options: {}
+      });
+    }
+  }
+
+  async _rollRequest(selected, actors) {
+    for (const actorId of actors) {
+      const validationData = {emmiterId: game.user.id, actorId: actorId};
+      const response = responseListener(PGT.CONST.SOCKET.RESPONSE.ROLL_RESULT, validationData);
+      emitEvent(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {
+        actorId: actorId,
+        selected: selected,
+        options: {}
+      });
+
+      response.then(result => {
+        const roll = result.payload;
+        if (roll._total == null) {
+          this.actorSelector[actorId].result = "X";
+          this.actorSelector[actorId].outcome = "fail";
+        }
+        else {
+          this.actorSelector[actorId].result = roll._total;
+          let outcome = "success";
+          if (this.details.rollDC !== null) {
+            outcome = roll._total >= this.details.rollDC ? "success" : "fail";
+          }
+
+          this.actorSelector[actorId].outcome = outcome;
+        }
+        delete this.actorSelector[actorId].request;
+        this.render();
+      });
     }
   }
 }
 
 export function openRollRequest() {
-  const actors = collectActorsFromActiveUsers();
-  const dropdown = PGT.rollOptions;
-  new RequestDialog(actors, dropdown, "roll").render(true);
+  new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions}).render(true);
 }
 
 export function openRestRequest() {
-  const actors = collectActorsFromActiveUsers();
-  const dropdown = PGT.restOptions;
-  new RequestDialog(actors, dropdown, "rest").render(true);
+  new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions}).render(true);
 }

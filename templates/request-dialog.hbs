@@ -1,32 +1,63 @@
-<form id="request-dialog" class="dialog-content standard-form {{cssClass}}">
-  <h4 class="divider">{{localize label}}</h4>
-
-  {{!-- Options --}}
-  <div class="form-group">
-    <label>{{localize selectTitle}}</label>
-    <select data-cType="string" data-path="selected">
-      {{selectOptions dropdownOptions selected=selected}}
-    </select>
-  </div>
-
-  {{!-- Selector --}}
-  <div class="selector-wrapper">
-    {{#if noActor}}
-    <div class="option">
-      <label>{{localize "PGMT.noActor"}}</label>
-    </div>
-    {{else}}
-    {{#each actorSelector as |option id|}}
-    <div class="option">
-      <div class="wrapper">
-        <img src="{{option.actor.img}}"/>
-        <input disabled value="{{option.actor.name}}"/>
-      </div>
-      <a class="fa-2x {{#if option.selected}}fa-solid fa-square-xmark{{else}}fa-regular fa-square{{/if}}" data-cType="activable" data-path="actorSelector.{{id}}.selected"></a>
+<form id="actor-request" class="pgt {{cssClass}}" style="min-width: 450px; max-width: 750px;">
+  <h4 class="divider">{{#if awaitingResult}}{{localize "PGT.AWAITING_RESULT"}}{{else}}{{localize "PGT.SELECT_ACTORS"}}{{/if}}</h4>
+  
+  
+  <fieldset class="actor-wrapper box-wrapper scrollable">
+  {{#if hasActors}} 
+    {{#each actorSelector as |wrapper actorId|}}
+    <div class="actor {{#if wrapper.selectable}}selectable{{/if}} {{#if wrapper.selected}}selected{{/if}}" 
+      {{#if wrapper.selectable}}data-cType="activable" data-path="actorSelector.{{actorId}}.selected"{{/if}}
+    >
+      {{#if wrapper.result}}<div class="roll-result-wrapper {{wrapper.outcome}}" data-tooltip="{{localize "PGT.ROLL_RESULT"}}"><span>{{wrapper.result}}</span></div>{{/if}}
+      {{#if wrapper.request}} <div class="roll-result-wrapper awaiting-result" data-tooltip="{{localize "PGT.AWAITING_RESULT"}}"><i class="fa-light fa-dice-d20 fa-lg dice-roll"></i></div> {{/if}}
+      <img src="{{wrapper.actor.img}}"/>
+      <input disabled value="{{wrapper.actor.name}}"/>
+      
+      
     </div>
     {{/each}}
-    {{/if}}
+  {{else}}
+    <span>{{localize "PGT.NO_ACTOR"}}</span>
+  {{/if}}
+  </fieldset>
+
+  {{!-- ROLL REQUEST --}}
+  {{#if rollRequest}}
+  <h4 class="divider">{{details.label}}</h4>
+  <div class="form-group roll-dc">
+    <label>{{localize "PGT.ROLL_DC"}}</label>
+    <input type="number" data-path="details.rollDC" value="{{details.rollDC}}" data-cType="numeric-nullable"/>
   </div>
 
-  <button class="close" data-action="sendRequest"><i class="fas {{icon}}"></i>{{localize "PGMT.sendRequest"}}</button>
+  <div class="select-options-wrapper">
+    {{#each selectOptions as |options category|}}
+    <fieldset class="button-wrapper box-wrapper scrollable">
+      <legend>{{localize (concat "PGT.CATEGORY." category)}}</legend>
+
+      {{#each options as |option key|}}
+      <button class="option" {{#if @root.noActorSelected}}disabled{{/if}} data-action="sendRequest" data-key="{{key}}"><i class="fa-solid {{@root.details.icon}}"></i> <span>{{option}}</span></button>
+      {{/each}}
+    </fieldset>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{#if awaitingResult}}
+  <footer class="form-footer">
+    <button class="button" data-action="close">{{localize "PGT.CLOSE"}}</button>
+  </footer>
+  {{/if}}
+
+  {{!-- REST REQUEST --}}
+  {{#if restRequest}}
+  <h4 class="divider">{{details.label}}</h4>
+    <fieldset class="button-wrapper box-wrapper scrollable">
+      <legend>{{localize (concat "PGT.CATEGORY.REST_TYPE")}}</legend>
+
+      {{#each selectOptions as |option key|}}
+      <button class="option" {{#if @root.noActorSelected}}disabled{{/if}} data-action="sendRequest" data-key="{{key}}"><i class="fa-solid {{@root.details.icon}}"></i> <span>{{option}}</span></button>
+      {{/each}}
+    </fieldset>
+
+  {{/if}}
 </form>

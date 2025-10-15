@@ -1,46 +1,136 @@
-#request-dialog .selector-wrapper {
-  margin-top: 5px;
-  padding: 5px 10px;
-  background-color: #8b8b8b73;
+.pgt .box-wrapper {
+  --scroll-margin: 0;
+  border-width: 2px;
   border-radius: 5px;
-  border: 1px solid var(--color-warm-2);
-  box-shadow: inset 0px 0px 10px 2px var(--color-warm-2);
+  padding: 10px;
 }
-
-#request-dialog .selector-wrapper .option {
-  padding-top: 5px;
-  margin: 5px;
+.pgt .form-group {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-top: 2px dashed var(--color-warm-2);
+  align-items: center;
+}
+.pgt .form-footer {
+  margin-top: 10px;
+}
+.pgt .form-footer .button {
+  font-size: 22px;
+  width: 100%;
+  padding: 5px;
 }
 
-#request-dialog .selector-wrapper .option:first-child {
-  padding-top: 0;
-  border-top: 0;
+#actor-request .actor-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 430px;
 }
-
-#request-dialog .selector-wrapper .option .wrapper {
+#actor-request .actor-wrapper .actor {
+  width: 160px;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: var(--table-header-bg-color);
+  border: 2px solid var(--color-text-selection-bg);
+  box-shadow: 0 0 3px 0px var(--color-text-selection-bg) inset;
+}
+#actor-request .actor-wrapper .actor img {
+  height: 150px;
+  width: 150px;
+  -o-object-position: 50% 0;
+  object-position: 50% 0;
+  -o-object-fit: cover;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  box-shadow: 0 0 4px 2px var(--color-cool-5-50);
+}
+#actor-request .actor-wrapper .actor input {
+  margin-top: 6px;
+  margin-bottom: 3px;
+  border: 0;
+  color: var(--color-text-primary);
+  font-size: 18px;
+  width: 150px;
+  background-color: transparent;
+  text-align: center;
+}
+#actor-request .actor-wrapper .actor:hover.selectable {
+  cursor: pointer;
+  box-shadow: 0 0 12px 3px var(--color-text-selection-bg) inset;
+}
+#actor-request .actor-wrapper .actor.selected {
+  box-shadow: 0 0 12px 3px #06aa06 inset;
+  border-color: #06aa06;
+}
+#actor-request .actor-wrapper .actor .roll-result-wrapper {
+  width: 160px;
+  height: 197px;
+  position: absolute;
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-top: -6px;
+  margin-left: -6px;
+  border-radius: 5px;
+  z-index: 2;
+  font-weight: bold;
+  font-family: var(--font-h4);
+  font-size: 60px;
+  text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 0px black;
+}
+#actor-request .actor-wrapper .actor .roll-result-wrapper.awaiting-result {
+  background-color: rgba(111, 139, 199, 0.4941176471);
+}
+#actor-request .actor-wrapper .actor .roll-result-wrapper.awaiting-result .dice-roll {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  cursor: default;
+  font-size: 80px;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+#actor-request .actor-wrapper .actor .roll-result-wrapper.success {
+  background-color: rgba(111, 199, 111, 0.4941176471);
+}
+#actor-request .actor-wrapper .actor .roll-result-wrapper.fail {
+  background-color: rgba(199, 111, 111, 0.4941176471);
+}
+#actor-request .roll-dc {
+  margin: 10px;
+}
+#actor-request .roll-dc input {
+  width: auto;
+  text-align: end;
+}
+#actor-request .select-options-wrapper {
+  display: flex;
+  width: auto;
+  gap: 10px;
+}
+#actor-request .button-wrapper {
+  width: auto;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-height: 450px;
+  display: flex;
   justify-content: start;
-  font-size: 18px;
-  width: calc(100% - 40px);
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-
-#request-dialog .selector-wrapper .option .wrapper img {
-  width: 40px;
-  height: 40px;
-  object-position: 50% 0;
-  object-fit: cover;
-  border-radius: 3px;
-}
-
-#request-dialog .selector-wrapper .option .wrapper input {
-  background-color: transparent;
-  border: 0px;
-  margin-left: 10px;
-  color: white;
+#actor-request .button-wrapper .option {
+  min-width: 170px;
   width: 100%;
+  height: 36px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  text-align: end;
 }
