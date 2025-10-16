@@ -115,7 +115,8 @@
   gap: 10px;
 }
 #actor-request .button-wrapper {
-  width: auto;
+  width: -moz-fit-content;
+  width: fit-content;
   height: -moz-fit-content;
   height: fit-content;
   max-height: 450px;

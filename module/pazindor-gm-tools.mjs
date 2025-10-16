@@ -6,10 +6,10 @@ import * as pf2e from "./systems/pf2e.mjs";
 
 Hooks.once("init", async function() {
   window.PGT = {
-    rollOptions: {placeholder: "No system detected"},
-    restOptions: {placeholder: "No system detected"},
-    onRollRequest: async (actor, selected) => {console.log("Pazindor's GM Tools[Roll Request]: NO SYSTEM DETECTED")},
-    onRestRequest: async (actor, selected) => {console.log("Pazindor's GM Tools[Rest Request]: NO SYSTEM DETECTED")},
+    rollOptions: {},
+    restOptions: {},
+    onRollRequest: null,
+    onRestRequest: null,
     actorTypes: ["character"],
     systemId: null,
   }
@@ -31,13 +31,16 @@ Hooks.once("ready", async function() {
 
     case "pf2e": 
       PGT.rollOptions = pf2e.rollOptions();
-      PGT.restOptions = pf2e.restOptions();
+      // PGT.restOptions = pf2e.restOptions(); // Check how pathfinder rest work
       PGT.onRollRequest = pf2e.rollRequest;
-      PGT.onRestRequest = pf2e.restRequest;
+      // PGT.onRestRequest = pf2e.restRequest; // Check how pathfinder rest work
       PGT.actorTypes = ["character"];
       PGT.systemId = "pf2e";
       break;
   }
+
+  // Refresh controls
+  ui.controls.render({reset:true})
 });
 
 Hooks.on("gameReady", () => {
@@ -51,21 +54,23 @@ Hooks.on("getSceneControlButtons", (controls) => {
     layer: null,
     icon: "fas fa-screwdriver-wrench",
     visible: game.user.isGM,
-    activeTool: "hiddenTool",
+    activeTool: "init",
     tools: {
       request: {
         name: "request",
         title: "PGT.MENU.ROLL",
         icon: "fas fa-dice",
-        button: !!PGT.onRollRequest,
-        onChange: () => openRollRequest()
+        button: true,
+        onChange: () => openRollRequest(),
+        visible: !!PGT.onRollRequest
       },
       rest: {
         name: "rest",
         title: "PGT.MENU.REST",
         icon: "fas fa-bed",
-        button: !!PGT.onRestRequest,
-        onChange: () => openRestRequest()
+        button: true,
+        onChange: () => openRestRequest(),
+        visible: !!PGT.onRestRequest
       },
       gmScreen: {
         name: "gmScreen",
@@ -74,8 +79,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
         button: true,
         onChange: () => console.log("GM_SCREEN")
       },
-      hiddenTool: {
-        name: "hiddenTool",
+      init: {
+        name: "init",
         title: "",
         icon: "hidden",
         button: true,

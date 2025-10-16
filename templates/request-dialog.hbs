@@ -51,7 +51,7 @@
   {{!-- REST REQUEST --}}
   {{#if restRequest}}
   <h4 class="divider">{{details.label}}</h4>
-    <fieldset class="button-wrapper box-wrapper scrollable">
+    <fieldset class="button-wrapper box-wrapper scrollable" style="width:100%">
       <legend>{{localize (concat "PGT.CATEGORY.REST_TYPE")}}</legend>
 
       {{#each selectOptions as |option key|}}
@@ -60,4 +60,10 @@
     </fieldset>
 
   {{/if}}
+
+  {{#unless hasActors}}
+  <footer class="form-footer">
+    <button class="button" data-action="close">{{localize "PGT.CLOSE"}}</button>
+  </footer>
+  {{/unless}}
 </form>

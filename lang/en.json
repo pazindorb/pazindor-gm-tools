@@ -16,7 +16,7 @@
   "PGT.ROLL_DC": "Roll DC",
   "PGT.CLOSE": "Close",
 
-  "PGT.NO_ACTOR": "NO ACTOR",
+  "PGT.NO_ACTOR": "There is no active user with actors that you could send requests to.",
 
   "PGT.CHECK": "Check",
   "PGT.SAVE": "Save",
@@ -26,7 +26,11 @@
   "PGT.CATEGORY.DND5E.ABILITY": "Ability Check",
   "PGT.CATEGORY.DND5E.SAVE": "Saving Throw",
   "PGT.CATEGORY.DND5E.SKILL": "Skill Check",
-
   "PGT.REST.DND5E.LONG": "Long Rest",
-  "PGT.REST.DND5E.SHORT": "Short Rest"
+  "PGT.REST.DND5E.SHORT": "Short Rest",
+
+  "PGT.CATEGORY.PF2E.BASIC": "Perception & Saves",
+  "PGT.CATEGORY.PF2E.SKILL": "Skill Checks",
+  "PGT.REST.PF2E.REST": "Start Rest"
+
 }
