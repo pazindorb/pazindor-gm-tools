@@ -64,6 +64,7 @@ class RequestDialog extends PgtDialog {
   static PARTS = {
     root: {
       template: "modules/pazindor-gm-tools/templates/request-dialog.hbs",
+      scrollable: [".scrollable"]
     }
   };
 

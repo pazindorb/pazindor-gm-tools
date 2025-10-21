@@ -8,12 +8,10 @@
     <div class="actor {{#if wrapper.selectable}}selectable{{/if}} {{#if wrapper.selected}}selected{{/if}}" 
       {{#if wrapper.selectable}}data-cType="activable" data-path="actorSelector.{{actorId}}.selected"{{/if}}
     >
-      {{#if wrapper.result}}<div class="roll-result-wrapper {{wrapper.outcome}}" data-tooltip="{{localize "PGT.ROLL_RESULT"}}"><span>{{wrapper.result}}</span></div>{{/if}}
-      {{#if wrapper.request}} <div class="roll-result-wrapper awaiting-result" data-tooltip="{{localize "PGT.AWAITING_RESULT"}}"><i class="fa-light fa-dice-d20 fa-lg dice-roll"></i></div> {{/if}}
+      {{#if wrapper.result}}<div class="roll-result-wrapper {{wrapper.outcome}}"><span class="roll-result" data-tooltip="{{localize "PGT.ROLL_RESULT"}}">{{wrapper.result}}</span></div>{{/if}}
+      {{#if wrapper.request}} <div class="roll-result-wrapper awaiting-result"><span class="roll-result" data-tooltip="{{localize "PGT.AWAITING_RESULT"}}"><i class="fa-light fa-dice-d20 fa-lg dice-roll"></i></div></span>{{/if}}
       <img src="{{wrapper.actor.img}}"/>
       <input disabled value="{{wrapper.actor.name}}"/>
-      
-      
     </div>
     {{/each}}
   {{else}}

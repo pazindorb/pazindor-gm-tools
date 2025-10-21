@@ -24,7 +24,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  max-height: 430px;
+  max-height: 220px;
 }
 #actor-request .actor-wrapper .actor {
   width: 160px;
@@ -63,26 +63,25 @@
   box-shadow: 0 0 12px 3px #06aa06 inset;
   border-color: #06aa06;
 }
+#actor-request .actor-wrapper .actor.selected:hover {
+  box-shadow: 0 0 12px 3px #06aa06 inset;
+}
 #actor-request .actor-wrapper .actor .roll-result-wrapper {
-  width: 160px;
-  height: 197px;
-  position: absolute;
+  width: 0;
+  height: 0;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: -6px;
-  margin-left: -6px;
-  border-radius: 5px;
-  z-index: 2;
   font-weight: bold;
   font-family: var(--font-h4);
   font-size: 60px;
   text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 0px black;
 }
-#actor-request .actor-wrapper .actor .roll-result-wrapper.awaiting-result {
+#actor-request .actor-wrapper .actor .roll-result-wrapper.awaiting-result .roll-result {
   background-color: rgba(111, 139, 199, 0.4941176471);
 }
-#actor-request .actor-wrapper .actor .roll-result-wrapper.awaiting-result .dice-roll {
+#actor-request .actor-wrapper .actor .roll-result-wrapper.awaiting-result .roll-result .dice-roll {
   display: inline-block;
   animation: spin 1s linear infinite;
   cursor: default;
@@ -96,11 +95,26 @@
     transform: rotate(360deg);
   }
 }
-#actor-request .actor-wrapper .actor .roll-result-wrapper.success {
+#actor-request .actor-wrapper .actor .roll-result-wrapper.success .roll-result {
   background-color: rgba(111, 199, 111, 0.4941176471);
 }
-#actor-request .actor-wrapper .actor .roll-result-wrapper.fail {
+#actor-request .actor-wrapper .actor .roll-result-wrapper.fail .roll-result {
   background-color: rgba(199, 111, 111, 0.4941176471);
+}
+#actor-request .actor-wrapper .actor .roll-result-wrapper .roll-result {
+  height: 199px;
+  width: 160px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-top: -8px;
+  margin-left: -7px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 30px;
+  justify-content: center;
+  border-radius: 5px;
+  z-index: 2;
 }
 #actor-request .roll-dc {
   margin: 10px;
