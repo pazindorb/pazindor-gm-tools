@@ -1,3 +1,6 @@
+//==================================
+//      REST AND ROLL REQUEST      =
+//==================================
 export function rollOptions() {
   const rollOptions = {
     ["DND5E.ABILITY"]: {},
@@ -50,5 +53,42 @@ export async function rollRequest(actor, selected) {
     
     default:
       return null;
+  }
+}
+
+//==================================
+//        CONDITION MANAGER        =
+//==================================
+export function conditions() {
+  const conditions = Object.keys(CONFIG.DND5E.conditionTypes);
+
+  return CONFIG.statusEffects
+      .filter(cond => cond.hud !== false)
+      .map(cond => {
+        cond.isCondition = conditions.includes(cond.id);
+        return cond;
+      });
+}
+
+export function conditionRollKeys() {
+  const keys = {};
+  for (const [key, ability] of Object.entries(CONFIG.DND5E.abilities)) {
+    keys[`${key}.save`] = `${ability.label} ${game.i18n.localize("PGT.SAVE")}`;
+  }
+  keys["ath.skill"] = `${CONFIG.DND5E.skills["ath"].label} ${game.i18n.localize("PGT.CHECK")}`;
+  keys["acr.skill"] = `${CONFIG.DND5E.skills["acr"].label} ${game.i18n.localize("PGT.CHECK")}`;
+  return keys;
+}
+
+export function applyCondition(actor, statusId) {
+  if (statusId === "exhaustion") CONFIG.ActiveEffect.documentClass._manageExhaustion(_dummyEvent(), actor);
+  else actor.toggleStatusEffect(statusId, {active: true});
+}
+
+function _dummyEvent() {
+  return {
+    button: 0,
+    preventDefault: () => {},
+    stopPropagation: () => {},
   }
 }

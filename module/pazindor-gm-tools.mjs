@@ -1,4 +1,5 @@
 import { prepareConstants } from "./constant.mjs";
+import { openConditionManager } from "./dialog/condition-manager.mjs";
 import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
 import { registerModuleSocket } from "./socket.mjs";
 import * as dnd5e from "./systems/dnd5e.mjs";
@@ -10,6 +11,9 @@ Hooks.once("init", async function() {
     restOptions: {},
     onRollRequest: null,
     onRestRequest: null,
+    conditions: {},
+    applyCondition: null,
+    conditionRollKeys: null,
     actorTypes: ["character"],
     systemId: null,
   }
@@ -25,6 +29,9 @@ Hooks.once("ready", async function() {
       PGT.restOptions = dnd5e.restOptions();
       PGT.onRollRequest = dnd5e.rollRequest;
       PGT.onRestRequest = dnd5e.restRequest;
+      PGT.conditions = dnd5e.conditions();
+      PGT.conditionRollKeys = dnd5e.conditionRollKeys();
+      PGT.applyCondition = dnd5e.applyCondition;
       PGT.actorTypes = ["character"];
       PGT.systemId = "dnd5e";
       break;
@@ -71,6 +78,14 @@ Hooks.on("getSceneControlButtons", (controls) => {
         button: true,
         onChange: () => openRestRequest(),
         visible: !!PGT.onRestRequest
+      },
+      condition: {
+        name: "condition",
+        title: "PGT.MENU.CONDITION",
+        icon: "fas fa-bolt",
+        button: true,
+        onChange: () => openConditionManager(),
+        visible: !!PGT.applyCondition
       },
       gmScreen: {
         name: "gmScreen",

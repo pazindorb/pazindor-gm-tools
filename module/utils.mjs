@@ -47,3 +47,12 @@ export function getActorsForPlayer(player) {
   return game.actors.filter(actor => actor.ownership[player.id] === 3)
               .filter(actor => PGT.actorTypes.includes(actor.type))
 }
+
+export function getPlayersForActor(actor, allowGM=false) {
+  return getActivePlayers(allowGM)
+          .filter(player => actor.ownership[player.id] === 3)
+}
+
+export function getSelectedTokens() {
+  if (canvas.activeLayer === canvas.tokens) return canvas.activeLayer.placeables.filter(p => p.controlled === true);
+}

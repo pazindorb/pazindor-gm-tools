@@ -1,0 +1,53 @@
+<form id="condition-manager" class="pgt standard-form {{cssClass}}">
+  <h4 class="divider">{{localize "PGT.CONDITION_MANAGER.TITLE"}}</h4>
+
+  {{!-- Configuration --}}
+  <fieldset>
+    <legend>{{localize "PGT.CONDITION_MANAGER.CONFIG"}}</legend>
+
+    {{!-- Show all statuses --}}
+    <div class="form-group">
+      <label>{{localize 'PGT.CONDITION_MANAGER.SHOW_ALL'}}</label>
+      <div class="form-fields">
+        <input type="checkbox" data-cType="activable" data-path="showAll" {{checked showAll}}/>
+      </div>
+    </div>
+
+    {{!-- Ask For Roll Before --}}
+    {{#if canAskForRoll}}
+    <div class="form-group">
+      <label>{{localize 'PGT.CONDITION_MANAGER.ROLL_BEFORE'}}</label>
+      <div class="form-fields">
+        <input type="checkbox" data-cType="activable" data-path="rollBefore.askForRoll" {{checked rollBefore.askForRoll}}/>
+      </div>
+      <p class="hint">{{localize "PGT.CONDITION_MANAGER.ROLL_BEFORE_HINT"}}</p>
+    </div>
+    {{#if rollBefore.askForRoll}}
+    <div class="form-group">
+      <div class="form-fields">
+        <label>{{localize 'PGT.CONDITION_MANAGER.ROLL_BEFORE_KEY'}}</label>
+        <select data-cType="string" data-path="rollBefore.key">
+          {{selectOptions rollKeys selected=rollBefore.key blank=""}}
+        </select>
+        <label>{{localize 'PGT.CONDITION_MANAGER.ROLL_BEFORE_DC'}}</label>
+        <input type="number" data-path="rollBefore.dc" value="{{rollBefore.dc}}" data-cType="numeric"/>
+      </div>
+    </div>
+    {{/if}}
+    {{/if}}
+  </fieldset>
+  
+
+  {{!-- Conditions --}}
+  <fieldset class="condition-fieldset scrollable">
+    <legend>{{localize "PGT.CONDITION_MANAGER.CONDITIONS"}}</legend>
+    <div class="conditions-wrapper">
+      {{#each conditions}}
+        <div class="condition" data-action="apply" data-status-id="{{id}}" data-tooltip="{{label}}">
+          <img src="{{img}}"/>
+          <label>{{name}}</label>
+        </div>
+      {{/each}}
+    </div>
+  </fieldset>
+</form>

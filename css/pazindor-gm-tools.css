@@ -1,13 +1,11 @@
 .pgt .box-wrapper {
-  --scroll-margin: 0;
   border-width: 2px;
   border-radius: 5px;
   padding: 10px;
 }
-.pgt .form-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.pgt .scrollable {
+  --scroll-margin: 0;
+  padding: 10px;
 }
 .pgt .form-footer {
   margin-top: 10px;
@@ -148,4 +146,40 @@
   display: flex;
   justify-content: space-between;
   text-align: end;
+}
+
+#condition-manager .condition-fieldset {
+  max-height: 320px;
+  overflow-y: auto;
+}
+#condition-manager .conditions-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+#condition-manager .conditions-wrapper .condition {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 5px;
+  border: 2px solid var(--color-tabs-border);
+}
+#condition-manager .conditions-wrapper .condition label {
+  padding: 5px;
+  font-size: 12px;
+}
+#condition-manager .conditions-wrapper .condition img {
+  padding: 5px;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  background-color: var(--color-text-subtle);
+  border-radius: 5px;
+  margin-top: 5px;
+}
+#condition-manager .conditions-wrapper .condition:hover {
+  box-shadow: 0 0 8px 3px var(--color-form-hint-hover) inset;
+  cursor: pointer;
 }

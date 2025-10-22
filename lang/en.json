@@ -31,6 +31,14 @@
 
   "PGT.CATEGORY.PF2E.BASIC": "Perception & Saves",
   "PGT.CATEGORY.PF2E.SKILL": "Skill Checks",
-  "PGT.REST.PF2E.REST": "Start Rest"
+  "PGT.REST.PF2E.REST": "Start Rest",
 
+  "PGT.CONDITION_MANAGER.TITLE": "Condition Manager",
+  "PGT.CONDITION_MANAGER.CONFIG": "Configuration",
+  "PGT.CONDITION_MANAGER.ROLL_BEFORE": "Ask for Roll",
+  "PGT.CONDITION_MANAGER.ROLL_BEFORE_HINT": "Ask for Roll and apply this condition only when target fails",
+  "PGT.CONDITION_MANAGER.ROLL_BEFORE_KEY": "Roll Type",
+  "PGT.CONDITION_MANAGER.ROLL_BEFORE_DC": "DC",
+  "PGT.CONDITION_MANAGER.CONDITIONS": "Apply to selected tokens",
+  "PGT.CONDITION_MANAGER.SHOW_ALL": "Show all statuses"
 }
