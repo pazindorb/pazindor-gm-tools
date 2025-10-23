@@ -6,6 +6,8 @@ class ConditionManagerDialog extends PgtDialog {
 
   constructor(conditions, options = {}) {
     super(options);
+    canvas.tokens.activate();
+
     this.conditions = conditions;
     this.showAll = false;
     this.rollKeys = this.options.rollKeys;
@@ -85,15 +87,14 @@ class ConditionManagerDialog extends PgtDialog {
         });
         response.then(result => {
           const roll = result.payload;
-          if (roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId);
+          if (!!!roll._total || roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId);
         })
       }
       else {
         const roll = await PGT.onRollRequest(actor, this.rollBefore.key);
-        if (roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId);
+        if (!!!roll._total || roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId);
       }
     }
-    
   }
 }
 

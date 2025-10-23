@@ -22,7 +22,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  max-height: 220px;
+  max-height: 230px;
+  flex-direction: row;
 }
 #actor-request .actor-wrapper .actor {
   width: 160px;
@@ -127,15 +128,13 @@
   gap: 10px;
 }
 #actor-request .button-wrapper {
-  width: -moz-fit-content;
-  width: fit-content;
+  width: -webkit-fill-available;
   height: -moz-fit-content;
   height: fit-content;
-  max-height: 450px;
+  max-height: 350px;
   display: flex;
   justify-content: start;
   align-items: center;
-  flex-wrap: wrap;
   gap: 10px;
 }
 #actor-request .button-wrapper .option {

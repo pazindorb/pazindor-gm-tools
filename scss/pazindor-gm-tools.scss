@@ -30,7 +30,8 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    max-height: 220px;
+    max-height: 230px;
+    flex-direction: row;
 
     .actor {
       width: 160px;
@@ -149,14 +150,14 @@
   }
 
   .button-wrapper {
-    width: fit-content;
+    width: -webkit-fill-available;
     height: fit-content;
-    max-height: 450px;
+    max-height: 350px;
+
 
     display: flex;
     justify-content: start;
     align-items: center;
-    flex-wrap: wrap;
     gap: 10px;
 
     .option {

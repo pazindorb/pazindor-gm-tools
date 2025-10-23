@@ -1,3 +1,6 @@
+//==================================
+//      REST AND ROLL REQUEST      =
+//==================================
 export function rollOptions() {
   const rollOptions = {
     ["PF2E.BASIC"]: {},
@@ -38,4 +41,40 @@ export async function rollRequest(actor, selected) {
     case "skill":
       return await actor.skills[key].roll();
   }
+}
+
+//==================================
+//        CONDITION MANAGER        =
+//==================================
+export function conditions() {
+  const ids = game.pf2e.ConditionManager.conditionsSlugs;
+  const notConditions = ["hostile", "helpful", "friendly", "indifferent", "unfriendly"]
+
+  const conditions = [];
+  for (const [key, condition] of game.pf2e.ConditionManager.conditions.entries()) {
+    if (ids.includes(key)) {
+      conditions.push({
+        name: condition.name,
+        id: key,
+        img: condition.img,
+        isCondition: !notConditions.includes(key)
+      })
+    }
+  }
+
+  return conditions;
+}
+
+export function conditionRollKeys() {
+  const rollKeys = {}
+  for (const [key, save] of Object.entries(CONFIG.PF2E.saves)) {
+    rollKeys[`${key}.save`] = `${game.i18n.localize(save)} ${game.i18n.localize("PGT.SAVE")}`;
+  }
+  return rollKeys;
+}
+
+export function applyCondition(actor, slug) {
+  const manager = game.pf2e.ConditionManager;
+
+  actor.increaseCondition(slug)
 }

@@ -41,6 +41,9 @@ Hooks.once("ready", async function() {
       // PGT.restOptions = pf2e.restOptions(); // Check how pathfinder rest work
       PGT.onRollRequest = pf2e.rollRequest;
       // PGT.onRestRequest = pf2e.restRequest; // Check how pathfinder rest work
+      PGT.conditions = pf2e.conditions();
+      PGT.conditionRollKeys = pf2e.conditionRollKeys();
+      PGT.applyCondition = pf2e.applyCondition;
       PGT.actorTypes = ["character"];
       PGT.systemId = "pf2e";
       break;
