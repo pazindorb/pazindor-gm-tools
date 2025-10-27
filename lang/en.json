@@ -2,11 +2,19 @@
   "PGT.ERROR.NO_SYSTEM": "System you are using is not supported by Pazindor's GM Tools",
   "PGT.ERROR.UNSUPPORTED_TYPE": "Request Type not supported, cannot send request",
 
+
+  "PGT.CHECK": "Check",
+  "PGT.SAVE": "Save",
+  "PGT.CLOSE": "Close",
+  "PGT.CONFIRM": "Confirm",
+  "PGT.CANCEL": "Cancel",
+
   "PGT.MENU.TITLE": "GM Tools",
   "PGT.MENU.ROLL": "Roll Request",
   "PGT.MENU.REST": "Rest Request",
   "PGT.MENU.CONDITION": "Condition Manager",
-  "PGT.gmScreen": "GM Screen",
+  "PGT.MENU.ADVENTURERS": "Adventurer's Register",
+  "PGT.MENU.GM_SCREEN": "Game Master Screen",
 
   "PGT.SELECT_ACTORS": "Select Actors",
   "PGT.REST_REQUEST": "Select Rest",
@@ -15,12 +23,8 @@
   "PGT.AWAITING_RESULT": "Awaiting Roll Result",
   "PGT.ROLL_RESULT": "Roll Result",
   "PGT.ROLL_DC": "Roll DC",
-  "PGT.CLOSE": "Close",
 
   "PGT.NO_ACTOR": "There is no active user with actors that you could send requests to.",
-
-  "PGT.CHECK": "Check",
-  "PGT.SAVE": "Save",
 
   "PGT.CATEGORY.REST_TYPE": "Rest Type",
 
@@ -41,5 +45,29 @@
   "PGT.CONDITION_MANAGER.ROLL_BEFORE_KEY": "Roll Type",
   "PGT.CONDITION_MANAGER.ROLL_BEFORE_DC": "DC",
   "PGT.CONDITION_MANAGER.CONDITIONS": "Apply to selected tokens",
-  "PGT.CONDITION_MANAGER.SHOW_ALL": "Show all statuses"
+  "PGT.CONDITION_MANAGER.SHOW_ALL": "Show all statuses",
+
+  "PGT.ADVENTURERS.TITLE": "Adventurer's Register",
+  "PGT.ADVENTURERS.VALUE_NOT_FOUND": "Value not found",
+  "PGT.ADVENTURERS.OPEN_SHEET": "Open Character Sheet",
+  "PGT.ADVENTURERS.TAB.CORE": "Core",
+  "PGT.ADVENTURERS.TAB.ADVANCED": "Advanced",
+  "PGT.ADVENTURERS.TAB.COMBAT": "Combat",
+  "PGT.ADVENTURERS.TAB.ABILITY": "Ability Checks",
+  "PGT.ADVENTURERS.TAB.SAVE": "Saving Throws",
+  "PGT.ADVENTURERS.TAB.SKILL": "Skills",
+  "PGT.ADVENTURERS.SELECT_GROUP": "Select Adventuring Group",
+  "PGT.ADVENTURERS.ADD_GROUP": "Add Adventuring Group",
+  "PGT.ADVENTURERS.REMOVE_GROUP": "Remove Adventuring Group",
+  "PGT.ADVENTURERS.REMOVE_FROM_GROUP": "Remove actor from group",
+  "PGT.ADVENTURERS.ADD_TO_GROUP": "Add actor to group",
+  "PGT.ADVENTURERS.ROLL": "Send Roll Request",
+
+  "PGT.ADVENTURERS.ADVANCED.SELECT_ACTOR": "Select Actor to inspect",
+  "PGT.ADVENTURERS.ADVANCED.SELECT_PATH": "Select path to inspect",
+  "PGT.ADVENTURERS.ADVANCED.PATH_VALUE": "Path value",
+  "PGT.ADVENTURERS.CORE.NAME": "Name",
+  "PGT.ADVENTURERS.CORE.HEALTH": "Health",
+  "PGT.ADVENTURERS.CORE.AC": "Armor Class",
+  "PGT.ADVENTURERS.CORE.SPEED": "Walking Speed"
 }

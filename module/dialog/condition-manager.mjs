@@ -21,7 +21,6 @@ class ConditionManagerDialog extends PgtDialog {
   /** @override */
   static PARTS = {
     root: {
-      classes: ["dc20rpg"],
       template: "modules/pazindor-gm-tools/templates/condition-manager-dialog.hbs",
     }
   };

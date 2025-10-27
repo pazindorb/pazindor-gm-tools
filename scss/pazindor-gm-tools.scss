@@ -20,6 +20,131 @@
       padding: 5px;
     }
   }
+
+  table {
+    border-radius: 5px;
+
+    [data-action="roll"]:hover {
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--color-shadow-primary) inset;
+      border-radius: 5px;
+    }
+
+    tr {
+      height: 35px;
+
+      &.large {
+        height: 50px;
+      }
+    }
+
+    th { 
+      padding: 0 5px;
+
+      &:not(:first-child) {
+        text-align: center;
+      }
+
+      .header-field {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      img {
+        height: 30px;
+        width: 30px;
+        border-radius: 3px;
+        object-position: 50% 0;
+        object-fit: cover;
+      }
+    }
+
+    td {
+      font-size: 16px;
+      padding: 0;
+      
+      &:not(:first-child) {
+        input {
+          text-align: center;
+        }
+      }
+
+      .centered {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      input {
+        background-color: transparent;
+        border-radius: 0;
+        border: 0;
+        padding: 0;
+
+        &.label {
+          text-indent: 10px;
+        }
+
+        &[readonly] {
+          cursor: default;
+
+          &:focus {
+            outline: 0;
+          }
+        }
+      }
+
+      .actor-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-right: 5px;
+
+        a {
+          padding: 10px;
+          margin: 3px;
+
+          &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--color-shadow-primary) inset;
+            border-radius: 5px;
+          }
+        }
+
+        .actor {
+          display: flex;
+          align-items: center;
+          width: 100%;
+
+          &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--color-shadow-primary) inset;
+            border-radius: 5px;
+          }
+
+          label {
+            cursor: pointer;
+          }
+
+          img {
+            margin-right: 10px;
+            width: 50px;
+            height: 50px;
+            object-position: 50% 0;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  }
+}
+
+#adventurers-register {
+  
+  table {
+    max-height: 500px;
+  }
 }
 
 #actor-request {

@@ -1,11 +1,16 @@
 import { prepareConstants } from "./constant.mjs";
+import { openAdventurersRegister } from "./dialog/adventurers-register.mjs";
 import { openConditionManager } from "./dialog/condition-manager.mjs";
 import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
+import { registerHandlebarsHelpers } from "./configs/handlebars.mjs";
+import { registerModuleSettings } from "./configs/settings.mjs";
 import { registerModuleSocket } from "./socket.mjs";
-import * as dnd5e from "./systems/dnd5e.mjs";
-import * as pf2e from "./systems/pf2e.mjs";
+import { pf2eConfig } from "./systems/pf2e.mjs";
+import { dnd5eConfig } from "./systems/dnd5e.mjs";
 
 Hooks.once("init", async function() {
+  registerModuleSettings();
+  registerHandlebarsHelpers();
   window.PGT = {
     rollOptions: {},
     restOptions: {},
@@ -14,43 +19,22 @@ Hooks.once("init", async function() {
     conditions: {},
     applyCondition: null,
     conditionRollKeys: null,
+    adventurersTabs: null,
     actorTypes: ["character"],
     systemId: null,
   }
-  PGT.CONST = prepareConstants()
+  PGT.CONST = prepareConstants();
 });
 
 Hooks.once("ready", async function() {
   registerModuleSocket();
 
   switch (game.system.id) {
-    case "dnd5e":
-      PGT.rollOptions = dnd5e.rollOptions();
-      PGT.restOptions = dnd5e.restOptions();
-      PGT.onRollRequest = dnd5e.rollRequest;
-      PGT.onRestRequest = dnd5e.restRequest;
-      PGT.conditions = dnd5e.conditions();
-      PGT.conditionRollKeys = dnd5e.conditionRollKeys();
-      PGT.applyCondition = dnd5e.applyCondition;
-      PGT.actorTypes = ["character"];
-      PGT.systemId = "dnd5e";
-      break;
-
-    case "pf2e": 
-      PGT.rollOptions = pf2e.rollOptions();
-      // PGT.restOptions = pf2e.restOptions(); // Check how pathfinder rest work
-      PGT.onRollRequest = pf2e.rollRequest;
-      // PGT.onRestRequest = pf2e.restRequest; // Check how pathfinder rest work
-      PGT.conditions = pf2e.conditions();
-      PGT.conditionRollKeys = pf2e.conditionRollKeys();
-      PGT.applyCondition = pf2e.applyCondition;
-      PGT.actorTypes = ["character"];
-      PGT.systemId = "pf2e";
-      break;
+    case "dnd5e": dnd5eConfig(); break;
+    case "pf2e": pf2eConfig(); break;
   }
-
   // Refresh controls
-  ui.controls.render({reset:true})
+  ui.controls.render({reset:true});
 });
 
 Hooks.on("gameReady", () => {
@@ -89,6 +73,14 @@ Hooks.on("getSceneControlButtons", (controls) => {
         button: true,
         onChange: () => openConditionManager(),
         visible: !!PGT.applyCondition
+      },
+      adventurers: {
+        name: "adventurers",
+        title: "PGT.MENU.ADVENTURERS",
+        icon: "fas fa-book-open-cover",
+        button: true,
+        onChange: () => openAdventurersRegister(),
+        visible: true
       },
       gmScreen: {
         name: "gmScreen",

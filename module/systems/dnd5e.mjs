@@ -1,7 +1,20 @@
+export function dnd5eConfig() {
+  PGT.rollOptions = rollOptions();
+  PGT.restOptions = restOptions();
+  PGT.onRollRequest = rollRequest;
+  PGT.onRestRequest = restRequest;
+  PGT.conditions = conditions();
+  PGT.conditionRollKeys = conditionRollKeys();
+  PGT.applyCondition = applyCondition;
+  PGT.adventurersConfig = adventurersRegisterConfig();
+  PGT.actorTypes = ["character"];
+  PGT.systemId = "dnd5e";
+}
+
 //==================================
 //      REST AND ROLL REQUEST      =
 //==================================
-export function rollOptions() {
+function rollOptions() {
   const rollOptions = {
     ["DND5E.ABILITY"]: {},
     ["DND5E.SAVE"]: {},
@@ -19,14 +32,14 @@ export function rollOptions() {
   return rollOptions;
 }
 
-export function restOptions() {
+function restOptions() {
   return {
     long: game.i18n.localize("PGT.REST.DND5E.LONG"),
     short: game.i18n.localize("PGT.REST.DND5E.SHORT")
   }
 }
 
-export function restRequest(actor, selected) {
+function restRequest(actor, selected) {
   if (selected === "long") {
     actor.longRest();
   }
@@ -35,7 +48,7 @@ export function restRequest(actor, selected) {
   }
 }
 
-export async function rollRequest(actor, selected) {
+async function rollRequest(actor, selected) {
   const [key, type] = selected.split(".");
 
   switch(type) {
@@ -59,7 +72,7 @@ export async function rollRequest(actor, selected) {
 //==================================
 //        CONDITION MANAGER        =
 //==================================
-export function conditions() {
+function conditions() {
   const conditions = Object.keys(CONFIG.DND5E.conditionTypes);
 
   return CONFIG.statusEffects
@@ -70,7 +83,7 @@ export function conditions() {
       });
 }
 
-export function conditionRollKeys() {
+function conditionRollKeys() {
   const keys = {};
   for (const [key, ability] of Object.entries(CONFIG.DND5E.abilities)) {
     keys[`${key}.save`] = `${ability.label} ${game.i18n.localize("PGT.SAVE")}`;
@@ -80,7 +93,7 @@ export function conditionRollKeys() {
   return keys;
 }
 
-export function applyCondition(actor, statusId) {
+function applyCondition(actor, statusId) {
   if (statusId === "exhaustion") CONFIG.ActiveEffect.documentClass._manageExhaustion(_dummyEvent(), actor);
   else actor.toggleStatusEffect(statusId, {active: true});
 }
@@ -90,5 +103,82 @@ function _dummyEvent() {
     button: 0,
     preventDefault: () => {},
     stopPropagation: () => {},
+  }
+}
+
+//==================================
+//      ADVENTURERS REGISTER       =
+//==================================
+function adventurersRegisterConfig() {
+  const abilityFields = [{id: "name", icon: "fa-solid fa-signature", label: "PGT.ADVENTURERS.CORE.NAME", type: "name-icon"}];
+  const saveFields = [{id: "name", icon: "fa-solid fa-signature", label: "PGT.ADVENTURERS.CORE.NAME", type: "name-icon"}];
+  const skillFields = [];
+
+  for (const [key, ability] of Object.entries(CONFIG.DND5E.abilities)) {
+    abilityFields.push({
+      id: `${key}-check`, 
+      label: `${ability.label} ${game.i18n.localize("PGT.CHECK")}`, 
+      short: key.toUpperCase(),
+      type: "value", 
+      path: `system.abilities.${key}.mod`, 
+      rollKey: `${key}.ability`
+    });
+    saveFields.push({
+      id: `${key}-save`, 
+      label: `${ability.label} ${game.i18n.localize("PGT.SAVE")}`, 
+      short: key.toUpperCase(),
+      type: "value", 
+      path: `system.abilities.${key}.save.value`, 
+      rollKey: `${key}.save`
+    });
+  }
+
+  for (const [key, skill] of Object.entries(CONFIG.DND5E.skills)) {
+    skillFields.push({
+      id: `${key}-check`, 
+      label: `${skill.label}`, 
+      type: "value", 
+      path: `system.skills.${key}.mod`, 
+      rollKey: `${key}.skill`
+    });
+  }
+
+  return {
+    tabs: [
+      {
+        id: "core", 
+        icon: "fa-solid fa-book", 
+        label: "PGT.ADVENTURERS.TAB.CORE", 
+        direction:"row",
+        fields: [
+          {id: "name", icon: "fa-solid fa-signature", label: "PGT.ADVENTURERS.CORE.NAME", type: "name-icon"},
+          {id: "health", icon: "fa-solid fa-heart", label: "PGT.ADVENTURERS.CORE.HEALTH", type: "current-max", pathCurrent: "system.attributes.hp.value", pathMax: "system.attributes.hp.max", editable: "numeric"},
+          {id: "ac", icon: "fa-solid fa-shield", label: "PGT.ADVENTURERS.CORE.AC", type: "value", path: "system.attributes.ac.value"},
+          {id: "speed", icon: "fa-solid fa-boot-heeled", label: "PGT.ADVENTURERS.CORE.SPEED", type: "value", path: "system.attributes.movement.walk"},
+        ]
+      },
+      {
+        id: "ability", 
+        icon: "fa-solid fa-dumbbell", 
+        label: "PGT.ADVENTURERS.TAB.ABILITY", 
+        direction:"row",
+        fields: abilityFields
+      },
+      {
+        id: "save", 
+        icon: "fa-solid fa-shield", 
+        label: "PGT.ADVENTURERS.TAB.SAVE", 
+        direction:"row",
+        fields: saveFields
+      },
+      {
+        id: "skills", 
+        icon: "fa-solid fa-pen-ruler", 
+        label: "PGT.ADVENTURERS.TAB.SKILL", 
+        direction:"column",
+        fields: skillFields
+      },
+    ],
+    initialTab: "core",
   }
 }

@@ -15,6 +15,108 @@
   width: 100%;
   padding: 5px;
 }
+.pgt table {
+  border-radius: 5px;
+}
+.pgt table [data-action=roll]:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-shadow-primary) inset;
+  border-radius: 5px;
+}
+.pgt table tr {
+  height: 35px;
+}
+.pgt table tr.large {
+  height: 50px;
+}
+.pgt table th {
+  padding: 0 5px;
+}
+.pgt table th:not(:first-child) {
+  text-align: center;
+}
+.pgt table th .header-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pgt table th img {
+  height: 30px;
+  width: 30px;
+  border-radius: 3px;
+  -o-object-position: 50% 0;
+  object-position: 50% 0;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.pgt table td {
+  font-size: 16px;
+  padding: 0;
+}
+.pgt table td:not(:first-child) input {
+  text-align: center;
+}
+.pgt table td .centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pgt table td input {
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  padding: 0;
+}
+.pgt table td input.label {
+  text-indent: 10px;
+}
+.pgt table td input[readonly] {
+  cursor: default;
+}
+.pgt table td input[readonly]:focus {
+  outline: 0;
+}
+.pgt table td .actor-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-right: 5px;
+}
+.pgt table td .actor-wrapper a {
+  padding: 10px;
+  margin: 3px;
+}
+.pgt table td .actor-wrapper a:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-shadow-primary) inset;
+  border-radius: 5px;
+}
+.pgt table td .actor-wrapper .actor {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.pgt table td .actor-wrapper .actor:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-shadow-primary) inset;
+  border-radius: 5px;
+}
+.pgt table td .actor-wrapper .actor label {
+  cursor: pointer;
+}
+.pgt table td .actor-wrapper .actor img {
+  margin-right: 10px;
+  width: 50px;
+  height: 50px;
+  -o-object-position: 50% 0;
+  object-position: 50% 0;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+#adventurers-register table {
+  max-height: 500px;
+}
 
 #actor-request .actor-wrapper {
   display: flex;

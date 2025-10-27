@@ -23,6 +23,12 @@ export function setValueForPath(object, path, value) {
   currentObject[keys[keys.length - 1]] = value;
 }
 
+export function toSelectOptions(objectArray, key, label) {
+  const options = {};
+  objectArray.forEach(obj => options[obj[key]] = obj[label]);
+  return options;
+}
+
 export function collectActorsFromActiveUsers() {
   const activePlayers = getActivePlayers(false);
 
@@ -55,4 +61,43 @@ export function getPlayersForActor(actor, allowGM=false) {
 
 export function getSelectedTokens() {
   if (canvas.activeLayer === canvas.tokens) return canvas.activeLayer.placeables.filter(p => p.controlled === true);
+}
+
+export async function getUserInput(title, selectOptions) {
+  let body = "";
+  if (selectOptions) {
+    let optionsHTML = Object.entries(selectOptions)
+          .map(([value, label]) => `<option value="${value}">${label}</option>`)
+          .join("");
+    body = `<select id="input" style="width: 100%; margin-top: 5px;">${optionsHTML}</select>`;
+  }
+  else {
+    body = '<input type="text" id="input" style="width: 100%;"/>';
+  }
+
+  return new Promise((resolve) => {
+    new Dialog({
+      title: title,
+      content: `
+        <div style="padding: 10px;">
+          <h4 class="divider">${title}</h4>
+          ${body}
+        </div>`,
+      buttons: {
+        ok: {
+          label: game.i18n.localize("PGT.CONFIRM"),
+          callback: (html) => {
+            const value = html.find("#input").val();
+            resolve(value);
+          }
+        },
+        cancel: {
+          label: game.i18n.localize("PGT.CLOSE"),
+          callback: () => resolve(null)
+        }
+      },
+      default: "ok",
+      close: () => resolve(null)
+    }).render(true);
+  });
 }

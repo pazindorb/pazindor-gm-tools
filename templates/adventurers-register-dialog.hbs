@@ -1,0 +1,63 @@
+<form id="adventurers-register" class="pgt standard-form {{cssClass}}">
+  <h4 class="divider">{{localize "PGT.ADVENTURERS.TITLE"}}</h4>
+
+  {{!-- Select Group --}}
+  <div class="form-group">
+    <label>{{localize 'PGT.ADVENTURERS.SELECT_GROUP'}}</label>    
+    <div class="form-fields">
+      <select data-cType="string" data-path="selectedGroup">
+        {{selectOptions groups selected=selectedGroup blank=""}}
+      </select>
+    </div>
+    {{#if selectedGroup}}
+    <a class="fa-solid fa-users-slash" style="flex: 0;" data-tooltip="{{localize 'PGT.ADVENTURERS.REMOVE_GROUP'}}" data-action="removeGroup"></a>
+    {{else}}
+    <a class="fa-solid fa-users-medical" style="flex: 0;" data-tooltip="{{localize 'PGT.ADVENTURERS.ADD_GROUP'}}" data-action="addGroup"></a>
+    {{/if}}
+  </div>
+
+  {{!-- Navigation --}}
+  <nav class="sheet-tabs tabs margin-top-5">
+    {{#each tabs}}
+    <a data-action="tab" data-group="primary" data-tab="{{id}}">
+      <i class="{{icon}}" style="margin-right:5px"></i><span>{{localize label}}</span>
+    </a>
+    {{/each}}
+  </nav>
+
+  {{#each tabs}} {{#ifCond id '!==' "advanced"}}
+  <section class="tab changes{{#ifCond @root.activeTab '===' id}} active{{/ifCond}}" data-group="primary" data-tab="{{id}}">
+    {{{adventurers-table @root.adventurers this @root.selectedGroup}}}
+  </section>
+  {{/ifCond}} {{/each}}
+
+  {{!-- ADVANCED --}}
+  <section class="tab changes {{#ifCond activeTab '===' "advanced"}} active{{/ifCond}}" data-group="primary" data-tab="advanced">
+    <div class="form-group">
+      <label>{{localize 'PGT.ADVENTURERS.ADVANCED.SELECT_ACTOR'}}</label>
+      <div class="form-fields">
+        <select data-cType="string" data-path="selectedActorId">
+          {{selectOptions actors selected=selectedActorId blank=""}}
+        </select>
+      </div>
+    </div>
+
+    {{#if selectedActor}}
+    <div class="form-group">
+      <label>{{localize 'PGT.ADVENTURERS.ADVANCED.SELECT_PATH'}}</label>
+      <div class="form-fields">
+        <select data-cType="string" data-path="selectedPath">
+          {{selectOptions actorPaths selected=selectedPath blank=""}}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize 'PGT.ADVENTURERS.ADVANCED.PATH_VALUE'}}</label>
+      <div class="form-fields">
+        <input disabled value="{{selectedPathValue}}"/>
+      </div>
+    </div>
+    {{/if}}
+  </section>
+</form>
