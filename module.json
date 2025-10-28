@@ -6,7 +6,7 @@
     "email": "xxpazindorxx@gmail.com",
     "discord": "Patryk#6024"
   }],
-  "version": "1.0.0",
+  "version": "0.6.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13.350"
@@ -23,5 +23,7 @@
   ],
   "flags": {
   },
-  "description": "<p>A module that supports game management. It allows GM to send roll requests, wait for the results, check player statistics and impose conditions. All with the help of a clear UI.</p>"
+  "description": "<p>A module that supports game management. It allows GM to send roll requests, wait for the results, check player statistics and impose conditions. All with the help of a clear UI.</p>",
+  "manifest": "https://drive.google.com/uc?export=download&id=1ngQ3hQXm7iYMxREjix7AMe1uzrfrsXSo",
+  "download": "https://drive.google.com/uc?export=download&id=1UJ4TJdtiYI3ReqYEfCY36fquvP2mk_Ys"
 }
