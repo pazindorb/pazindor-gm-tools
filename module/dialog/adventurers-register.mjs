@@ -211,7 +211,7 @@ export class AdventurersRegister extends PgtDialog {
   async _onChangeString(path, value, dataset) {
     const actorId = dataset.actorId;
     const actor = this.allAdventurers.find(actor => actorId === actor.id);
-    if (!actor) super._onChangeString(path, value, dataset);
+    if (!actor) return super._onChangeString(path, value, dataset);
 
     await actor.update({[path]: value});
     this.render();
@@ -220,7 +220,7 @@ export class AdventurersRegister extends PgtDialog {
   async _onChangeNumeric(path, value, nullable, dataset) {
     const actorId = dataset.actorId;
     const actor = this.allAdventurers.find(actor => actorId === actor.id);
-    if (!actor) super._onChangeNumeric(path, value, nullable, dataset);
+    if (!actor) return super._onChangeNumeric(path, value, nullable, dataset);
 
     let numericValue = parseInt(value);
     if (nullable && isNaN(numericValue)) numericValue = null;

@@ -87,7 +87,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
         title: "PGT.MENU.GM_SCREEN",
         icon: "fas fa-screencast",
         button: true,
-        onChange: () => console.log("GM_SCREEN")
+        onChange: () => console.log("GM_SCREEN"),
+        visible: false
       },
       init: {
         name: "init",

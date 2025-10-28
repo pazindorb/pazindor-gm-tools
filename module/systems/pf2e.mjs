@@ -1,11 +1,12 @@
 export function pf2eConfig() {
-  PGT.rollOptions = pf2e.rollOptions();
+  PGT.rollOptions = rollOptions();
   // PGT.restOptions = pf2e.restOptions(); // Check how pathfinder rest work
-  PGT.onRollRequest = pf2e.rollRequest;
+  PGT.onRollRequest = rollRequest;
   // PGT.onRestRequest = pf2e.restRequest; // Check how pathfinder rest work
-  PGT.conditions = pf2e.conditions();
-  PGT.conditionRollKeys = pf2e.conditionRollKeys();
-  PGT.applyCondition = pf2e.applyCondition;
+  PGT.conditions = conditions();
+  PGT.conditionRollKeys = conditionRollKeys();
+  PGT.applyCondition = applyCondition;
+  PGT.adventurersConfig = adventurersRegisterConfig();
   PGT.actorTypes = ["character"];
   PGT.systemId = "pf2e";
 }
@@ -86,7 +87,79 @@ export function conditionRollKeys() {
 }
 
 export function applyCondition(actor, slug) {
-  const manager = game.pf2e.ConditionManager;
+  actor.increaseCondition(slug);
+}
 
-  actor.increaseCondition(slug)
+//==================================
+//      ADVENTURERS REGISTER       =
+//==================================
+function adventurersRegisterConfig() {
+  const rollFields = [{id: "name", icon: "fa-solid fa-signature", label: "PGT.ADVENTURERS.CORE.NAME", type: "name-icon"}];
+  const skillFields = [];
+
+  rollFields.push({
+    id: `perception`, 
+    label: `${game.i18n.localize("PF2E.PerceptionLabel")}`, 
+    icon: "fa-solid fa-eye",
+    type: "value", 
+    path: `system.perception.value`, 
+    rollKey: `perception.perception`
+  });
+  const icons = {
+    fortitude: "fa-solid fa-hand-fist",
+    reflex: "fa-solid fa-rabbit-running",
+    will: "fa-solid fa-brain"
+  }
+  for (const [key, save] of Object.entries(CONFIG.PF2E.saves)) {
+    rollFields.push({
+      id: `${key}-save`, 
+      label: `${game.i18n.localize(save)}`, 
+      icon: icons[key],
+      type: "value", 
+      path: `system.saves.${key}.value`, 
+      rollKey: `${key}.save`
+    });
+  }
+
+  for (const [key, skill] of Object.entries(CONFIG.PF2E.skills)) {
+    skillFields.push({
+      id: `${key}-check`, 
+      label: `${skill.label}`, 
+      type: "value", 
+      path: `system.skills.${key}.value`, 
+      rollKey: `${key}.skill`
+    });
+  }
+
+  return {
+    tabs: [
+      {
+        id: "core", 
+        icon: "fa-solid fa-book", 
+        label: "PGT.ADVENTURERS.TAB.CORE", 
+        direction:"row",
+        fields: [
+          {id: "name", icon: "fa-solid fa-signature", label: "PGT.ADVENTURERS.CORE.NAME", type: "name-icon"},
+          {id: "health", icon: "fa-solid fa-heart", label: "PGT.ADVENTURERS.CORE.HEALTH", type: "current-max", pathCurrent: "system.attributes.hp.value", pathMax: "system.attributes.hp.max", editable: "numeric"},
+          {id: "ac", icon: "fa-solid fa-shield", label: "PGT.ADVENTURERS.CORE.AC", type: "value", path: "system.attributes.ac.value"},
+          {id: "speed", icon: "fa-solid fa-boot-heeled", label: "PGT.ADVENTURERS.CORE.SPEED", type: "value", path: "system.movement.speeds.land.value"},
+        ]
+      },
+      {
+        id: "rolls", 
+        icon: "fa-regular fa-dice-d20", 
+        label: "PGT.ADVENTURERS.TAB.ROLLS", 
+        direction:"row",
+        fields: rollFields
+      },
+      {
+        id: "skills", 
+        icon: "fa-solid fa-pen-ruler", 
+        label: "PGT.ADVENTURERS.TAB.SKILL", 
+        direction:"column",
+        fields: skillFields
+      },
+    ],
+    initialTab: "core",
+  }
 }
