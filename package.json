@@ -1,13 +1,15 @@
 {
   "scripts": {
     "build:css": "gulp css",
-    "watch": "gulp"
+    "watch": "gulp",
+    "build:code": "rollup ./module/pazindor-gm-tools.mjs -f es -o ./release/module/pazindor-gm-tools.mjs"
   },
   "dependencies": {
     "gulp": "^5.0.0",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
+    "rollup": "^4.46.2",
     "sass": "^1.69.5"
   }
 }

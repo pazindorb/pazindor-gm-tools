@@ -9,7 +9,7 @@
   "version": "1.0.0",
   "compatibility": {
     "minimum": "13",
-    "verified": "13.346"
+    "verified": "13.350"
   },
   "socket": true,
   "esmodules": ["module/pazindor-gm-tools.mjs"],
@@ -23,5 +23,5 @@
   ],
   "flags": {
   },
-  "description": "<p></p>"
+  "description": "<p>A module that supports game management. It allows GM to send roll requests, wait for the results, check player statistics and impose conditions. All with the help of a clear UI.</p>"
 }
