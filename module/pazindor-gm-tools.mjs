@@ -7,10 +7,12 @@ import { registerModuleSettings } from "./configs/settings.mjs";
 import { registerModuleSocket } from "./socket.mjs";
 import { pf2eConfig } from "./systems/pf2e.mjs";
 import { dnd5eConfig } from "./systems/dnd5e.mjs";
+import { registerKeybindings } from "./configs/keybindings.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
   registerHandlebarsHelpers();
+  registerKeybindings();
   window.PGT = {
     rollOptions: {},
     restOptions: {},

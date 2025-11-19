@@ -54,14 +54,17 @@ async function rollRequest(actor, selected) {
   switch(type) {
     case "ability":
       const abilityCheck = await actor.rollAbilityCheck({ability: key});
+      if (!abilityCheck) return null;
       return abilityCheck[0];
 
     case "save":
       const savingThrow = await actor.rollSavingThrow({ability: key});
+      if (!savingThrow) return null;
       return savingThrow[0];
 
     case "skill":
       const skillCheck = await actor.rollSkill({skill: key});
+      if (!skillCheck) return null;
       return skillCheck[0];
     
     default:
