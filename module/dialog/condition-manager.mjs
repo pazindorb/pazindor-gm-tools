@@ -29,7 +29,7 @@ class ConditionManagerDialog extends PgtDialog {
   static DEFAULT_OPTIONS = {
     id: "condition-manager",
     classes: ["pgt themed"],
-    position: {width: 500},
+    position: {width: 500, left: 0, top: 0},
     window: {
       title: "PGT.CONDITION_MANAGER.TITLE",
       icon: "fa-solid fa-bolt",
@@ -97,6 +97,11 @@ class ConditionManagerDialog extends PgtDialog {
   }
 }
 
+let conditionsWindow;
 export function openConditionManager() {
-  new ConditionManagerDialog(PGT.conditions, {rollKeys: PGT.conditionRollKeys}).render(true);
+  if (!conditionsWindow) {
+    conditionsWindow = new ConditionManagerDialog(PGT.conditions, {rollKeys: PGT.conditionRollKeys});
+  }
+  if (conditionsWindow.rendered) conditionsWindow.close();
+  else conditionsWindow.render(true);
 }

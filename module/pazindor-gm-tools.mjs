@@ -8,6 +8,7 @@ import { registerModuleSocket } from "./socket.mjs";
 import { pf2eConfig } from "./systems/pf2e.mjs";
 import { dnd5eConfig } from "./systems/dnd5e.mjs";
 import { registerKeybindings } from "./configs/keybindings.mjs";
+import { keybindToText } from "./utils.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -54,7 +55,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     tools: {
       request: {
         name: "request",
-        title: "PGT.MENU.ROLL",
+        title: `${game.i18n.localize("PGT.MENU.ROLL")} (${keybindToText(game.keybindings.get("pgt", "rollRequest"))})`,
         icon: "fas fa-dice",
         button: true,
         onChange: () => openRollRequest(),
@@ -62,7 +63,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       rest: {
         name: "rest",
-        title: "PGT.MENU.REST",
+        title: `${game.i18n.localize("PGT.MENU.REST")} (${keybindToText(game.keybindings.get("pgt", "restRequest"))})`,
         icon: "fas fa-bed",
         button: true,
         onChange: () => openRestRequest(),
@@ -70,7 +71,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       condition: {
         name: "condition",
-        title: "PGT.MENU.CONDITION",
+        title: `${game.i18n.localize("PGT.MENU.CONDITION")} (${keybindToText(game.keybindings.get("pgt", "condition"))})`,
         icon: "fas fa-bolt",
         button: true,
         onChange: () => openConditionManager(),
@@ -78,7 +79,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       adventurers: {
         name: "adventurers",
-        title: "PGT.MENU.ADVENTURERS",
+        title: `${game.i18n.localize("PGT.MENU.ADVENTURERS")} (${keybindToText(game.keybindings.get("pgt", "adventurers"))})`,
         icon: "fas fa-book-open-cover",
         button: true,
         onChange: () => openAdventurersRegister(),
@@ -86,7 +87,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       gmScreen: {
         name: "gmScreen",
-        title: "PGT.MENU.GM_SCREEN",
+        title: `${game.i18n.localize("PGT.MENU.GM_SCREEN")} (${keybindToText(game.keybindings.get("pgt", "gmScreen"))})`,
         icon: "fas fa-screencast",
         button: true,
         onChange: () => console.log("GM_SCREEN"),

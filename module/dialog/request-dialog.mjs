@@ -53,7 +53,7 @@ class RequestDialog extends PgtDialog {
   static DEFAULT_OPTIONS = {
     id: "actor-request",
     classes: ["pgt themed"],
-    position: {width: "auto"},
+    position: {width: "auto", left: 0, top: 0},
     window: {
       title: "PGT.SEND",
       icon: "fa-solid fa-window",
@@ -162,10 +162,20 @@ class RequestDialog extends PgtDialog {
   }
 }
 
+let rollRequestWindow;
 export function openRollRequest() {
-  new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions}).render(true);
+  if (!rollRequestWindow) {
+    rollRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions});
+  }
+  if (rollRequestWindow.rendered) rollRequestWindow.close();
+  else rollRequestWindow.render(true);
 }
 
+let restRequestWindow;
 export function openRestRequest() {
-  new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions}).render(true);
+  if (!restRequestWindow) {
+    restRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions});
+  }
+  if (restRequestWindow.rendered) restRequestWindow.close();
+  else restRequestWindow.render(true);
 }

@@ -50,7 +50,7 @@ export class AdventurersRegister extends PgtDialog {
   static DEFAULT_OPTIONS = {
     id: "adventurers-register",
     classes: ["pgt themed"],
-    position: {width: 700},
+    position: {width: 700, left: 0, top: 0},
     window: {
       title: "PGT.ADVENTURERS.TITLE",
       icon: "fa-solid fa-book-open-cover",
@@ -235,6 +235,11 @@ export class AdventurersRegister extends PgtDialog {
   }
 }
 
+let adventurersWindow;
 export function openAdventurersRegister() {
-  new AdventurersRegister().render(true);
+  if (!adventurersWindow) {
+    adventurersWindow = new AdventurersRegister();
+  }
+  if (adventurersWindow.rendered) adventurersWindow.close();
+  else adventurersWindow.render(true);
 }
