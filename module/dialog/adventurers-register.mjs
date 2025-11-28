@@ -50,7 +50,7 @@ export class AdventurersRegister extends PgtDialog {
   static DEFAULT_OPTIONS = {
     id: "adventurers-register",
     classes: ["pgt themed"],
-    position: {width: 700, left: 0, top: 0},
+    position: {width: 700},
     window: {
       title: "PGT.ADVENTURERS.TITLE",
       icon: "fa-solid fa-book-open-cover",

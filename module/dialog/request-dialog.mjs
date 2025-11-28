@@ -53,7 +53,7 @@ class RequestDialog extends PgtDialog {
   static DEFAULT_OPTIONS = {
     id: "actor-request",
     classes: ["pgt themed"],
-    position: {width: "auto", left: 0, top: 0},
+    position: {width: "auto"},
     window: {
       title: "PGT.SEND",
       icon: "fa-solid fa-window",

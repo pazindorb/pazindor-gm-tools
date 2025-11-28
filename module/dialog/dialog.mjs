@@ -36,7 +36,7 @@ export class PgtDialog extends foundry.applications.api.HandlebarsApplicationMix
   _attachFrameListeners() {
     super._attachFrameListeners();
     this.window.content.addEventListener("change", this._onChange.bind(this));
-    this.window.content.addEventListener("click", this._onClick.bind(this));
+    this.window.content.addEventListener("mousedown", this._onMouseDown.bind(this));
     this.window.content.addEventListener("drop", this._onDrop.bind(this));
   }
 
@@ -60,18 +60,21 @@ export class PgtDialog extends foundry.applications.api.HandlebarsApplicationMix
     }
   }
 
-  _onClick(event) {
+  _onMouseDown(event) {
     const target = this._getCtypeTarget(event.target);
     const dataset = target.dataset;
     const cType = dataset.ctype;
     const path = dataset.path;
+    const max = dataset.max ? parseInt(dataset.max) : 0;
+    const min = dataset.min ? parseInt(dataset.min) : 0;
 
     switch (cType) {
-      case "activable": this._onActivable(path, dataset); break;
+      case "toggle": this._onToggle(path, event.which, max, min, dataset); break;
+      case "activable": this._onActivable(path, event.which, dataset); break;
     }
   }
 
-  _onActivable(path, dataset) {
+  _onActivable(path, which, dataset) {
     const value = getValueFromPath(this, path);
     setValueForPath(this, path, !value);
     this.render();

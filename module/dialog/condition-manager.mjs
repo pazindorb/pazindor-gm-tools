@@ -29,7 +29,7 @@ class ConditionManagerDialog extends PgtDialog {
   static DEFAULT_OPTIONS = {
     id: "condition-manager",
     classes: ["pgt themed"],
-    position: {width: 500, left: 0, top: 0},
+    position: {width: 500},
     window: {
       title: "PGT.CONDITION_MANAGER.TITLE",
       icon: "fa-solid fa-bolt",
