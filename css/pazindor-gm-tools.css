@@ -387,6 +387,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid #000000;
+  border-top: 0;
 }
 #gm-screen .window-content #gm-screen-content .tab-selector .tab.active {
   color: #000000;

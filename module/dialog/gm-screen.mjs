@@ -383,6 +383,15 @@ export class GmScreen extends PgtDialog {
     if (!this.selectedTab) {
       this.selectedTab = this.tabs[0];
       this.index = 0;
+
+      if (!this.selectedTab) {
+        this.tabs.push({
+          name: "Main Actors",
+          records: [],
+          type: "actor"
+        });
+        this.selectedTab = this.tabs[0];
+      }
     }
   }
 
@@ -451,10 +460,10 @@ export class GmScreen extends PgtDialog {
     this.selectedTab.journals = journals
   }
 
-  close() {
+  async close() {
     this._closeTab();
     game.settings.set("pgt", "gmScreenTabs", this.tabs);
-    super.close();
+    return super.close();
   }
 
   _closeTab() {
