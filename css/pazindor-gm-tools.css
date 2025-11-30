@@ -409,6 +409,13 @@
   position: absolute;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 35px);
+}
+#gm-screen .window-content #gm-screen-content .menu-buttons .left-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #gm-screen .window-content #gm-screen-content .menu-button {
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -426,6 +433,17 @@
 #gm-screen .window-content #gm-screen-content .menu-button:hover {
   box-shadow: 0 0 10px 3px #cf5959 inset;
   cursor: pointer;
+}
+#gm-screen .window-content #gm-screen-content .menu-button.close {
+  font-weight: bold;
+  background-color: #9c9c9c;
+  color: #6d0000;
+  text-shadow: -1px 0 #6d0000, 0 1px #6d0000, 1px 0 #6d0000, 0 -1px #6d0000;
+  border-color: #6d0000;
+  border-radius: 5px;
+  min-width: 35px;
+  min-height: 35px;
+  margin-right: 0;
 }
 #gm-screen .window-content #gm-screen-content .menu-button.add-tab {
   background-color: #006d18;

@@ -74,6 +74,7 @@
   "PGT.ADVENTURERS.CORE.AC": "Armor Class",
   "PGT.ADVENTURERS.CORE.SPEED": "Walking Speed",
 
+  "PGT.GM_SCREEN.CLOSE": "Close",
   "PGT.GM_SCREEN.HEADER": "Game Master Screen",
   "PGT.GM_SCREEN.ADD_TAB": "Add new tab",
   "PGT.GM_SCREEN.DELETE_TAB": "Delete this tab",

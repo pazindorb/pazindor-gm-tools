@@ -10,6 +10,7 @@ import { dnd5eConfig } from "./systems/dnd5e.mjs";
 import { registerKeybindings } from "./configs/keybindings.mjs";
 import { keybindToText } from "./utils.mjs";
 import { SimpleDialog } from "./dialog/simple-dialog.mjs";
+import { gmScreen } from "./dialog/gm-screen.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -92,8 +93,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
         title: `${game.i18n.localize("PGT.MENU.GM_SCREEN")} (${keybindToText(game.keybindings.get("pgt", "gmScreen"))})`,
         icon: "fas fa-screencast",
         button: true,
-        onChange: () => console.log("GM_SCREEN"),
-        visible: false
+        onChange: () => gmScreen(),
+        visible: true
       },
       init: {
         name: "init",

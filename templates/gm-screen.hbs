@@ -1,12 +1,16 @@
 <form id="gm-screen-content" class="pgt standard-form {{cssClass}}">
   <h4 class="divider">{{localize "PGT.GM_SCREEN.HEADER"}}</h4>
   <div class="menu-buttons">
-    <div class="menu-button add-tab" data-action="addTab" data-tooltip="{{localize 'PGT.GM_SCREEN.ADD_TAB'}}"><i class="fa-solid fa-plus-large fa-lg"></i></div>
-    {{#ifCond selectedTab.type '===' "journal"}}
-    <div class="menu-button config-tab" data-action="configTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CONFIG_TAB'}}"><i class="fa-solid fa-gear fa-lg"></i></div>
-    <div class="menu-button clear-tab" data-action="clearTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CLEAR_TAB'}}"><i class="fa-solid fa-broom-wide fa-lg"></i></div>
-    {{/ifCond}}
-    <div class="menu-button delete-tab" data-action="deleteTab" data-tooltip="{{localize 'PGT.GM_SCREEN.DELETE_TAB'}}"><i class="fa-solid fa-trash fa-lg"></i></div>
+    <div class="left-menu">
+      <div class="menu-button add-tab" data-action="addTab" data-tooltip="{{localize 'PGT.GM_SCREEN.ADD_TAB'}}"><i class="fa-solid fa-plus-large fa-lg"></i></div>
+      {{#ifCond selectedTab.type '===' "journal"}}
+      <div class="menu-button config-tab" data-action="configTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CONFIG_TAB'}}"><i class="fa-solid fa-gear fa-lg"></i></div>
+      <div class="menu-button clear-tab" data-action="clearTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CLEAR_TAB'}}"><i class="fa-solid fa-broom-wide fa-lg"></i></div>
+      {{/ifCond}}
+      <div class="menu-button delete-tab" data-action="deleteTab" data-tooltip="{{localize 'PGT.GM_SCREEN.DELETE_TAB'}}"><i class="fa-solid fa-trash fa-lg"></i></div>
+    </div>
+
+    <div class="menu-button close" data-action="close" data-tooltip="{{localize 'PGT.GM_SCREEN.CLOSE'}}"><i class="fa-solid fa-x fa-lg"></i></div>
   </div>
   
   <div class="content">
