@@ -1,5 +1,6 @@
 import { openAdventurersRegister } from "../dialog/adventurers-register.mjs";
 import { openConditionManager } from "../dialog/condition-manager.mjs";
+import { gmScreen } from "../dialog/gm-screen.mjs";
 import { openRestRequest, openRollRequest } from "../dialog/request-dialog.mjs";
 
 export function registerKeybindings() {
@@ -32,10 +33,10 @@ export function registerKeybindings() {
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 
-  // game.keybindings.register("pgt", "gmScreen", {
-  //   name: "PGT.MENU.GM_SCREEN",
-  //   editable: [{key: "KeyG", modifiers: []}],
-  //   onDown: () => {},
-  //   precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-  // });
+  game.keybindings.register("pgt", "gmScreen", {
+    name: "PGT.MENU.GM_SCREEN",
+    editable: [{key: "KeyG", modifiers: []}],
+    onDown: () => gmScreen(),
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+  });
 }

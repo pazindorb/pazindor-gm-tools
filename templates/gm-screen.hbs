@@ -1,0 +1,46 @@
+<form id="gm-screen-content" class="pgt standard-form {{cssClass}}">
+  <h4 class="divider">{{localize "PGT.GM_SCREEN.HEADER"}}</h4>
+  <div class="menu-buttons">
+    <div class="menu-button add-tab" data-action="addTab" data-tooltip="{{localize 'PGT.GM_SCREEN.ADD_TAB'}}"><i class="fa-solid fa-plus-large fa-lg"></i></div>
+    {{#ifCond selectedTab.type '===' "journal"}}
+    <div class="menu-button config-tab" data-action="configTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CONFIG_TAB'}}"><i class="fa-solid fa-gear fa-lg"></i></div>
+    <div class="menu-button clear-tab" data-action="clearTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CLEAR_TAB'}}"><i class="fa-solid fa-broom-wide fa-lg"></i></div>
+    {{/ifCond}}
+    <div class="menu-button delete-tab" data-action="deleteTab" data-tooltip="{{localize 'PGT.GM_SCREEN.DELETE_TAB'}}"><i class="fa-solid fa-trash fa-lg"></i></div>
+  </div>
+  
+  <div class="content">
+  {{#ifCond selectedTab.type '===' "actor"}}
+  <div class="selector scrollable">
+    {{#each selectedTab.records as |actor index|}}
+    <div class="actor {{actor.active}}" data-cType="activable" data-index="{{index}}">
+      <img src="{{actor.img}}"/>
+      <input readonly value="{{actor.name}}"/>
+      <div class="menu-button remove-record" data-action="removeRecord" data-index="{{index}}">
+        <i class="fa-solid fa-trash fa-lg"></i>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  <div style="min-width:{{selectedTab.actorContentWidth}}px"></div>
+  {{/ifCond}}
+
+  {{#ifCond selectedTab.type '===' "journal"}}
+  <div class="journal-table">
+    {{#each selectedTab.cells}}
+    <div class="cell" style="grid-column: span {{colspan}}; grid-row: span {{rowspan}};" data-key="{{key}}">
+      <span>{{localize 'PGT.GM_SCREEN.CELL_TIP'}}</span>
+    </div>
+    {{/each}}
+  </div>
+  {{/ifCond}} 
+  </div>
+
+  <div class="tab-selector">
+    {{#each tabs as |tab index|}}
+    <div class="tab {{#ifCond index '===' @root.selectedIndex}}active{{/ifCond}}" data-action="activateTab" data-index="{{index}}">
+      <span>{{tab.name}}</span>
+    </div>
+    {{/each}}
+  </div>
+</form>

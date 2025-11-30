@@ -8,6 +8,8 @@
   "PGT.CLOSE": "Close",
   "PGT.CONFIRM": "Confirm",
   "PGT.CANCEL": "Cancel",
+  "PGT.YES": "Yes",
+  "PGT.NO": "No",
 
   "PGT.MENU.TITLE": "GM Tools",
   "PGT.MENU.ROLL": "Roll Request",
@@ -70,5 +72,29 @@
   "PGT.ADVENTURERS.CORE.NAME": "Name",
   "PGT.ADVENTURERS.CORE.HEALTH": "Health",
   "PGT.ADVENTURERS.CORE.AC": "Armor Class",
-  "PGT.ADVENTURERS.CORE.SPEED": "Walking Speed"
+  "PGT.ADVENTURERS.CORE.SPEED": "Walking Speed",
+
+  "PGT.GM_SCREEN.HEADER": "Game Master Screen",
+  "PGT.GM_SCREEN.ADD_TAB": "Add new tab",
+  "PGT.GM_SCREEN.DELETE_TAB": "Delete this tab",
+  "PGT.GM_SCREEN.CONFIG_TAB": "Configure this tab",
+  "PGT.GM_SCREEN.CLEAR_TAB": "Remove all linked journals",
+  "PGT.GM_SCREEN.CELL_TIP": "Drop Journal here...",
+  "PGT.GM_SCREEN.ACTOR_NOT_EXIST": "Actor doesn't exist",
+
+  "PGT.GM_SCREEN.CREATE_HEADER": "Create new tab",
+  "PGT.GM_SCREEN.TAB_NAME": "Tab name",
+  "PGT.GM_SCREEN.TAB_TYPE": "Tab type",
+  "PGT.GM_SCREEN.TAB_TYPE_ACTOR": "Actor tab",
+  "PGT.GM_SCREEN.TAB_TYPE_JOURNAL": "Journal tab",
+  "PGT.GM_SCREEN.WRONG_TAB_TYPE" : "Incorrect tab type",
+
+  "PGT.GM_SCREEN.CONFIGURE_HEADER": "Configure tab",
+  "PGT.GM_SCREEN.COL1_WIDTH_1": "Column 1 Row 1 width",
+  "PGT.GM_SCREEN.COL2_WIDTH_1": "Column 2 Row 1 width",
+  "PGT.GM_SCREEN.COL1_WIDTH_2": "Column 1 Row 2 width",
+  "PGT.GM_SCREEN.COL2_WIDTH_2": "Column 2 Row 2 width",
+  "PGT.GM_SCREEN.COL1_HEIGHT": "Column 1 height",
+  "PGT.GM_SCREEN.COL2_HEIGHT": "Column 2 height",
+  "PGT.GM_SCREEN.COL3_HEIGHT": "Column 3 height"
 }

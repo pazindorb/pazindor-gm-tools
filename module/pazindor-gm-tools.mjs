@@ -9,6 +9,7 @@ import { pf2eConfig } from "./systems/pf2e.mjs";
 import { dnd5eConfig } from "./systems/dnd5e.mjs";
 import { registerKeybindings } from "./configs/keybindings.mjs";
 import { keybindToText } from "./utils.mjs";
+import { SimpleDialog } from "./dialog/simple-dialog.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -25,6 +26,7 @@ Hooks.once("init", async function() {
     adventurersTabs: null,
     actorTypes: ["character"],
     systemId: null,
+    SimpleDialog
   }
   PGT.CONST = prepareConstants();
 });
