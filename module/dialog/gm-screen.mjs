@@ -420,15 +420,31 @@ export class GmScreen extends PgtDialog {
         top: 60,
       },
     }
-    await this.selectedTab.actorSheetA.render(true, foundry.utils.deepClone(options));
-    this.selectedTab.actorSheetA.element.classList.add("gm-screen-embeded");
+
+    this.selectedTab.actorSheetA.render(true, foundry.utils.deepClone(options));
+    const elementA = await waitForRender(this.selectedTab.actorSheetA);
+    if (elementA.classList) {
+      elementA.classList.add("gm-screen-embeded");
+    }
+    else {
+      elementA.addClass("gm-screen-embeded");
+      this.selectedTab.actorSheetA.setPosition(options.position);
+    }
 
     // Render Actor B
     if (!this.selectedTab.renderActorB) return;
     const actorBWidth = this.selectedTab.actorSheetB.position.width;
     options.position.left -= (actorBWidth + 45);
-    await this.selectedTab.actorSheetB.render(true, foundry.utils.deepClone(options));
-    this.selectedTab.actorSheetB.element.classList.add("gm-screen-embeded");
+
+    this.selectedTab.actorSheetB.render(true, foundry.utils.deepClone(options));
+    const elementB = await waitForRender(this.selectedTab.actorSheetB);
+    if (elementB.classList) {
+      elementB.classList.add("gm-screen-embeded");
+    }
+    else {
+      elementB.addClass("gm-screen-embeded");
+      this.selectedTab.actorSheetB.setPosition(options.position);
+    }
   }
 
   async _renderJournals() {
@@ -451,9 +467,18 @@ export class GmScreen extends PgtDialog {
           height: rect.height - 4
         }
       }
-      await journal.sheet.render(true, options);
-      journal.sheet.element.classList.add("gm-screen-embeded");
-      journal.sheet.element.style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
+      journal.sheet.render(true, options);
+      const element = await waitForRender(journal.sheet);
+      if (element.classList) {
+        journal.sheet.element.classList.add("gm-screen-embeded");
+        journal.sheet.element.style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
+      }
+      else {
+        element.addClass("gm-screen-embeded");
+        element[0].style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
+        journal.sheet.setPosition(options.position);
+      }
+
       journals.push(journal);
     }
 
@@ -468,8 +493,14 @@ export class GmScreen extends PgtDialog {
 
   _closeTab() {
     if (this.selectedTab.type === "actor") {
-      if (this.selectedTab.actorSheetA) this.selectedTab.actorSheetA.close();
-      if (this.selectedTab.actorSheetB) this.selectedTab.actorSheetB.close();
+      if (this.selectedTab.actorSheetA) {
+        this.selectedTab.actorSheetA.close();
+        if (game.system.id === "pf2e") this.selectedTab.actorSheetA = null;
+      }
+      if (this.selectedTab.actorSheetB) {
+        this.selectedTab.actorSheetB.close();
+        if (game.system.id === "pf2e") this.selectedTab.actorSheetB = null;
+      }
     }
     if (this.selectedTab.type === "journal") {
       this.selectedTab.journals.forEach(journal => journal.sheet.close());
@@ -484,4 +515,15 @@ export function gmScreen() {
   }
   if (gmScreenWindow.rendered) gmScreenWindow.close();
   else gmScreenWindow.render(true);
+}
+
+function waitForRender(app) {
+  return new Promise(resolve => {
+    const hook = Hooks.on("render" + app.constructor.name, (app2, html) => {
+      if (app === app2) {
+        Hooks.off("render" + app.constructor.name, hook);
+        resolve(html);
+      }
+    });
+  });
 }

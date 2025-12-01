@@ -469,7 +469,13 @@
   flex-basis: var(--sidebar-width-collapsed) !important;
 }
 .gm-screen-embeded.journal-sheet .journal-sidebar .action-buttons {
-  padding: 10px;
+  padding: 0;
+}
+.gm-screen-embeded.journal-sheet .journal-sidebar .action-buttons button {
+  margin: 0;
+}
+.gm-screen-embeded.journal-sheet .journal-sidebar .headings {
+  display: none;
 }
 .gm-screen-embeded.journal-sheet .journal-sidebar input {
   display: none;
@@ -480,7 +486,7 @@
 .gm-screen-embeded .window-header {
   visibility: hidden;
 }
-.gm-screen-embeded .window-resize-handle {
+.gm-screen-embeded .window-resize-handle, .gm-screen-embeded .window-resizable-handle {
   visibility: hidden;
 }
 

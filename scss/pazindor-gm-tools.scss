@@ -564,7 +564,15 @@
       flex-basis: var(--sidebar-width-collapsed) !important;
 
       .action-buttons {
-        padding: 10px;
+        padding: 0;
+
+        button {
+          margin: 0;
+        }
+      }
+
+      .headings {
+        display: none;
       }
 
       input {
@@ -581,7 +589,7 @@
     visibility: hidden;
   }
 
-  .window-resize-handle {
+  .window-resize-handle, .window-resizable-handle {
     visibility: hidden;
   }
 }
