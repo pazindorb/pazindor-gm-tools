@@ -26,5 +26,5 @@
   "description": "<p>A module that supports game management. It allows GM to send roll requests, wait for the results, check player statistics and impose conditions. All with the help of a clear UI.</p>",
   "url": "",
   "manifest": "https://github.com/pazindorb/pazindor-gm-tools/releases/download/0.7.0/module.json",
-  "download": "https://github.com/pazindorb/pazindor-gm-tools/releases/download/0.7.0/pazindor-quick-notes.zip"
+  "download": "https://github.com/pazindorb/pazindor-gm-tools/releases/download/0.7.0/pazindor-gm-tools.zip"
 }
