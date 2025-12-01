@@ -48,7 +48,6 @@ export class GmScreen extends PgtDialog {
 
   _initializeApplicationOptions(options) {
     const initialized = super._initializeApplicationOptions(options);
-    initialized.actions.removeRecord = this._onRemoveRecord;
     initialized.actions.activateTab = this._onActivateTab;
     initialized.actions.addTab = this._onAddTab;
     initialized.actions.configTab = this._onTabConfig;
@@ -283,11 +282,22 @@ export class GmScreen extends PgtDialog {
     this.render();
   }
 
-  _onRemoveRecord(event, target) {
-    const index = parseInt(target.dataset.index);
+  _onRemoveRecord(ix) {
+    const index = parseInt(ix);
     if (isNaN(index)) return;
     delete this.selectedTab.records.splice(index, 1);
     this.render();
+  }
+
+  _onMouseDown(event) {
+    let dataset = event.target.dataset;
+    if (!dataset?.action) dataset = event.target.parentElement?.dataset;
+    if (dataset?.action === "removeRecord") {
+      this._onRemoveRecord(dataset.index);
+    }
+    else {
+      super._onMouseDown(event)
+    }
   }
 
   _onActivable(path, which, dataset) {

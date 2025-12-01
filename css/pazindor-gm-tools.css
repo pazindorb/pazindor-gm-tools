@@ -480,7 +480,7 @@
 .gm-screen-embeded.journal-sheet .journal-sidebar input {
   display: none;
 }
-.gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleSidebar], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleSearch], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=createPage] {
+.gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleSidebar], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleCollapse], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleSearch], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=createPage] {
   display: none;
 }
 .gm-screen-embeded .window-header {
