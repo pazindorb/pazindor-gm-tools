@@ -1,15 +1,14 @@
-import { PgtDialog } from "./dialog.mjs";
-import { collectActorsFromActiveUsers } from "../utils.mjs";
-import { emitEvent, responseListener } from "../socket.mjs";
+import { emitEvent, responseListener } from "../configs/socket.mjs";
+import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
-class RequestDialog extends PgtDialog {
+class RequestDialog extends BaseDialog {
 
   constructor(requestType, options = {}) {
     super(options);
     this.requestType = requestType;
     this.selectOptions = options.selectOptions || {};
     
-    const actors = options.actors || collectActorsFromActiveUsers();
+    const actors = options.actors || PDE.utils.collectActorsFromActiveUsers();
     this.actorSelector = this._actorSelector(actors);
     this._prepareDetails();
   }

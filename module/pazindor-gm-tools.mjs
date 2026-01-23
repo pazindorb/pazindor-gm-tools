@@ -1,15 +1,14 @@
-import { prepareConstants } from "./constant.mjs";
+import { prepareConstants } from "./configs/constant.mjs";
 import { openAdventurersRegister } from "./dialog/adventurers-register.mjs";
 import { openConditionManager } from "./dialog/condition-manager.mjs";
 import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
 import { registerHandlebarsHelpers } from "./configs/handlebars.mjs";
 import { registerModuleSettings } from "./configs/settings.mjs";
-import { registerModuleSocket } from "./socket.mjs";
+import { registerModuleSocket } from "./configs/socket.mjs";
 import { pf2eConfig } from "./systems/pf2e.mjs";
 import { dnd5eConfig } from "./systems/dnd5e.mjs";
 import { registerKeybindings } from "./configs/keybindings.mjs";
 import { keybindToText } from "./utils.mjs";
-import { SimpleDialog } from "./dialog/simple-dialog.mjs";
 import { gmScreen } from "./dialog/gm-screen.mjs";
 
 Hooks.once("init", async function() {
@@ -27,7 +26,6 @@ Hooks.once("init", async function() {
     adventurersTabs: null,
     actorTypes: ["character"],
     systemId: null,
-    SimpleDialog
   }
   PGT.CONST = prepareConstants();
 });
@@ -41,6 +39,14 @@ Hooks.once("ready", async function() {
   }
   // Refresh controls
   ui.controls.render({reset:true});
+
+  // Resize GM Screen
+  window.onresize = () => {
+    const gmScreen = foundry.applications.instances.get("gm-screen");
+    if (!gmScreen) return;
+    if (!gmScreen.rendered) return;
+    gmScreen.render();
+  }
 });
 
 Hooks.on("gameReady", () => {

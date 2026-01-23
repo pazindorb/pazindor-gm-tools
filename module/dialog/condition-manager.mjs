@@ -1,8 +1,7 @@
-import { emitEvent, responseListener } from "../socket.mjs";
-import { getPlayersForActor, getSelectedTokens } from "../utils.mjs";
-import { PgtDialog } from "./dialog.mjs";
+import { emitEvent, responseListener } from "../configs/socket.mjs";
+import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
-class ConditionManagerDialog extends PgtDialog {
+class ConditionManagerDialog extends BaseDialog {
 
   constructor(conditions, options = {}) {
     super(options);
@@ -63,7 +62,7 @@ class ConditionManagerDialog extends PgtDialog {
     const shouldAskForRoll = this.rollBefore.askForRoll && this.rollBefore.key && this.rollBefore.dc;
     const statusId = target.dataset.statusId;
 
-    const tokens = getSelectedTokens();
+    const tokens = PDE.utils.getSelectedTokens();
     for (const token of tokens) {
       const actor = token.actor;
       if (!actor) continue;
@@ -75,7 +74,7 @@ class ConditionManagerDialog extends PgtDialog {
       }
       
       // With asking for roll
-      const hasOwners = getPlayersForActor(actor).length > 0;
+      const hasOwners = PDE.utils.getPlayersForActor(actor).length > 0;
       if (hasOwners) {
         const validationData = {emmiterId: game.user.id, actorId: actor.id};
         const response = responseListener(PGT.CONST.SOCKET.RESPONSE.ROLL_RESULT, validationData);

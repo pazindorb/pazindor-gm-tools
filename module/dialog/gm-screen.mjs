@@ -1,7 +1,5 @@
-import { PgtDialog } from "./dialog.mjs";
-import { SimpleDialog } from "./simple-dialog.mjs";
-
-export class GmScreen extends PgtDialog {
+import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
+export class GmScreen extends BaseDialog {
 
   constructor(options = {}) {
     super(options);
@@ -133,7 +131,7 @@ export class GmScreen extends PgtDialog {
   }
 
   async _onAddTab() {
-    const answers = await SimpleDialog.create("input", {
+    const answers = await PDE.InputDialog.create("input", {
       header: game.i18n.localize("PGT.GM_SCREEN.CREATE_HEADER"),
       inputs: [
         {
@@ -204,7 +202,7 @@ export class GmScreen extends PgtDialog {
   async _onTabConfig() {
     if (this.selectedTab.type !== "journal") return;
 
-    const answers = await SimpleDialog.create("input", {
+    const answers = await PDE.InputDialog.create("input", {
       header: game.i18n.localize("PGT.GM_SCREEN.CONFIGURE_HEADER"),
       inputs: [
         {

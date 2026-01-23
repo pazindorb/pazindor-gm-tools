@@ -11,6 +11,18 @@
     "minimum": "13",
     "verified": "13.350"
   },
+  "relationships": {
+    "requires": [
+      {
+        "id": "pazindor-dev-essentials",
+        "type": "module",
+        "compatibility": {
+          "minimum": "0.7.0",
+          "verified": "0.7.0"
+        }
+      }
+    ]
+  },
   "socket": true,
   "esmodules": ["module/pazindor-gm-tools.mjs"],
   "styles": ["css/pazindor-gm-tools.css"],
@@ -21,8 +33,7 @@
       "path": "lang/en.json"
     }
   ],
-  "flags": {
-  },
+  "flags": {},
   "description": "<p>A module that supports game management. It allows GM to send roll requests, wait for the results, check player statistics and impose conditions. All with the help of a clear UI.</p>",
   "url": "",
   "manifest": "https://github.com/pazindorb/pazindor-gm-tools/releases/download/0.7.0/module.json",

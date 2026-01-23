@@ -1,8 +1,7 @@
-import { emitEvent } from "../socket.mjs";
-import { getPlayersForActor, getUserInput, getValueFromPath, toSelectOptions } from "../utils.mjs";
-import { PgtDialog } from "./dialog.mjs";
+import { emitEvent } from "../configs/socket.mjs";
+import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
-export class AdventurersRegister extends PgtDialog {
+export class AdventurersRegister extends BaseDialog {
 
   constructor(options = {}) {
     super(options);
@@ -77,7 +76,7 @@ export class AdventurersRegister extends PgtDialog {
 
     // Group Selection
     const adventurers = this._prepareGroup();
-    context.groups = toSelectOptions(this.groups, "name", "name");
+    context.groups = PDE.utils.toSelectOptions(this.groups, "name", "name");
     context.selectedGroup = this.selectedGroup;
     context.adventurers = adventurers;
 
@@ -89,7 +88,7 @@ export class AdventurersRegister extends PgtDialog {
     if (selectedActor) {
       context.actorPaths = this._actorPaths(selectedActor.system);
       context.selectedPath = this.selectedPath;
-      context.selectedPathValue = getValueFromPath(selectedActor, `system.${this.selectedPath}`)
+      context.selectedPathValue = PDE.utils.getValueFromPath(selectedActor, `system.${this.selectedPath}`)
     }
 
     return context;
@@ -144,7 +143,7 @@ export class AdventurersRegister extends PgtDialog {
     const actor = this.allAdventurers.find(actor => dataset.actorId === actor.id);
     if (!actor) return;
 
-    const hasOwners = getPlayersForActor(actor).length > 0;
+    const hasOwners = PDE.utils.getPlayersForActor(actor).length > 0;
     if (hasOwners) {
       emitEvent(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {
         actorId: actor.id,
@@ -165,7 +164,7 @@ export class AdventurersRegister extends PgtDialog {
   }
 
   async _onAddNewGroup(event, target) {
-    const name = await getUserInput("Provide Group Name");
+    const name = await PDE.InputDialog.input("Provide Group Name");
     if (!name) return;
 
     this.groups.push({
@@ -179,7 +178,7 @@ export class AdventurersRegister extends PgtDialog {
     const actorId = target.dataset?.actorId;
     if (!actorId) return;
 
-    const groupName = await getUserInput("Select Group", toSelectOptions(this.groups, "name", "name"));
+    const groupName = await PDE.InputDialog.select("Select Group", PDE.utils.toSelectOptions(this.groups, "name", "name"));
     const group = this.groups.find(group => group.name === groupName);
     if (!group) return;
 

@@ -1,35 +1,4 @@
-import { getValueFromPath } from "../utils.mjs";
-
 export function registerHandlebarsHelpers() {
-
-  Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-    switch (operator) {
-      case '==':
-        return (v1 == v2) ? options.fn(this) : options.inverse(this);
-      case '===':
-        return (v1 === v2) ? options.fn(this) : options.inverse(this);
-      case '!=':
-        return (v1 != v2) ? options.fn(this) : options.inverse(this);
-      case '!==':
-        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-      case '<':
-        return (v1 < v2) ? options.fn(this) : options.inverse(this);
-      case '<=':
-        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-      case '>':
-        return (v1 > v2) ? options.fn(this) : options.inverse(this);
-      case '>=':
-        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-      case '&&':
-        return (v1 && v2) ? options.fn(this) : options.inverse(this);
-      case '||':
-        return (v1 || v2) ? options.fn(this) : options.inverse(this);
-      case '%':
-        return (v1 % v2 === 0) ? options.fn(this) : options.inverse(this);
-      default:
-        return options.inverse(this);
-    }
-  });
 
   Handlebars.registerHelper('adventurers-table', (adventurers, tabConfig, activeGroup) => {
     let colgroup = "";
@@ -128,7 +97,7 @@ function _nameIconField(actor, activeGroup) {
 }
 
 function _valueField(actor, field) {
-  const value = getValueFromPath(actor, field.path);
+  const value = PDE.utils.getValueFromPath(actor, field.path);
   if (value  == null) {
     return `<input type="text" value="?" data-tooltip='${game.i18n.localize("PGT.ADVENTURERS.VALUE_NOT_FOUND")}'/>`;
   }
@@ -142,8 +111,8 @@ function _valueField(actor, field) {
 }
 
 function _currentMax(actor, field) {
-  const current = getValueFromPath(actor, field.pathCurrent);
-  const max = getValueFromPath(actor, field.pathMax);
+  const current = PDE.utils.getValueFromPath(actor, field.pathCurrent);
+  const max = PDE.utils.getValueFromPath(actor, field.pathMax);
   if (current == null || max == null) {
     return `<input type="text" value="?" data-tooltip='${game.i18n.localize("PGT.ADVENTURERS.VALUE_NOT_FOUND")}'/>`;
   }
