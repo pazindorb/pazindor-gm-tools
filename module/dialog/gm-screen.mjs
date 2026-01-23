@@ -1,9 +1,11 @@
 import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 export class GmScreen extends BaseDialog {
+  BASIC_TYPES = ["JournalEntry", "RollTable", "JournalEntryPage"]
 
   constructor(options = {}) {
     super(options);
     this.tabs = game.settings.get("pgt", "gmScreenTabs");
+    this.editable = false;
     this.index = 0;
     this._prepareTabs();
   }
@@ -38,8 +40,8 @@ export class GmScreen extends BaseDialog {
         if (tab.actorSheetA) tab.actorSheetA = null;
         if (tab.actorSheetB) tab.actorSheetB = null;
       }
-      if (tab.type === "journal") {
-        tab.journals = [];
+      if (tab.type === "basic") {
+        tab.basic = [];
       }
     }
   }
@@ -51,6 +53,7 @@ export class GmScreen extends BaseDialog {
     initialized.actions.configTab = this._onTabConfig;
     initialized.actions.deleteTab = this._onTabDelete;
     initialized.actions.clearTab = this._onClearTab;
+    initialized.actions.editMode = this._onEditMode;
     return initialized;
   }
 
@@ -60,11 +63,12 @@ export class GmScreen extends BaseDialog {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
 
+    context.editable = this.editable;
     context.tabs = foundry.utils.deepClone(this.tabs);
     context.selectedIndex = this.index;
     context.selectedTab = foundry.utils.deepClone(this.selectedTab);
     if (context.selectedTab.type === "actor") this._prepareActorTab(context);
-    if (context.selectedTab.type === "journal") this._prepareJournalTab(context);
+    if (context.selectedTab.type === "basic") this._prepareBasicTab(context);
 
     return context;
   }
@@ -82,7 +86,7 @@ export class GmScreen extends BaseDialog {
     }
   }
 
-  _prepareJournalTab(context) {
+  _prepareBasicTab(context) {
     const grid = Object.entries(this.selectedTab.grid);
     const cells = [];
     let counter = 0;
@@ -142,8 +146,8 @@ export class GmScreen extends BaseDialog {
           type: "select",
           label: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE"),
           options: {
-            actor: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE_ACTOR"), 
-            journal: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE_JOURNAL"), 
+            basic: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE_BASIC"), 
+            actor: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE_ACTOR")
           }
         }
       ]
@@ -168,7 +172,7 @@ export class GmScreen extends BaseDialog {
         config.renderActorB = false
         break;
 
-      case "journal":
+      case "basic":
         config.grid = {
           col1: {
             row1: "",
@@ -200,7 +204,7 @@ export class GmScreen extends BaseDialog {
   }
 
   async _onTabConfig() {
-    if (this.selectedTab.type !== "journal") return;
+    if (this.selectedTab.type !== "basic") return;
 
     const answers = await PDE.InputDialog.create("input", {
       header: game.i18n.localize("PGT.GM_SCREEN.CONFIGURE_HEADER"),
@@ -261,7 +265,7 @@ export class GmScreen extends BaseDialog {
   }
 
   _onClearTab() {
-    if (this.selectedTab.type !== "journal") return;
+    if (this.selectedTab.type !== "basic") return;
 
     this._closeTab();
     const grid = this.selectedTab.grid;
@@ -271,6 +275,14 @@ export class GmScreen extends BaseDialog {
     grid.col2.row2 = "";
     grid.col3.row1 = "";
     grid.col3.row2 = "";
+  }
+
+  _onEditMode() {
+    if (this.selectedTab.type !== "basic") return;
+
+    this.editable = !this.editable;
+    this._closeTab();
+    this.render();
   }
 
   _onTabDelete() {
@@ -341,7 +353,7 @@ export class GmScreen extends BaseDialog {
       this.render();
     }
 
-    if (this.selectedTab.type === "journal" && object.type === "JournalEntry") {
+    if (this.selectedTab.type === "basic" && this.BASIC_TYPES.includes(object.type)) {
       const key = event.target?.dataset?.key;
       if (!key) return;
       const [col, row] = key.split("#");
@@ -378,8 +390,8 @@ export class GmScreen extends BaseDialog {
         this._renderActorSheets();
         break;
 
-      case "journal":
-        this._renderJournals();
+      case "basic":
+        this._renderBasic();
         break;
     }
 
@@ -408,7 +420,10 @@ export class GmScreen extends BaseDialog {
     const screenWidth = this.element.clientWidth;
     const actorAWidth = this.selectedTab.actorSheetA?.position?.width || 0;
     const actorBWidth = this.selectedTab.actorSheetB?.position?.width || 0;
-    return screenWidth - 200 > actorAWidth + actorBWidth;
+
+    const shouldRender = screenWidth - 200 > actorAWidth + actorBWidth;
+    if (!shouldRender && this.selectedTab.actorSheetB?.rendered) this.selectedTab.actorSheetB.close();
+    return shouldRender;
   }
 
   async _renderActorSheets() {
@@ -455,16 +470,16 @@ export class GmScreen extends BaseDialog {
     }
   }
 
-  async _renderJournals() {
+  async _renderBasic() {
     if (!this.element) return;
 
-    const journals = []
+    const basic = []
     const cells = this.element.querySelectorAll(".cell");
     for (const cell of cells) {
       const [col, row] = cell.dataset.key.split("#");
       const uuid = this.selectedTab.grid[col][row];
-      const journal = await fromUuid(uuid);
-      if (!journal) continue;
+      const document = await fromUuid(uuid);
+      if (!document) continue;
 
       const rect = cell.getBoundingClientRect();
       const options = {
@@ -475,22 +490,30 @@ export class GmScreen extends BaseDialog {
           height: rect.height - 4
         }
       }
-      journal.sheet.render(true, options);
-      const element = await waitForRender(journal.sheet);
+      document.sheet.render(true, options);
+      const element = await waitForRender(document.sheet);
       if (element.classList) {
-        journal.sheet.element.classList.add("gm-screen-embeded");
-        journal.sheet.element.style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
+        document.sheet.element.classList.add("gm-screen-embeded");
+        if (!this.editable) document.sheet.element.classList.add("edit-locked");
+        document.sheet.element.style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
       }
       else {
         element.addClass("gm-screen-embeded");
+        if (!this.editable) element.addClass("edit-locked");
         element[0].style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
-        journal.sheet.setPosition(options.position);
+        document.sheet.setPosition(options.position);
       }
 
-      journals.push(journal);
+      // Journal Page - disable editor
+      if (!this.editable) {
+        const proseMirror = element.querySelectorAll("prose-mirror");
+        for (const editor of proseMirror) editor.disabled = true;
+      }
+
+      basic.push(document);
     }
 
-    this.selectedTab.journals = journals
+    this.selectedTab.basic = basic
   }
 
   async close() {
@@ -510,8 +533,8 @@ export class GmScreen extends BaseDialog {
         if (game.system.id === "pf2e") this.selectedTab.actorSheetB = null;
       }
     }
-    if (this.selectedTab.type === "journal") {
-      this.selectedTab.journals.forEach(journal => journal.sheet.close());
+    if (this.selectedTab.type === "basic") {
+      this.selectedTab.basic.forEach(document => document.sheet.close());
     }
   }
 }

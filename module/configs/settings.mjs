@@ -22,8 +22,8 @@ export function registerModuleSettings() {
       records: []
     },
     {
-      name: "Main Journals",
-      type: "journal",
+      name: "Main",
+      type: "basic",
       grid: {
         col1: {
           row1: "",

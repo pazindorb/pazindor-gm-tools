@@ -358,14 +358,14 @@
 #gm-screen .window-content #gm-screen-content .content .selector .actor.activeB {
   background-color: #3a7e26;
 }
-#gm-screen .window-content #gm-screen-content .content .journal-table {
+#gm-screen .window-content #gm-screen-content .content .basic-table {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 4px;
 }
-#gm-screen .window-content #gm-screen-content .content .journal-table .cell {
+#gm-screen .window-content #gm-screen-content .content .basic-table .cell {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -424,14 +424,16 @@
   text-align: center;
   min-width: 35px;
   min-height: 35px;
-  border-radius: 30px;
+  border-radius: 7px;
   justify-content: center;
+  align-items: center;
   display: flex;
   align-items: center;
-  margin-right: 5px;
+  margin-right: 8px;
+  background-color: #9c9c9c;
 }
 #gm-screen .window-content #gm-screen-content .menu-button:hover {
-  box-shadow: 0 0 10px 3px #cf5959 inset;
+  box-shadow: 0 0 5px 2px #cf5959 inset;
   cursor: pointer;
 }
 #gm-screen .window-content #gm-screen-content .menu-button.close {
@@ -445,22 +447,27 @@
   min-height: 35px;
   margin-right: 0;
 }
+#gm-screen .window-content #gm-screen-content .menu-button.clear-tab, #gm-screen .window-content #gm-screen-content .menu-button.config-tab, #gm-screen .window-content #gm-screen-content .menu-button.edit-mode {
+  min-width: 30px;
+  min-height: 30px;
+  margin-right: 5px;
+}
 #gm-screen .window-content #gm-screen-content .menu-button.add-tab {
   background-color: #006d18;
-}
-#gm-screen .window-content #gm-screen-content .menu-button.clear-tab {
-  background-color: #7f2991;
 }
 #gm-screen .window-content #gm-screen-content .menu-button.delete-tab, #gm-screen .window-content #gm-screen-content .menu-button.remove-record {
   background-color: #6d0000;
 }
-#gm-screen .window-content #gm-screen-content .menu-button.config-tab {
-  background-color: #00196d;
+#gm-screen .window-content #gm-screen-content .menu-button.edit-mode.editable {
+  background-color: #068f34;
 }
 
 .gm-screen-embeded.actor {
   min-height: 630px;
   height: 630px !important;
+}
+.gm-screen-embeded.roll-table-sheet.edit-locked [data-action=changeMode] {
+  display: none;
 }
 .gm-screen-embeded.journal-sheet .window-header {
   display: none;
@@ -481,6 +488,18 @@
   display: none;
 }
 .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleSidebar], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleCollapse], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=toggleSearch], .gm-screen-embeded.journal-sheet .journal-sidebar [data-action=createPage] {
+  display: none;
+}
+.gm-screen-embeded.journal-sheet.edit-locked .journal-header .page-metadata {
+  display: none;
+}
+.gm-screen-embeded.journal-sheet.edit-locked .journal-header .title {
+  pointer-events: none;
+}
+.gm-screen-embeded.journal-sheet.edit-locked .edit-container {
+  display: none !important;
+}
+.gm-screen-embeded.journal-sheet.edit-locked prose-mirror .editor-menu {
   display: none;
 }
 .gm-screen-embeded .window-header {

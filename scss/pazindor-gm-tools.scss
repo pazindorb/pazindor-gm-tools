@@ -426,7 +426,7 @@
           }
         }
 
-        .journal-table {
+        .basic-table {
           width: 100%;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -504,14 +504,16 @@
         text-align: center;
         min-width: 35px;
         min-height: 35px;
-        border-radius: 30px;
+        border-radius: 7px;
         justify-content: center;
+        align-items: center;
         display: flex;
         align-items: center;
-        margin-right: 5px;
+        margin-right: 8px;
+        background-color: #9c9c9c;
 
         &:hover {
-          box-shadow: 0 0 10px 3px #cf5959 inset;
+          box-shadow: 0 0 5px 2px #cf5959 inset;
           cursor: pointer;
         }
 
@@ -527,20 +529,22 @@
           margin-right: 0;
         }
 
-        &.add-tab {
-          background-color: #006d18;
+        &.clear-tab, &.config-tab, &.edit-mode {
+          min-width: 30px;
+          min-height: 30px;
+          margin-right: 5px;
         }
 
-        &.clear-tab {
-          background-color: #7f2991;
+        &.add-tab {
+          background-color: #006d18;
         }
 
         &.delete-tab, &.remove-record {
           background-color: #6d0000;
         }
 
-        &.config-tab {
-          background-color: #00196d;
+        &.edit-mode.editable {
+          background-color: #068f34;
         }
       }
     }
@@ -552,6 +556,16 @@
   &.actor {
     min-height: 630px;
     height: 630px !important;
+  }
+
+  &.roll-table-sheet {
+
+    &.edit-locked {
+
+      [data-action="changeMode"] {
+        display: none;
+      }
+    }
   }
 
   &.journal-sheet {
@@ -581,6 +595,28 @@
 
       [data-action="toggleSidebar"], [data-action="toggleCollapse"], [data-action="toggleSearch"], [data-action="createPage"] {
         display: none;
+      }
+    }
+
+    &.edit-locked {
+      .journal-header {
+        .page-metadata {
+          display: none;
+        }
+        
+        .title {
+          pointer-events: none;
+        }
+      }
+
+      .edit-container {
+        display: none !important;
+      }
+
+      prose-mirror {
+        .editor-menu {
+          display: none;
+        }
       }
     }
   }

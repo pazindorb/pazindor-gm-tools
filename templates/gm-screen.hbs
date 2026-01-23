@@ -3,11 +3,12 @@
   <div class="menu-buttons">
     <div class="left-menu">
       <div class="menu-button add-tab" data-action="addTab" data-tooltip="{{localize 'PGT.GM_SCREEN.ADD_TAB'}}"><i class="fa-solid fa-plus-large fa-lg"></i></div>
-      {{#ifCond selectedTab.type '===' "journal"}}
+      <div class="menu-button delete-tab" data-action="deleteTab" data-tooltip="{{localize 'PGT.GM_SCREEN.DELETE_TAB'}}"><i class="fa-solid fa-trash fa-lg"></i></div>
+      {{#ifCond selectedTab.type '===' "basic"}}
       <div class="menu-button config-tab" data-action="configTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CONFIG_TAB'}}"><i class="fa-solid fa-gear fa-lg"></i></div>
       <div class="menu-button clear-tab" data-action="clearTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CLEAR_TAB'}}"><i class="fa-solid fa-broom-wide fa-lg"></i></div>
+      <div class="menu-button edit-mode {{#if editable}}editable{{/if}}" data-action="editMode" data-tooltip="{{localize 'PGT.GM_SCREEN.EDIT_MODE'}}"><i class="fa-solid fa-pen-to-square fa-lg"></i></div>
       {{/ifCond}}
-      <div class="menu-button delete-tab" data-action="deleteTab" data-tooltip="{{localize 'PGT.GM_SCREEN.DELETE_TAB'}}"><i class="fa-solid fa-trash fa-lg"></i></div>
     </div>
 
     <div class="menu-button close" data-action="close" data-tooltip="{{localize 'PGT.GM_SCREEN.CLOSE'}}"><i class="fa-solid fa-x fa-lg"></i></div>
@@ -29,8 +30,8 @@
   <div style="min-width:{{selectedTab.actorContentWidth}}px"></div>
   {{/ifCond}}
 
-  {{#ifCond selectedTab.type '===' "journal"}}
-  <div class="journal-table">
+  {{#ifCond selectedTab.type '===' "basic"}}
+  <div class="basic-table">
     {{#each selectedTab.cells}}
     <div class="cell" style="grid-column: span {{colspan}}; grid-row: span {{rowspan}};" data-key="{{key}}">
       <span>{{localize 'PGT.GM_SCREEN.CELL_TIP'}}</span>
