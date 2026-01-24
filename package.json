@@ -2,7 +2,7 @@
   "scripts": {
     "build:css": "gulp css",
     "watch": "gulp",
-    "build:code": "rollup ./module/pazindor-gm-tools.mjs -f es -o ./release/module/pazindor-gm-tools.mjs"
+    "build:code": "rollup -c rollup.config.mjs"
   },
   "dependencies": {
     "gulp": "^5.0.0",
