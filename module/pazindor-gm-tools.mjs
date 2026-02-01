@@ -64,7 +64,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     tools: {
       request: {
         name: "request",
-        title: `${game.i18n.localize("PGT.MENU.ROLL")} (${keybindToText(game.keybindings.get("pgt", "rollRequest"))})`,
+        title: `${game.i18n.localize("PGT.MENU.ROLL")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "rollRequest"))})`,
         icon: "fas fa-dice",
         button: true,
         onChange: () => openRollRequest(),
@@ -72,7 +72,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       rest: {
         name: "rest",
-        title: `${game.i18n.localize("PGT.MENU.REST")} (${keybindToText(game.keybindings.get("pgt", "restRequest"))})`,
+        title: `${game.i18n.localize("PGT.MENU.REST")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "restRequest"))})`,
         icon: "fas fa-bed",
         button: true,
         onChange: () => openRestRequest(),
@@ -80,7 +80,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       condition: {
         name: "condition",
-        title: `${game.i18n.localize("PGT.MENU.CONDITION")} (${keybindToText(game.keybindings.get("pgt", "condition"))})`,
+        title: `${game.i18n.localize("PGT.MENU.CONDITION")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "condition"))})`,
         icon: "fas fa-bolt",
         button: true,
         onChange: () => openConditionManager(),
@@ -88,7 +88,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       adventurers: {
         name: "adventurers",
-        title: `${game.i18n.localize("PGT.MENU.ADVENTURERS")} (${keybindToText(game.keybindings.get("pgt", "adventurers"))})`,
+        title: `${game.i18n.localize("PGT.MENU.ADVENTURERS")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "adventurers"))})`,
         icon: "fas fa-book-open-cover",
         button: true,
         onChange: () => openAdventurersRegister(),
@@ -96,7 +96,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       },
       gmScreen: {
         name: "gmScreen",
-        title: `${game.i18n.localize("PGT.MENU.GM_SCREEN")} (${keybindToText(game.keybindings.get("pgt", "gmScreen"))})`,
+        title: `${game.i18n.localize("PGT.MENU.GM_SCREEN")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "gmScreen"))})`,
         icon: "fas fa-screencast",
         button: true,
         onChange: () => gmScreen(),

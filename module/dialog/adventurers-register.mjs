@@ -21,10 +21,10 @@ export class AdventurersRegister extends BaseDialog {
 
   _prepareAdventurers() {
     this.allAdventurers = game.actors.filter(actor => actor.type === "character");
-    this.groups = game.settings.get("pgt", "adventurersGroups");
+    this.groups = game.settings.get("pazindor-gm-tools", "adventurersGroups");
     
     if (this.groups.length > 0) {
-      this.selectedGroup = game.settings.get("pgt", "mainAdventurersGroup");
+      this.selectedGroup = game.settings.get("pazindor-gm-tools", "mainAdventurersGroup");
     }
   }
 
@@ -228,8 +228,8 @@ export class AdventurersRegister extends BaseDialog {
   }
 
   close() {
-    game.settings.set("pgt", "adventurersGroups", this.groups);
-    game.settings.set("pgt", "mainAdventurersGroup", this.selectedGroup);
+    game.settings.set("pazindor-gm-tools", "adventurersGroups", this.groups);
+    game.settings.set("pazindor-gm-tools", "mainAdventurersGroup", this.selectedGroup);
     super.close();
   }
 }

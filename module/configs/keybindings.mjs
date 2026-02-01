@@ -5,35 +5,35 @@ import { openRestRequest, openRollRequest } from "../dialog/request-dialog.mjs";
 
 export function registerKeybindings() {
 
-  game.keybindings.register("pgt", "rollRequest", {
+  game.keybindings.register("pazindor-gm-tools", "rollRequest", {
     name: "PGT.MENU.ROLL",
     editable: [{key: "KeyR", modifiers: ['Shift']}],
     onDown: () => {if (PGT.onRollRequest) openRollRequest()},
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 
-  game.keybindings.register("pgt", "restRequest", {
+  game.keybindings.register("pazindor-gm-tools", "restRequest", {
     name: "PGT.MENU.REST",
     editable: [{key: "KeyY", modifiers: ['Shift']}],
     onDown: () => {if (PGT.onRestRequest) openRestRequest()},
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 
-  game.keybindings.register("pgt", "condition", {
+  game.keybindings.register("pazindor-gm-tools", "condition", {
     name: "PGT.MENU.CONDITION",
     editable: [{key: "KeyH", modifiers: []}],
     onDown: () => {if (PGT.applyCondition) openConditionManager()},
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 
-  game.keybindings.register("pgt", "adventurers", {
+  game.keybindings.register("pazindor-gm-tools", "adventurers", {
     name: "PGT.MENU.ADVENTURERS",
     editable: [{key: "KeyJ", modifiers: []}],
     onDown: () => openAdventurersRegister(),
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 
-  game.keybindings.register("pgt", "gmScreen", {
+  game.keybindings.register("pazindor-gm-tools", "gmScreen", {
     name: "PGT.MENU.GM_SCREEN",
     editable: [{key: "KeyG", modifiers: []}],
     onDown: () => gmScreen(),

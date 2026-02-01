@@ -1,19 +1,19 @@
 export function registerModuleSettings() {
-  game.settings.register("pgt", "adventurersGroups", {
+  game.settings.register("pazindor-gm-tools", "adventurersGroups", {
     scope: "user",
     config: false,
     default: [],
     type: Array
   });
 
-  game.settings.register("pgt", "mainAdventurersGroup", {
+  game.settings.register("pazindor-gm-tools", "mainAdventurersGroup", {
     scope: "user",
     config: false,
     default: "",
     type: String
   });
 
-  game.settings.register("pgt", "gmScreenTabs", {
+  game.settings.register("pazindor-gm-tools", "gmScreenTabs", {
     scope: "user",
     config: false,
     default: [{

@@ -4,7 +4,7 @@ export class GmScreen extends BaseDialog {
 
   constructor(options = {}) {
     super(options);
-    this.tabs = game.settings.get("pgt", "gmScreenTabs");
+    this.tabs = game.settings.get("pazindor-gm-tools", "gmScreenTabs");
     this.editable = false;
     this.index = 0;
     this._prepareTabs();
@@ -518,7 +518,7 @@ export class GmScreen extends BaseDialog {
 
   async close() {
     this._closeTab();
-    game.settings.set("pgt", "gmScreenTabs", this.tabs);
+    game.settings.set("pazindor-gm-tools", "gmScreenTabs", this.tabs);
     return super.close();
   }
 
