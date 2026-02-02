@@ -163,18 +163,22 @@ class RequestDialog extends BaseDialog {
 
 let rollRequestWindow;
 export function openRollRequest() {
-  if (!rollRequestWindow) {
-    rollRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions});
+  if (rollRequestWindow?.rendered) {
+    rollRequestWindow.close();
+    rollRequestWindow = null;
+    return;
   }
-  if (rollRequestWindow.rendered) rollRequestWindow.close();
-  else rollRequestWindow.render(true);
+  rollRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions});
+  rollRequestWindow.render(true);
 }
 
 let restRequestWindow;
 export function openRestRequest() {
-  if (!restRequestWindow) {
-    restRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions});
+  if (restRequestWindow?.rendered) {
+    restRequestWindow.close();
+    restRequestWindow = null;
+    return;
   }
-  if (restRequestWindow.rendered) restRequestWindow.close();
-  else restRequestWindow.render(true);
+  restRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions});
+  restRequestWindow.render(true);
 }
