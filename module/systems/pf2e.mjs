@@ -1,8 +1,8 @@
 export function pf2eConfig() {
   PGT.rollOptions = rollOptions();
-  // PGT.restOptions = pf2e.restOptions(); // Check how pathfinder rest work
+  PGT.restOptions = restOptions();
   PGT.onRollRequest = rollRequest;
-  // PGT.onRestRequest = pf2e.restRequest; // Check how pathfinder rest work
+  PGT.onRestRequest = restRequest;
   PGT.conditions = conditions();
   PGT.conditionRollKeys = conditionRollKeys();
   PGT.applyCondition = applyCondition;
@@ -37,7 +37,7 @@ export function restOptions() {
 
 export function restRequest(actor, selected) {
   if (selected === "rest") {
-    // Check how pathfinder rest work
+    game.pf2e.actions.restForTheNight({actors: [actor]})
   }
 }
 

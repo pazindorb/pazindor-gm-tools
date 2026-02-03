@@ -141,6 +141,8 @@ class RequestDialog extends BaseDialog {
 
       response.then(result => {
         const roll = result.payload;
+        if (roll.noResult) this.close();
+
         if (roll._total == null) {
           this.actorSelector[actorId].result = "X";
           this.actorSelector[actorId].outcome = "fail";
