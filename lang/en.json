@@ -18,15 +18,22 @@
   "PGT.MENU.ADVENTURERS": "Adventurer's Register",
   "PGT.MENU.GM_SCREEN": "Game Master Screen",
 
-  "PGT.SELECT_ACTORS": "Select Actors",
-  "PGT.REST_REQUEST": "Select Rest",
-  "PGT.ROLL_REQUEST": "Select Roll",
-  "PGT.SEND": "Send Request",
-  "PGT.AWAITING_RESULT": "Awaiting Roll Result",
-  "PGT.ROLL_RESULT": "Roll Result",
-  "PGT.ROLL_DC": "Roll DC",
+  "PGT.REQUEST.SELECT_ACTORS": "Select Actors",
+  "PGT.REQUEST.REST_REQUEST": "Select Rest",
+  "PGT.REQUEST.ROLL_REQUEST": "Select Roll",
+  "PGT.REQUEST.SEND": "Send Request",
+  "PGT.REQUEST.AWAITING_RESULT": "Awaiting Roll Result",
+  "PGT.REQUEST.ROLL_RESULT": "Roll Result",
+  "PGT.REQUEST.ROLL_DC": "Roll DC",
+  "PGT.REQUEST.AGAINST_DC": " vs DC ",
+  "PGT.REQUEST.SEND_ROLL_REQUEST": "Send Roll Request",
+  "PGT.REQUEST.COLLECT_MODE": "Actor collection Mode",
 
-  "PGT.NO_ACTOR": "There is no active user with actors that you could send requests to.",
+  "PGT.COLLECT_MODE.ACTIVE": "Active Players",
+  "PGT.COLLECT_MODE.SCENE": "Active Scene",
+  "PGT.COLLECT_MODE.ALL_PC": "All Player Characters",
+
+  "PGT.REQUEST.NO_ACTOR": "There is no active user with actors that you could send requests to.",
 
   "PGT.CATEGORY.REST_TYPE": "Rest Type",
 

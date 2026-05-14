@@ -20,7 +20,7 @@ export class AdventurersRegister extends BaseDialog {
   }
 
   _prepareAdventurers() {
-    this.allAdventurers = game.actors.filter(actor => actor.type === "character");
+    this.allAdventurers = game.actors.filter(actor => PGT.pcActorTypes.includes(actor.type));
     this.groups = game.settings.get("pazindor-gm-tools", "adventurersGroups");
     
     if (this.groups.length > 0) {

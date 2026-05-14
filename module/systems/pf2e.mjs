@@ -7,7 +7,7 @@ export function pf2eConfig() {
   PGT.conditionRollKeys = conditionRollKeys();
   PGT.applyCondition = applyCondition;
   PGT.adventurersConfig = adventurersRegisterConfig();
-  PGT.actorTypes = ["character"];
+  PGT.pcActorTypes = ["character"];
   PGT.systemId = "pf2e";
 }
 

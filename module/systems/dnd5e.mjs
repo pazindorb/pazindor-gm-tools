@@ -7,7 +7,7 @@ export function dnd5eConfig() {
   PGT.conditionRollKeys = conditionRollKeys();
   PGT.applyCondition = applyCondition;
   PGT.adventurersConfig = adventurersRegisterConfig();
-  PGT.actorTypes = ["character"];
+  PGT.pcActorTypes = ["character"];
   PGT.systemId = "dnd5e";
 }
 

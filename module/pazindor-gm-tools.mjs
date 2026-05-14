@@ -24,7 +24,7 @@ Hooks.once("init", async function() {
     applyCondition: null,
     conditionRollKeys: null,
     adventurersTabs: null,
-    actorTypes: ["character"],
+    pcActorTypes: ["character"],
     systemId: null,
   }
   PGT.CONST = prepareConstants();
