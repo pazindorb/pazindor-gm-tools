@@ -657,6 +657,25 @@
   .window-resize-handle, .window-resizable-handle {
     visibility: hidden;
   }
+
+  .gm-screen-clear-document {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 100;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #6d0000;
+
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0 0 5px 2px #cf5959 inset;
+    }
+  }
 }
 
 #simple-popup {

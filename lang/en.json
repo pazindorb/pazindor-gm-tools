@@ -87,6 +87,7 @@
   "PGT.GM_SCREEN.DELETE_TAB": "Delete this tab",
   "PGT.GM_SCREEN.CONFIG_TAB": "Configure this tab",
   "PGT.GM_SCREEN.CLEAR_TAB": "Remove all linked documents",
+  "PGT.GM_SCREEN.CLEAR_DOCUMENT": "Remove linked document",
   "PGT.GM_SCREEN.EDIT_MODE": "Enable/Disable Edit Mode",
   "PGT.GM_SCREEN.CELL_TIP": "Drop Document here...",
   "PGT.GM_SCREEN.ACTOR_NOT_EXIST": "Actor doesn't exist",

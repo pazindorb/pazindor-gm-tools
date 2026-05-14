@@ -354,13 +354,58 @@ export class GmScreen extends BaseDialog {
     }
 
     if (this.selectedTab.type === "basic" && this.BASIC_TYPES.includes(object.type)) {
-      const key = event.target?.dataset?.key;
+      const key = this._getBasicDropKey(event);
       if (!key) return;
       const [col, row] = key.split("#");
       this._removeUuidIfAlreadyExist(object.uuid);
       this.selectedTab.grid[col][row] = object.uuid;
       this.render();
     }
+  }
+
+  _getBasicDropKey(event) {
+    const directCell = event.target?.closest?.(".cell");
+    if (directCell?.dataset?.key) return directCell.dataset.key;
+
+    const x = event.clientX;
+    const y = event.clientY;
+    if (typeof x !== "number" || typeof y !== "number") return null;
+
+    const cells = this.element?.querySelectorAll(".cell") ?? [];
+    for (const cell of cells) {
+      const rect = cell.getBoundingClientRect();
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) return cell.dataset.key;
+    }
+
+    return null;
+  }
+
+  _activateBasicSheetClearButton(sheetElement, key) {
+    if (!sheetElement) return;
+
+    sheetElement.querySelector(".gm-screen-clear-document")?.remove();
+    const button = document.createElement("button");
+    button.type = "button";
+    button.classList.add("gm-screen-clear-document");
+    button.dataset.tooltip = game.i18n.localize("PGT.GM_SCREEN.CLEAR_DOCUMENT");
+    button.innerHTML = '<i class="fa-solid fa-trash"></i>';
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      this._clearBasicDocument(key);
+    });
+    sheetElement.appendChild(button);
+  }
+
+  _clearBasicDocument(key) {
+    const [col, row] = key.split("#");
+    if (!this.selectedTab.grid?.[col]) return;
+
+    const uuid = this.selectedTab.grid[col][row];
+    const droppedDocument = this.selectedTab.basic.find(document => document.uuid === uuid);
+    droppedDocument?.sheet?.close();
+    this.selectedTab.grid[col][row] = "";
+    this.render();
   }
 
   _removeUuidIfAlreadyExist(uuid) {
@@ -492,6 +537,7 @@ export class GmScreen extends BaseDialog {
       }
       document.sheet.render(true, options);
       const element = await waitForRender(document.sheet);
+      const sheetElement = element.classList ? element : element[0];
       if (element.classList) {
         document.sheet.element.classList.add("gm-screen-embeded");
         if (!this.editable) document.sheet.element.classList.add("edit-locked");
@@ -503,10 +549,11 @@ export class GmScreen extends BaseDialog {
         element[0].style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
         document.sheet.setPosition(options.position);
       }
+      this._activateBasicSheetClearButton(sheetElement, cell.dataset.key);
 
       // Journal Page - disable editor
       if (!this.editable) {
-        const proseMirror = element.querySelectorAll("prose-mirror");
+        const proseMirror = sheetElement.querySelectorAll("prose-mirror");
         for (const editor of proseMirror) editor.disabled = true;
       }
 

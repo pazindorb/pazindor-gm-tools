@@ -116,6 +116,7 @@ class RequestDialog extends BaseDialog {
     context.details = this.details;
     context.rollRequest = context.hasActors && this.isRoll && !this.awaitingResult;
     context.restRequest = context.hasActors && this.isRest;
+    context.isRoll = this.isRoll;
     context.awaitingResult = this.awaitingResult;
     return context;
   }

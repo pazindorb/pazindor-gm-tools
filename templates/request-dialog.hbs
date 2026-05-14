@@ -1,7 +1,7 @@
 <form id="actor-request" class="pgt standard-form {{cssClass}}" style="min-width: 450px; max-width: 750px;">
   <h4 class="divider">{{#if awaitingResult}}{{localize "PGT.REQUEST.AWAITING_RESULT"}}{{else}}{{localize "PGT.REQUEST.SELECT_ACTORS"}}{{/if}}</h4>
   
-  {{#if rollRequest}}
+  {{#if isRoll}}
   {{#ifCond collectMode '!==' "preconfigured"}}
   <div class="form-group">
     <label>{{localize 'PGT.REQUEST.COLLECT_MODE'}}</label>
