@@ -30,6 +30,9 @@
   "PGT.REQUEST.SEND_ROLL_REQUEST": "Send Roll Request",
   "PGT.REQUEST.COLLECT_MODE": "Actor collection Mode",
   "PGT.REQUEST.REFRESH": "Recollect and refresh",
+  "PGT.REQUEST.PROGRES_TRACKER": "Influence Progress Tracker",
+  "PGT.REQUEST.PROGRES_TRACKER_SUCCESS": "On Success",
+  "PGT.REQUEST.PROGRES_TRACKER_FAIL": "On Fail",
 
   "PGT.COLLECT_MODE.ACTIVE": "Active Players",
   "PGT.COLLECT_MODE.TARGET": "Targetted Tokens",

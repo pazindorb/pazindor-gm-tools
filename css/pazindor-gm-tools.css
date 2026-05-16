@@ -241,10 +241,7 @@
   box-shadow: 0 0 3px 0px var(--color-fieldset-border) inset;
   background-color: var(--table-background-color);
 }
-#actor-request .roll-dc {
-  margin: 10px;
-}
-#actor-request .roll-dc input {
+#actor-request .fixed-input input, #actor-request .fixed-input select {
   width: auto;
   text-align: end;
 }
@@ -561,16 +558,17 @@
   max-height: 250px;
   max-width: 350px;
   height: 250px;
-  width: 250px;
+  width: 350px;
 }
 #progress-tracker .window-header {
   display: none;
 }
 #progress-tracker .window-content {
+  padding: 5px;
   overflow: visible;
 }
 #progress-tracker #progress-tracker-content .scrollable {
-  max-height: 215px;
+  max-height: 230px;
   padding: 0;
 }
 #progress-tracker #progress-tracker-content .gm-menu {

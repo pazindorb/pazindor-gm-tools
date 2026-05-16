@@ -5,3 +5,9 @@ export function keybindToText(keybind) {
   humanized = humanized.replace("Control", "Ctrl");
   return humanized;
 }
+
+export function combinedKey(actor) {
+  let combinedKey = actor.id;
+  if (actor.token) combinedKey += actor.token.id;
+  return combinedKey;
+}

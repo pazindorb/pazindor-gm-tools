@@ -1,4 +1,6 @@
 import { emitEvent, responseListener } from "../configs/socket.mjs";
+import { combinedKey } from "../utils.mjs";
+import { openProgressTracker } from "./progress-tracker.mjs";
 import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
 class RequestDialog extends BaseDialog {
@@ -41,7 +43,7 @@ class RequestDialog extends BaseDialog {
     
     const selector = {}
     collected.forEach((actor) => {
-      selector[actor.id] = {
+      selector[combinedKey(actor)] = {
         selected: false,
         selectable: true,
         actor: actor
@@ -63,6 +65,11 @@ class RequestDialog extends BaseDialog {
           icon: "fa-dice",
           label: game.i18n.localize("PGT.REQUEST.ROLL_REQUEST"),
           rollDC: null,
+          tracker: {
+            key: "",
+            success: "",
+            fail: ""
+          }
         }
         this.isRoll = true;
         break;
@@ -105,12 +112,20 @@ class RequestDialog extends BaseDialog {
     return initialized;
   }
 
+  //=====================
+  //       CONTEXT      =
+  //=====================
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.actorSelector = this.actorSelector;
     context.hasActors = Object.keys(this.actorSelector).length !== 0;
     context.noActorSelected = Object.values(this.actorSelector).filter(actor => actor.selected).length === 0;
 
+    context.progressTrackers = this.#collectProgressTrackers();
+    context.progressTypes = {
+      increase: "PGT.TRACKER.INCREASE_COUNTER",
+      reduce: "PGT.TRACKER.REDUCE_COUNTER"
+    }
     context.collectModes = {
       active: "PGT.COLLECT_MODE.ACTIVE",
       target: "PGT.COLLECT_MODE.TARGET",
@@ -127,6 +142,19 @@ class RequestDialog extends BaseDialog {
     return context;
   }
 
+  #collectProgressTrackers() {
+    if (!window.trackerWindow) openProgressTracker(false, true);
+
+    const trackers = {};
+    for (const [key, tracker] of Object.entries(window.trackerWindow.progressTracker.trackers)) {
+      trackers[key] = tracker.label;
+    }
+    return trackers;
+  }
+
+  //=====================
+  //       ACTIONS      =
+  //=====================
   async _onSendRequest(event) {
     event.preventDefault();
     this.awaitingResult = true;
@@ -136,17 +164,17 @@ class RequestDialog extends BaseDialog {
     const notSelectedActors = [];
     for (const wrapper of Object.values(this.actorSelector)) {
       if (wrapper.selected) {
-        selectedActorIds.push(wrapper.actor.id);
+        selectedActorIds.push(combinedKey(wrapper.actor));
 
         delete wrapper.selected;
         delete wrapper.selectable;
         wrapper.request = true;
       }
-      else notSelectedActors.push(wrapper.actor.id);
+      else notSelectedActors.push(combinedKey(wrapper.actor));
     }
 
-    for (const actorId of notSelectedActors) {
-      delete this.actorSelector[actorId];
+    for (const combinedKey of notSelectedActors) {
+      delete this.actorSelector[combinedKey];
     }
 
     if (this.isRoll) {
@@ -165,7 +193,7 @@ class RequestDialog extends BaseDialog {
 
     const selectedActorIds = [];
     for (const wrapper of Object.values(this.actorSelector)) {
-      if (wrapper.selected) selectedActorIds.push(wrapper.actor.id);
+      if (wrapper.selected) selectedActorIds.push(combinedKey(wrapper.actor));
     }
     this._restRequest(selected, selectedActorIds);
     this.close();
@@ -213,6 +241,9 @@ class RequestDialog extends BaseDialog {
       if (this.details.rollDC !== null) {
         wrapper.rollDC = this.details.rollDC;
       }
+      if (this.details.tracker.key) {
+        wrapper.tracker = this.details.tracker;
+      }
     }
     this.render();
   }
@@ -225,21 +256,21 @@ class RequestDialog extends BaseDialog {
     const notSelectedActors = [];
     for (const wrapper of Object.values(this.actorSelector)) {
       if (wrapper.key) {
-        selectedActorIds.push(wrapper.actor.id);
+        selectedActorIds.push(combinedKey(wrapper.actor));
         delete wrapper.selectable;
         wrapper.request = true;
       }
       else {
-        notSelectedActors.push(wrapper.actor.id);
+        notSelectedActors.push(combinedKey(wrapper.actor));
       }
     }
 
-    for (const actorId of notSelectedActors) {
-      delete this.actorSelector[actorId];
+    for (const combinedKey of notSelectedActors) {
+      delete this.actorSelector[combinedKey];
     }
 
-    for (const actorId of selectedActorIds) {
-      this._rollRequest(this.actorSelector[actorId]);
+    for (const combinedKey of selectedActorIds) {
+      this._rollRequest(this.actorSelector[combinedKey]);
     }
 
     this.render();
@@ -280,6 +311,19 @@ class RequestDialog extends BaseDialog {
       let outcome = "success";
       if (wrapper.rollDC != null) {
         outcome = roll._total >= wrapper.rollDC ? "success" : "fail";
+
+        // Resolve Progress Tracker changes
+        if (wrapper.tracker) {
+          const trackerExist = window.trackerWindow.has(wrapper.tracker.key);
+          if (trackerExist) {
+            let action = "none";
+            if (wrapper.tracker.success && outcome === "success") action = wrapper.tracker.success;
+            if (wrapper.tracker.fail && outcome === "fail") action = wrapper.tracker.fail;
+
+            if (action === "increase") window.trackerWindow.increase(wrapper.tracker.key);
+            if (action === "reduce") window.trackerWindow.reduce(wrapper.tracker.key);
+          }
+        }
       }
 
       wrapper.outcome = outcome;

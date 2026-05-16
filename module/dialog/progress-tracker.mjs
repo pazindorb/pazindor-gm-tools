@@ -26,6 +26,14 @@ class ProgressTracker extends BaseDialog {
       left: 0,
     },
   }  
+
+  has(key) {
+    return !!this.progressTracker.trackers[key];
+  }
+
+  get(key) {
+    return this.progressTracker.trackers[key];
+  }
   
   _initializeApplicationOptions(options) {
     const initialized = super._initializeApplicationOptions(options);
@@ -101,13 +109,13 @@ class ProgressTracker extends BaseDialog {
 
   async _onConfig(event, target) {
     const key = target.dataset.key;
-    const tracker = this.progressTracker.trackers[key];
+    const tracker = this.get(key);
     if (!tracker) return;
     new TrackerConfig(tracker, key).render(true)
   }
 
   _onResetTracker(event, target) {
-    const tracker = this.progressTracker.trackers[target.dataset.key];
+    const tracker = this.get(target.dataset.key);
     if (!tracker) return;
 
     tracker.value = tracker.countdown ? tracker.max : 0;
@@ -115,27 +123,15 @@ class ProgressTracker extends BaseDialog {
   }
 
   _onProgress(event, target) {
-    const tracker = this.progressTracker.trackers[target.dataset.key];
-    if (!tracker) return;
-
-    tracker.value += 1;
-    if (tracker.value === tracker.max) this.displayAnnouncement();
-    if (tracker.max) tracker.value = Math.min(tracker.value, tracker.max);
-    this.updateTracker();
+    this.increase(target.dataset.key);
   }
 
   _onRevert(event, target) {
-    const tracker = this.progressTracker.trackers[target.dataset.key];
-    if (!tracker) return;
-
-    tracker.value -= 1;
-    if (tracker.value === 0) this.displayAnnouncement();
-    tracker.value = Math.max(tracker.value, 0);
-    this.updateTracker();
+    this.reduce(target.dataset.key);
   }
 
   _onVisible(event, target) {
-    const tracker = this.progressTracker.trackers[target.dataset.key];
+    const tracker = this.get(target.dataset.key);
     if (!tracker) return;
 
     tracker.visible = !tracker.visible;
@@ -144,6 +140,26 @@ class ProgressTracker extends BaseDialog {
 
   _onOpenForPlayers(event, target) {
     emitEvent(PGT.CONST.SOCKET.EMIT.OPEN_TRACKER, {});
+  }
+
+  async increase(key) {
+    const tracker = this.get(key);
+    if (!tracker) return;
+
+    tracker.value += 1;
+    if (tracker.value === tracker.max) this.displayAnnouncement();
+    if (tracker.max) tracker.value = Math.min(tracker.value, tracker.max);
+    await this.updateTracker();
+  }
+
+  async reduce(key) {
+    const tracker = this.get(key);
+    if (!tracker) return;
+
+    tracker.value -= 1;
+    if (tracker.value === 0) this.displayAnnouncement();
+    tracker.value = Math.max(tracker.value, 0);
+    await this.updateTracker();
   }
 
   async updateTracker() {
@@ -162,10 +178,10 @@ class ProgressTracker extends BaseDialog {
   }
 }
 
-export function openProgressTracker(force=false) {
+export function openProgressTracker(force=false, skipRender=false) {
   if (!window.trackerWindow) {
     window.trackerWindow = new ProgressTracker();
   }
   if (window.trackerWindow.rendered && !force) window.trackerWindow.close();
-  else window.trackerWindow.render(true);
+  else if (!skipRender) window.trackerWindow.render(true);
 }

@@ -288,10 +288,8 @@
     }
   }
 
-  .roll-dc {
-    margin: 10px;
-
-    input {
+  .fixed-input {
+    input, select {
       width: auto;
       text-align: end;
     }
@@ -695,19 +693,20 @@
   max-height: 250px;
   max-width: 350px;
   height: 250px;
-  width: 250px;
+  width: 350px;
 
   .window-header {
     display: none;
   }
 
   .window-content {
+    padding: 5px;
     overflow: visible;
   }
 
   #progress-tracker-content {
     .scrollable {
-      max-height: 215px;
+      max-height: 230px;
       padding: 0;
     }
 
