@@ -1,3 +1,4 @@
+import { announce } from "../dialog/announcement.mjs";
 import { openProgressTracker } from "../dialog/progress-tracker.mjs";
 
 export function registerModuleSocket() {
@@ -18,6 +19,10 @@ export function registerModuleSocket() {
 
       case emitTypes.OPEN_TRACKER:
         handleOpenTracker();
+        break;
+      
+      case emitTypes.ANNOUNCEMENT:
+        handleAnnouncement(data.payload);
         break;
     }
   });
@@ -52,6 +57,11 @@ function handleUpdateTracker() {
 
 function handleOpenTracker() {
   openProgressTracker(true);
+}
+
+function handleAnnouncement(payload) {
+  const { announcement, timer } = payload;
+  announce(announcement, timer);
 }
 
 //=======================================

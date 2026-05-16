@@ -1,4 +1,5 @@
 import { emitEvent } from "../configs/socket.mjs";
+import { announceAll } from "./announcement.mjs";
 import { TrackerConfig } from "./tracker-config.mjs";
 import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
@@ -147,7 +148,7 @@ class ProgressTracker extends BaseDialog {
     if (!tracker) return;
 
     tracker.value += 1;
-    if (tracker.value === tracker.max) this.displayAnnouncement();
+    if (tracker.value == tracker.max && !tracker.countdown && tracker.visible) this.displayAnnouncement(tracker.announcement);
     if (tracker.max) tracker.value = Math.min(tracker.value, tracker.max);
     await this.updateTracker();
   }
@@ -157,7 +158,7 @@ class ProgressTracker extends BaseDialog {
     if (!tracker) return;
 
     tracker.value -= 1;
-    if (tracker.value === 0) this.displayAnnouncement();
+    if (tracker.value == 0 && tracker.countdown && tracker.visible) this.displayAnnouncement(tracker.announcement);
     tracker.value = Math.max(tracker.value, 0);
     await this.updateTracker();
   }
@@ -173,8 +174,9 @@ class ProgressTracker extends BaseDialog {
     this.render();
   }
 
-  displayAnnouncement() {
-
+  displayAnnouncement(announcement) {
+    if (!announcement) return;
+    announceAll(announcement, 3000);
   }
 }
 
