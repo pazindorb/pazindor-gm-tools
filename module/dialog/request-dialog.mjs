@@ -25,6 +25,10 @@ class RequestDialog extends BaseDialog {
           collected = PDE.utils.collectActorsFromActiveUsers();
           break;
 
+        case "target":
+          collected = game.user.targets.map(token => token.actor);
+          break;
+
         case "scene": 
           collected = this.#collectActorsFromScene();
           break;
@@ -97,6 +101,7 @@ class RequestDialog extends BaseDialog {
     const initialized = super._initializeApplicationOptions(options);
     initialized.actions.sendRestRequest = this._onSendRestRequest;
     initialized.actions.sendRollRequest = this._onSendRollRequest;
+    initialized.actions.refresh = () => {this._collectAndPrepareActors(); this.render()};
     return initialized;
   }
 
@@ -108,6 +113,7 @@ class RequestDialog extends BaseDialog {
 
     context.collectModes = {
       active: "PGT.COLLECT_MODE.ACTIVE",
+      target: "PGT.COLLECT_MODE.TARGET",
       scene: "PGT.COLLECT_MODE.SCENE",
       all: "PGT.COLLECT_MODE.ALL_PC"
     }

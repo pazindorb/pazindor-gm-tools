@@ -1,7 +1,7 @@
 <form id="actor-request" class="pgt standard-form {{cssClass}}" style="min-width: 450px; max-width: 750px;">
   <h4 class="divider">{{#if awaitingResult}}{{localize "PGT.REQUEST.AWAITING_RESULT"}}{{else}}{{localize "PGT.REQUEST.SELECT_ACTORS"}}{{/if}}</h4>
   
-  {{#if isRoll}}
+  {{#if isRoll}} {{#unless awaitingResult}}
   {{#ifCond collectMode '!==' "preconfigured"}}
   <div class="form-group">
     <label>{{localize 'PGT.REQUEST.COLLECT_MODE'}}</label>
@@ -10,9 +10,10 @@
         {{selectOptions collectModes selected=collectMode localize=true}}
       </select>
     </div>
+    <a class="fa-solid fa-arrows-rotate" style="flex: 0;" data-tooltip="{{localize 'PGT.REQUEST.REFRESH'}}" data-action="refresh"></a>
   </div>
   {{/ifCond}}
-  {{/if}}
+  {{/unless}} {{/if}}
 
   <fieldset class="actor-wrapper box-wrapper scrollable">
   {{#if hasActors}} 
@@ -34,7 +35,15 @@
     </div>
     {{/each}}
   {{else}}
-    <span>{{localize "PGT.REQUEST.NO_ACTOR"}}</span>
+    {{#unless awaitingResult}}
+      {{#if isRoll}}
+      <span>{{localize "PGT.REQUEST.NO_ACTOR.ROLL"}}</span>
+      {{else}}
+      <span>{{localize "PGT.REQUEST.NO_ACTOR.REST"}}</span>
+      {{/if}}
+    {{else}}
+    <span>{{localize "PGT.REQUEST.NO_ACTOR.RESULT"}}</span>
+    {{/unless}}
   {{/if}}
   </fieldset>
 

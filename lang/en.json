@@ -28,12 +28,16 @@
   "PGT.REQUEST.AGAINST_DC": " vs DC ",
   "PGT.REQUEST.SEND_ROLL_REQUEST": "Send Roll Request",
   "PGT.REQUEST.COLLECT_MODE": "Actor collection Mode",
+  "PGT.REQUEST.REFRESH": "Recollect and refresh",
 
   "PGT.COLLECT_MODE.ACTIVE": "Active Players",
+  "PGT.COLLECT_MODE.TARGET": "Targetted Tokens",
   "PGT.COLLECT_MODE.SCENE": "Active Scene",
   "PGT.COLLECT_MODE.ALL_PC": "All Player Characters",
 
-  "PGT.REQUEST.NO_ACTOR": "There is no active user with actors that you could send requests to.",
+  "PGT.REQUEST.NO_ACTOR.REST": "There is no active user with actors that you could send requests to.",
+  "PGT.REQUEST.NO_ACTOR.ROLL": "There are no actors that you could send requests to. You can change the collection mode.",
+  "PGT.REQUEST.NO_ACTOR.RESULT": "There is no actor you could wait for.",
 
   "PGT.CATEGORY.REST_TYPE": "Rest Type",
 
