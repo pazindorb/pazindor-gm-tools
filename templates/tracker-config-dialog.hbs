@@ -1,0 +1,81 @@
+<form id="tracker-config-content" class="pgt standard-form {{cssClass}}">
+
+  {{!-- Label --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.LABEL"}}</label>
+    <div class="form-fields">
+      <input type="text" data-path="tracker.label" value="{{tracker.label}}" data-cType="string"/>
+    </div>
+  </div>
+
+  {{!-- Max Value --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.MAX"}}</label>
+    <div class="form-fields">
+      <input type="text" data-path="tracker.max" value="{{tracker.max}}" data-cType="numeric-nullable"/>
+    </div>
+  </div>
+
+  {{!-- Countdown --}}
+  <div class="form-group">
+    <label>{{localize 'PGT.TRACKER_CONFIG.COUNTDOWN'}}</label>
+    <div class="form-fields">
+      <input type="checkbox" data-cType="activable" data-path="tracker.countdown" {{#if tracker.max}}{{checked tracker.countdown}}{{else}}disabled {{checked false}}{{/if}} />
+    </div>
+    <p class="hint">{{localize "PGT.TRACKER_CONFIG.COUNTDOWN_HINT"}}</p>
+  </div>
+
+  {{!-- Image --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.IMAGE_PATH"}}</label>
+    <div class="form-fields">
+      <input type="text" data-path="tracker.img" value="{{tracker.img}}" data-cType="string"/>
+      <button type="button" data-action="pickImage" data-path="tracker.img">
+        <i class="fa-solid fa-file-image"></i>
+      </button>
+    </div>
+  </div>
+
+  {{!-- Announcement --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.ANNOUNCEMENT"}}</label>
+    <div class="form-fields">
+      <input type="text" data-path="tracker.announcement" value="{{tracker.announcement}}" data-cType="string"/>
+    </div>
+    <p class="hint">{{localize "PGT.TRACKER_CONFIG.ANNOUNCEMENT_HINT"}}</p>
+  </div>
+
+  {{!-- Tracker Icon --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.EMPTY_ICON"}}</label>
+    <div class="form-fields">
+      <input type="text" data-path="tracker.emptyIcon" value="{{tracker.emptyIcon}}" data-cType="string"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.FULL_ICON"}}</label>
+    <div class="form-fields">
+      <input type="text" data-path="tracker.fullIcon" value="{{tracker.fullIcon}}" data-cType="string"/>
+    </div>
+  </div>
+
+  {{!-- Color --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.EMPTY_COLOR"}}</label>
+    <div class="form-fields">
+      <input type="color" data-path="tracker.emptyColor" value="{{tracker.emptyColor}}" data-cType="string"/>
+      <input type="text" data-path="tracker.emptyColor" value="{{tracker.emptyColor}}" data-cType="string"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.FULL_COLOR"}}</label>
+    <div class="form-fields">
+      <input type="color" data-path="tracker.fullColor" value="{{tracker.fullColor}}" data-cType="string"/>
+      <input type="text" data-path="tracker.fullColor" value="{{tracker.fullColor}}" data-cType="string"/>
+    </div>
+  </div>
+
+  <footer class="form-footer margin-top-5">
+    <button data-action="save"><i class="fa-solid fa-floppy-disk"></i> {{localize "PGT.SAVE"}}</button>
+  </footer>
+</form>

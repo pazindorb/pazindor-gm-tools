@@ -50,4 +50,13 @@ export function registerModuleSettings() {
     }],
     type: Array
   });
+
+  game.settings.register("pazindor-gm-tools", "progressTracker", {
+    scope: "world",
+    config: false,
+    default: {
+      trackers: {}
+    },
+    type: Object
+  });
 }

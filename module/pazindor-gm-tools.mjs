@@ -10,12 +10,14 @@ import { dnd5eConfig } from "./systems/dnd5e.mjs";
 import { registerKeybindings } from "./configs/keybindings.mjs";
 import { keybindToText } from "./utils.mjs";
 import { gmScreen } from "./dialog/gm-screen.mjs";
+import { openProgressTracker } from "./dialog/progress-tracker.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
   registerHandlebarsHelpers();
   registerKeybindings();
   window.PGT = {
+    // TODO: Add system specific tools
     rollOptions: {},
     restOptions: {},
     onRollRequest: null,
@@ -59,7 +61,6 @@ Hooks.on("getSceneControlButtons", (controls) => {
     title: "PGT.MENU.TITLE",
     layer: null,
     icon: "fas fa-screwdriver-wrench",
-    visible: game.user.isGM,
     activeTool: "init",
     tools: {
       request: {
@@ -68,7 +69,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-dice",
         button: true,
         onChange: () => openRollRequest(),
-        visible: !!PGT.onRollRequest
+        visible: !!PGT.onRollRequest && game.user.isGM 
       },
       rest: {
         name: "rest",
@@ -76,7 +77,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-bed",
         button: true,
         onChange: () => openRestRequest(),
-        visible: !!PGT.onRestRequest
+        visible: !!PGT.onRestRequest && game.user.isGM
       },
       condition: {
         name: "condition",
@@ -84,7 +85,15 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-bolt",
         button: true,
         onChange: () => openConditionManager(),
-        visible: !!PGT.applyCondition
+        visible: !!PGT.applyCondition && game.user.isGM
+      },
+      tracker: {
+        name: "tracker",
+        title: `${game.i18n.localize("PGT.MENU.TRACKER")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "tracker"))})`,
+        icon: "fas fa-bars-progress",
+        button: true,
+        onChange: () => openProgressTracker(),
+        visible:  true
       },
       adventurers: {
         name: "adventurers",
@@ -92,7 +101,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-book-open-cover",
         button: true,
         onChange: () => openAdventurersRegister(),
-        visible: true
+        visible: game.user.isGM
       },
       gmScreen: {
         name: "gmScreen",
@@ -100,7 +109,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-screencast",
         button: true,
         onChange: () => gmScreen(),
-        visible: true
+        visible: game.user.isGM
       },
       init: {
         name: "init",

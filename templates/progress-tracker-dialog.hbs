@@ -1,0 +1,33 @@
+<form id="progress-tracker-content" class="pgt standard-form {{cssClass}}">
+  <div class="scrollable">
+    {{#if isGM}} 
+    <div class="gm-menu">
+      <a class="fa-solid fa-square-plus fa-lg" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.ADD_TRACKER'}}" data-action="add" data-tooltip-direction="UP"></a>
+      <a class="fa-solid fa-eye fa-lg" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.OPEN_TO_PLAYERS'}}" data-action="openForPlayers" data-tooltip-direction="UP"></a>
+    </div>
+    {{/if}}
+
+    {{#each trackers as |tracker|}}
+    {{#if tracker.show}}
+    <fieldset class="tracker">
+      <legend>{{tracker.label}}</legend>
+      {{#if tracker.img}} <img src="{{tracker.img}}"/> {{/if}}
+      <div class="steps" data-tooltip="{{tracker.value}}" data-tooltip-direction="UP">
+        {{{tracker.steps}}}
+      </div>
+      {{#if @root.isGM}} 
+      <div class="menu">
+        <a class="long-button fa-solid fa-backward-fast" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.REDUCE_COUNTER'}}" data-action="revert" data-key="{{tracker.key}}" data-tooltip-direction="RIGHT"></a>
+        <a class="fa-solid fa-arrows-rotate" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.RESET_TRACKER'}}" data-action="reset" data-key="{{tracker.key}}" data-tooltip-direction="RIGHT"></a>
+        <a class="long-button fa-solid fa-forward-fast" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.INCREASE_COUNTER'}}" data-action="progress" data-key="{{tracker.key}}" data-tooltip-direction="RIGHT"></a>
+
+        <a class="fa-solid fa-gear" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.CONFIG_TRACKER'}}" data-action="config" data-key="{{tracker.key}}" data-tooltip-direction="RIGHT"></a>
+        <a class="long-button fa-solid fa-eye{{#if tracker.visible}} visible{{/if}}" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.VISIBLE_TO_PLAYERS'}}" data-action="visible" data-key="{{tracker.key}}" data-tooltip-direction="RIGHT"></a>
+        <a class="fa-solid fa-x" style="flex: 0;" data-tooltip="{{localize 'PGT.TRACKER.DELETE_TRACKER'}}" data-action="remove" data-key="{{tracker.key}}" data-tooltip-direction="RIGHT"></a>
+      </div>
+      {{/if}}
+    </fieldset>
+    {{/if}}
+    {{/each}}
+  </div>
+</form>

@@ -1,23 +1,33 @@
+import { openProgressTracker } from "../dialog/progress-tracker.mjs";
+
 export function registerModuleSocket() {
   game.socket.on("module.pazindor-gm-tools", async (data, emmiterId) => {
-    const { actorId, selected } = data.payload;
-    const actor = game.actors.get(actorId);
-    if (!actor.isOwner) return;
-
     const emitTypes = PGT.CONST.SOCKET.EMIT;
     switch (data.type) {
       case emitTypes.ROLL_REQUEST:
-        handleRollRequest(actor, selected, emmiterId);
+        handleRollRequest(data.payload, emmiterId);
         break;
 
       case emitTypes.REST_REQUEST:
-        PGT.onRestRequest(actor, selected);
+        handleRestRequest(data.payload);
+        break;
+
+      case emitTypes.UPDATE_TRACKER:
+        handleUpdateTracker();
+        break;
+
+      case emitTypes.OPEN_TRACKER:
+        handleOpenTracker();
         break;
     }
   });
 }
 
-async function handleRollRequest(actor, selected, emmiterId) {
+async function handleRollRequest(payload, emmiterId) {
+  const { actorId, selected } = payload;
+  const actor = game.actors.get(actorId);
+  if (!actor.isOwner) return;
+
   let roll = await PGT.onRollRequest(actor, selected);
   if (!roll) roll = {};
   emitEvent(PGT.CONST.SOCKET.RESPONSE.ROLL_RESULT, {
@@ -25,6 +35,23 @@ async function handleRollRequest(actor, selected, emmiterId) {
     emmiterId: emmiterId,
     actorId: actor.id
   });
+}
+
+async function handleRestRequest(payload) {
+  const { actorId, selected } = payload;
+  const actor = game.actors.get(actorId);
+  if (!actor.isOwner) return;
+
+  PGT.onRestRequest(actor, selected);
+}
+
+function handleUpdateTracker() {
+  if (!window.trackerWindow) return;
+  window.trackerWindow.refresh();
+}
+
+function handleOpenTracker() {
+  openProgressTracker(true);
 }
 
 //=======================================

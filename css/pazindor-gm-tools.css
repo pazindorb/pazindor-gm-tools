@@ -553,3 +553,108 @@
 #simple-popup .form-group input {
   flex: 1;
 }
+
+#progress-tracker {
+  bottom: 0px !important;
+  top: auto !important;
+  overflow: visible;
+  max-height: 250px;
+  max-width: 350px;
+  height: 250px;
+  width: 250px;
+}
+#progress-tracker .window-header {
+  display: none;
+}
+#progress-tracker .window-content {
+  overflow: visible;
+}
+#progress-tracker #progress-tracker-content .scrollable {
+  max-height: 215px;
+  padding: 0;
+}
+#progress-tracker #progress-tracker-content .gm-menu {
+  position: absolute;
+  height: 0;
+  width: 0;
+  top: -23px;
+  display: flex;
+}
+#progress-tracker #progress-tracker-content .gm-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-text-selection-bg);
+  min-height: 30px;
+  min-width: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  margin-left: 5px;
+}
+#progress-tracker #progress-tracker-content .gm-menu a:hover {
+  box-shadow: 0 0 5px 1px var(--color-form-hint-hover) inset;
+  cursor: pointer;
+}
+#progress-tracker #progress-tracker-content .tracker {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 5px 10px;
+  box-shadow: 0 0 3px 1px var(--color-text-selection-bg) inset;
+}
+#progress-tracker #progress-tracker-content .tracker img {
+  width: 40px;
+  height: 40px;
+  -o-object-position: 50% 0;
+  object-position: 50% 0;
+  -o-object-fit: cover;
+  object-fit: cover;
+  border: 1px solid;
+  border-radius: 4px;
+}
+#progress-tracker #progress-tracker-content .tracker .steps {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: center;
+}
+#progress-tracker #progress-tracker-content .tracker .steps .step {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  font-size: 20px;
+  margin-right: 2px;
+}
+#progress-tracker #progress-tracker-content .tracker .menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90px;
+  min-width: 90px;
+  gap: 2px;
+  flex-flow: wrap;
+  margin-left: 4px;
+  padding-left: 4px;
+  border-left: 1px solid;
+}
+#progress-tracker #progress-tracker-content .tracker .menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-text-selection-bg);
+  min-height: 20px;
+  min-width: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+}
+#progress-tracker #progress-tracker-content .tracker .menu a.long-button {
+  min-width: 30px;
+}
+#progress-tracker #progress-tracker-content .tracker .menu a.visible {
+  background-color: #006d18;
+}
+#progress-tracker #progress-tracker-content .tracker .menu a:hover {
+  box-shadow: 0 0 5px 1px var(--color-form-hint-hover) inset;
+  cursor: pointer;
+}
