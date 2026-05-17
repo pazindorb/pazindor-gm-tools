@@ -106,6 +106,7 @@
   "PGT.TRACKER_CONFIG.COUNTDOWN_HINT": "The countdown starts from the maximum and goes down. Countdown requires maximum to be provided.",
   "PGT.TRACKER_CONFIG.IMAGE_PATH": "Path to Tracker image",
   "PGT.TRACKER_CONFIG.ANNOUNCEMENT": "Announcement",
+  "PGT.TRACKER_CONFIG.ANNOUNCEMENT_STYLE": "Announcement Style",
   "PGT.TRACKER_CONFIG.ANNOUNCEMENT_HINT": "Message that should be displayed if the Tracker reaches max or zero for Countdown. Will be displayed only when Tracker is visible to everyone.",
   "PGT.TRACKER_CONFIG.EMPTY_ICON": "Tracker symbol (empty)",
   "PGT.TRACKER_CONFIG.FULL_ICON": "Tracker symbol (full)",

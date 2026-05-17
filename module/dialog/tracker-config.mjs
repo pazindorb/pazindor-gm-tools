@@ -73,6 +73,7 @@ export class TrackerConfig extends BaseDialog {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.tracker = this.tracker;
+    context.announcementStyles = PDE.announcementStyles
     return context;
   }
 

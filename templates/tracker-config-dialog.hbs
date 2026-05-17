@@ -45,6 +45,16 @@
     <p class="hint">{{localize "PGT.TRACKER_CONFIG.ANNOUNCEMENT_HINT"}}</p>
   </div>
 
+  {{!-- Announcement Style --}}
+  <div class="form-group">
+    <label>{{localize "PGT.TRACKER_CONFIG.ANNOUNCEMENT_STYLE"}}</label>
+    <div class="form-fields">
+      <select data-cType="string" data-path="tracker.announcementStyle">
+        {{selectOptions announcementStyles selected=tracker.announcementStyle blank="" localize=true}}
+      </select>
+    </div>
+  </div>
+
   {{!-- Tracker Icon --}}
   <div class="form-group">
     <label>{{localize "PGT.TRACKER_CONFIG.EMPTY_ICON"}}</label>

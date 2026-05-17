@@ -17,8 +17,8 @@
         "id": "pazindor-dev-essentials",
         "type": "module",
         "compatibility": {
-          "minimum": "0.9.0",
-          "verified": "0.9.0"
+          "minimum": "0.9.5",
+          "verified": "0.9.5"
         }
       }
     ]
