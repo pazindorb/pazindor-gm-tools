@@ -48,22 +48,24 @@ function restRequest(actor, selected) {
   }
 }
 
-async function rollRequest(actor, selected) {
+async function rollRequest(actor, selected, rollMode) {
   const [key, type] = selected.split(".");
+  const messageConfig = {};
+  if (rollMode) messageConfig.rollMode = rollMode;
 
   switch(type) {
     case "ability":
-      const abilityCheck = await actor.rollAbilityCheck({ability: key});
+      const abilityCheck = await actor.rollAbilityCheck({ability: key}, {}, messageConfig);
       if (!abilityCheck) return null;
       return abilityCheck[0];
 
     case "save":
-      const savingThrow = await actor.rollSavingThrow({ability: key});
+      const savingThrow = await actor.rollSavingThrow({ability: key}, {}, messageConfig);
       if (!savingThrow) return null;
       return savingThrow[0];
 
     case "skill":
-      const skillCheck = await actor.rollSkill({skill: key});
+      const skillCheck = await actor.rollSkill({skill: key}, {}, messageConfig);
       if (!skillCheck) return null;
       return skillCheck[0];
     

@@ -33,6 +33,11 @@
   "PGT.REQUEST.PROGRES_TRACKER": "Influence Progress Tracker",
   "PGT.REQUEST.PROGRES_TRACKER_SUCCESS": "On Success",
   "PGT.REQUEST.PROGRES_TRACKER_FAIL": "On Fail",
+  "PGT.REQUEST.ROLL_MODE": "Roll Mode",
+  "PGT.REQUEST.publicroll": "(Public)",
+  "PGT.REQUEST.gmroll": "(GM)",
+  "PGT.REQUEST.blindroll": "(Blind)",
+  "PGT.REQUEST.selfroll": "(Self)",
 
   "PGT.COLLECT_MODE.ACTIVE": "Active Players",
   "PGT.COLLECT_MODE.TARGET": "Targetted Tokens",

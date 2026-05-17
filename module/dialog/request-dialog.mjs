@@ -65,6 +65,7 @@ class RequestDialog extends BaseDialog {
           icon: "fa-dice",
           label: game.i18n.localize("PGT.REQUEST.ROLL_REQUEST"),
           rollDC: null,
+          rollMode: "",
           tracker: {
             key: "",
             success: "",
@@ -132,6 +133,13 @@ class RequestDialog extends BaseDialog {
       scene: "PGT.COLLECT_MODE.SCENE",
       all: "PGT.COLLECT_MODE.ALL_PC"
     }
+    context.rollModes = {
+      publicroll: "CHAT.RollPublic",
+      gmroll: "CHAT.RollPrivate",
+      blindroll: "CHAT.RollBlind",
+      selfroll: "CHAT.RollSelf"
+    };
+
     context.collectMode = this.collectMode;
     context.selectOptions = this.selectOptions;
     context.details = this.details;
@@ -231,7 +239,7 @@ class RequestDialog extends BaseDialog {
     super._onChange(event);
   }
 
-  async #setRollRequest(key, label) {
+  #setRollRequest(key, label) {
     for (const wrapper of Object.values(this.actorSelector)) {
       if (!wrapper.selected) continue;
       
@@ -243,6 +251,9 @@ class RequestDialog extends BaseDialog {
       }
       if (this.details.tracker.key) {
         wrapper.tracker = this.details.tracker;
+      }
+      if (this.details.rollMode) {
+        wrapper.rollMode = this.details.rollMode;
       }
     }
     this.render();
@@ -282,7 +293,7 @@ class RequestDialog extends BaseDialog {
 
     // If there is no active player GM needs to roll himself
     if (PDE.utils.getPlayersForActor(wrapper.actor).length === 0) {
-      const roll = await PGT.onRollRequest(wrapper.actor, wrapper.key);
+      const roll = await PGT.onRollRequest(wrapper.actor, wrapper.key, wrapper.rollMode);
       this.#resolveRollOutcome(wrapper, roll);
     }
 
@@ -291,6 +302,7 @@ class RequestDialog extends BaseDialog {
     emitEvent(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {
       actorId: actorId,
       selected: wrapper.key,
+      rollMode: wrapper.rollMode,
       options: {}
     });
 

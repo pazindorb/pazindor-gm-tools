@@ -41,18 +41,19 @@ export function restRequest(actor, selected) {
   }
 }
 
-export async function rollRequest(actor, selected) {
+export async function rollRequest(actor, selected, rollMode) {
   const [key, type] = selected.split(".");
+  const rollOptions = rollMode ? {rollMode} : {};
 
   switch(type) {
     case "perception":
-      return await actor.perception.roll();
+      return await actor.perception.roll(rollOptions);
 
     case "save":
-      return await actor.saves[key].roll();
+      return await actor.saves[key].roll(rollOptions);
 
     case "skill":
-      return await actor.skills[key].roll();
+      return await actor.skills[key].roll(rollOptions);
   }
 }
 

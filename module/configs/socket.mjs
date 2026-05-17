@@ -24,11 +24,11 @@ export function registerModuleSocket() {
 }
 
 async function handleRollRequest(payload, emmiterId) {
-  const { actorId, selected } = payload;
+  const { actorId, selected, rollMode } = payload;
   const actor = game.actors.get(actorId);
   if (!actor.isOwner) return;
 
-  let roll = await PGT.onRollRequest(actor, selected);
+  let roll = await PGT.onRollRequest(actor, selected, rollMode);
   if (!roll) roll = {};
   emitEvent(PGT.CONST.SOCKET.RESPONSE.ROLL_RESULT, {
     payload: {...roll},

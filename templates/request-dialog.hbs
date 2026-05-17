@@ -28,6 +28,7 @@
       {{#if wrapper.key}}
       <div class="selected-roll-wrapper">
         <span class="selected-roll">
+          {{#if wrapper.rollMode}}{{localize (concat "PGT.REQUEST." wrapper.rollMode)}}{{/if}}
           {{wrapper.label}}{{#if wrapper.rollDC}}{{localize "PGT.REQUEST.AGAINST_DC"}}{{wrapper.rollDC}}{{/if}}
         </span>
       </div>
@@ -87,6 +88,16 @@
   </div>
   {{/if}}
   {{/if}} {{/if}}
+
+  {{!-- Roll Mode --}}
+  <div class="form-group">
+    <label>{{localize "PGT.REQUEST.ROLL_MODE"}}</label>
+    <div class="form-fields">
+      <select data-cType="string" data-path="details.rollMode">
+        {{selectOptions rollModes selected=details.rollMode localize=true blank=""}}
+      </select>
+    </div>
+  </div>
 
   <div class="select-options-wrapper">
     {{#each selectOptions as |options category|}}
