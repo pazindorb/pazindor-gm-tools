@@ -176,7 +176,7 @@ class ProgressTracker extends BaseDialog {
 
   displayAnnouncement(tracker) {
     if (!tracker.announcement) return;
-    PDE.announce(tracker.announcement, 3000000, {style: tracker.announcementStyle});
+    PDE.announce(tracker.announcement, 3000, {style: tracker.announcementStyle});
   }
 }
 
