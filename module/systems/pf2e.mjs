@@ -144,6 +144,7 @@ function adventurersRegisterConfig() {
           {id: "health", icon: "fa-solid fa-heart", label: "PGT.ADVENTURERS.CORE.HEALTH", type: "current-max", pathCurrent: "system.attributes.hp.value", pathMax: "system.attributes.hp.max", editable: "numeric"},
           {id: "ac", icon: "fa-solid fa-shield", label: "PGT.ADVENTURERS.CORE.AC", type: "value", path: "system.attributes.ac.value"},
           {id: "speed", icon: "fa-solid fa-boot-heeled", label: "PGT.ADVENTURERS.CORE.SPEED", type: "value", path: "system.movement.speeds.land.value"},
+          {id: "perceptionDC", icon: "fa-solid fa-eye", label: `PF2E.Check.DC.Specific.perception`, type: "value", path: "system.perception.dc"},
         ]
       },
       {
