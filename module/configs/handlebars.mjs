@@ -54,11 +54,13 @@ export function registerHandlebarsHelpers() {
     }
 
     // Full Table
-    return `<table class="scrollable">
-      <colgroup>${colgroup}</colgroup>
-      <thead>${header}</thead>
-      <tbody>${rows}</tbody>
-    </table>`
+    return `<div class="scrollable" style="max-height: 400px; padding:0;">
+      <table>
+        <colgroup>${colgroup}</colgroup>
+        <thead>${header}</thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`
   });
 }
 
@@ -76,10 +78,13 @@ function _rowField(actor, field, activeGroup) {
       return _nameIconField(actor, activeGroup);
 
     case "label": case "value":
-      return _valueField(actor, field);  
+      return _valueField(actor, field);
 
     case "current-max":
       return _currentMax(actor, field);
+
+    case "custom": 
+      return _custom(actor, field);
   }
 }
 
@@ -105,7 +110,7 @@ function _valueField(actor, field) {
   const editableContent = field.editable ? `data-cType=${field.editable} data-actor-id=${actor.id} data-path="${field.path}"` : "readonly";
 
   if ('boolean' === typeof value) {
-    return `<i class="${value ? 'fa-solid fa-check' : ''}" ${rollableContent}></i>`;
+    return `<i style="width: 100%;" class="${value ? 'fa-solid fa-check' : ''}" ${rollableContent}></i>`;
   }
   return `<input class="${field.type}" type="text" value="${value}" ${rollableContent}  ${editableContent}/>`;
 }
@@ -123,6 +128,10 @@ function _currentMax(actor, field) {
             <span>/</span>
             <input type="text" value="${max}" readonly/>
           </div>`;
+}
+
+function _custom(actor, field) {
+  return field.customResolver(actor, field);
 }
 
 function _colgroup(type) {

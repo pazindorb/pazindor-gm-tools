@@ -28,8 +28,8 @@
       {{#if wrapper.key}}
       <div class="selected-roll-wrapper">
         <span class="selected-roll">
-          {{#if wrapper.rollMode}}{{localize (concat "PGT.REQUEST." wrapper.rollMode)}}{{/if}}
           {{wrapper.label}}{{#if wrapper.rollDC}}{{localize "PGT.REQUEST.AGAINST_DC"}}{{wrapper.rollDC}}{{/if}}
+          {{#if wrapper.rollOptionsTooltip}}<i class="fa-solid fa-gear" style="margin-left:3px;" data-tooltip="{{wrapper.rollOptionsTooltip}}"></i>{{/if}}
         </span>
       </div>
       {{/if}}
@@ -51,53 +51,43 @@
   {{!-- ROLL REQUEST --}}
   {{#if rollRequest}}
   <h4 class="divider">{{details.label}}</h4>
+  <fieldset class="box-wrapper scrollable" style="max-height: 200px;">
+    <div class="form-group fixed-input">
+      <label>{{localize "PGT.REQUEST.ROLL_DC"}}</label>
+      <input type="number" data-path="details.rollDC" value="{{details.rollDC}}" data-cType="numeric-nullable"/>
+    </div>
 
-  <div class="form-group fixed-input" style="margin-top: 5px;">
-    <label>{{localize "PGT.REQUEST.ROLL_DC"}}</label>
-    <input type="number" data-path="details.rollDC" value="{{details.rollDC}}" data-cType="numeric-nullable"/>
-  </div>
-
-  {{!-- Progress Tracker --}}
-  {{#if details.rollDC}} {{#if progressTrackers}}
-  <div class="form-group">
-    <label>{{localize "PGT.REQUEST.PROGRES_TRACKER"}}</label>
-    <div class="form-fields">
+    {{!-- Progress Tracker --}}
+    {{#if details.rollDC}} {{#if progressTrackers}}
+    <div class="form-group">
+      <label>{{localize "PGT.REQUEST.PROGRES_TRACKER"}}</label>
       <select data-cType="string" data-path="details.tracker.key">
         {{selectOptions progressTrackers selected=details.tracker.key localize=true blank=""}}
       </select>
     </div>
-  </div>
 
-  {{#if details.tracker.key}}
-  <div class="form-group">
-    <label>{{localize "PGT.REQUEST.PROGRES_TRACKER_SUCCESS"}}</label>
-    <div class="form-fields">
+    {{#if details.tracker.key}}
+    <div class="form-group">
+      <label>{{localize "PGT.REQUEST.PROGRES_TRACKER_SUCCESS"}}</label>
       <select data-cType="string" data-path="details.tracker.success">
         {{selectOptions progressTypes selected=details.tracker.success localize=true blank=""}}
       </select>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label>{{localize "PGT.REQUEST.PROGRES_TRACKER_FAIL"}}</label>
-    <div class="form-fields">
+    <div class="form-group">
+      <label>{{localize "PGT.REQUEST.PROGRES_TRACKER_FAIL"}}</label>
       <select data-cType="string" data-path="details.tracker.fail">
         {{selectOptions progressTypes selected=details.tracker.fail localize=true blank=""}}
       </select>
     </div>
-  </div>
-  {{/if}}
-  {{/if}} {{/if}}
+    {{/if}}
+    {{/if}} {{/if}}
 
-  {{!-- Roll Mode --}}
-  <div class="form-group">
-    <label>{{localize "PGT.REQUEST.ROLL_MODE"}}</label>
-    <div class="form-fields">
-      <select data-cType="string" data-path="details.rollMode">
-        {{selectOptions rollModes selected=details.rollMode localize=true blank=""}}
-      </select>
-    </div>
-  </div>
+    {{!-- Request extra options --}}
+    {{#each extraFields as |field key|}}
+    {{> "modules/pazindor-gm-tools/templates/partials/extra-field.hbs" field key=key }}
+    {{/each}}
+  </fieldset>
 
   <div class="select-options-wrapper">
     {{#each selectOptions as |options category|}}

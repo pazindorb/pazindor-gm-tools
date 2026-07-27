@@ -51,7 +51,10 @@
 }
 .pgt table td {
   font-size: 16px;
-  padding: 0;
+  padding: 0 2px;
+}
+.pgt table td:not(:first-child) {
+  border-left: 1px solid var(--color-fieldset-border);
 }
 .pgt table td:not(:first-child) input {
   text-align: center;

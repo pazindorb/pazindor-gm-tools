@@ -3,6 +3,7 @@ export function dnd5eConfig() {
   PGT.restOptions = restOptions();
   PGT.onRollRequest = rollRequest;
   PGT.onRestRequest = restRequest;
+  PGT.requestFields = requestFields();
   PGT.conditions = conditions();
   PGT.conditionRollKeys = conditionRollKeys();
   PGT.applyCondition = applyCondition;
@@ -48,29 +49,40 @@ function restRequest(actor, selected) {
   }
 }
 
-async function rollRequest(actor, selected, rollMode) {
+async function rollRequest(actor, selected, options={}) {
   const [key, type] = selected.split(".");
-  const messageConfig = {};
-  if (rollMode) messageConfig.rollMode = rollMode;
 
   switch(type) {
     case "ability":
-      const abilityCheck = await actor.rollAbilityCheck({ability: key}, {}, messageConfig);
+      const abilityCheck = await actor.rollAbilityCheck({ability: key}, {}, options);
       if (!abilityCheck) return null;
       return abilityCheck[0];
 
     case "save":
-      const savingThrow = await actor.rollSavingThrow({ability: key}, {}, messageConfig);
+      const savingThrow = await actor.rollSavingThrow({ability: key}, {}, options);
       if (!savingThrow) return null;
       return savingThrow[0];
 
     case "skill":
-      const skillCheck = await actor.rollSkill({skill: key}, {}, messageConfig);
+      const skillCheck = await actor.rollSkill({skill: key}, {}, options);
       if (!skillCheck) return null;
       return skillCheck[0];
     
     default:
       return null;
+  }
+}
+
+function requestFields() {
+  return {
+    roll: {
+      rollMode: {
+        element: "select",
+        type: "string",
+        options: CONFIG.ChatMessage.modes,
+        label: "PGT.REQUEST.ROLL_MODE"
+      }
+    }
   }
 }
 

@@ -21,7 +21,7 @@
 
   "PGT.REQUEST.SELECT_ACTORS": "Select Actors",
   "PGT.REQUEST.REST_REQUEST": "Select Rest",
-  "PGT.REQUEST.ROLL_REQUEST": "Select Roll",
+  "PGT.REQUEST.ROLL_REQUEST": "Select and Configure Roll",
   "PGT.REQUEST.SEND": "Send Request",
   "PGT.REQUEST.AWAITING_RESULT": "Awaiting Roll Result",
   "PGT.REQUEST.ROLL_RESULT": "Roll Result",
@@ -34,10 +34,9 @@
   "PGT.REQUEST.PROGRES_TRACKER_SUCCESS": "On Success",
   "PGT.REQUEST.PROGRES_TRACKER_FAIL": "On Fail",
   "PGT.REQUEST.ROLL_MODE": "Roll Mode",
-  "PGT.REQUEST.publicroll": "(Public)",
-  "PGT.REQUEST.gmroll": "(GM)",
-  "PGT.REQUEST.blindroll": "(Blind)",
-  "PGT.REQUEST.selfroll": "(Self)",
+
+  "PGT.REQUEST.DC20.ADV": "Advantage Level",
+  "PGT.REQUEST.DC20.DIS": "Disadvantage Level",
 
   "PGT.COLLECT_MODE.ACTIVE": "Active Players",
   "PGT.COLLECT_MODE.TARGET": "Targetted Tokens",
@@ -62,6 +61,10 @@
   "PGT.CATEGORY.PF2E.SKILL": "Skill Checks",
   "PGT.REST.PF2E.REST": "Start Rest",
 
+  "PGT.CATEGORY.DC20.BASIC": "Checks & Saves",
+  "PGT.CATEGORY.DC20.SKILL": "Skill Check",
+  "PGT.CATEGORY.DC20.TRADE": "Trade Check",
+
   "PGT.CONDITION_MANAGER.TITLE": "Condition Manager",
   "PGT.CONDITION_MANAGER.CONFIG": "Configuration",
   "PGT.CONDITION_MANAGER.ROLL_BEFORE": "Ask for Roll",
@@ -70,6 +73,14 @@
   "PGT.CONDITION_MANAGER.ROLL_BEFORE_DC": "DC",
   "PGT.CONDITION_MANAGER.CONDITIONS": "Apply to selected tokens",
   "PGT.CONDITION_MANAGER.SHOW_ALL": "Show all statuses",
+
+  "PGT.CONDITION.DC20.DURATION": "Duration (Rounds)",
+  "PGT.CONDITION.DC20.REMOVE_TRIGGER": "Removal Trigger",
+  "PGT.CONDITION.DC20.UNTIL_TRIGGERED": "Until Triggered for the First Time",
+  "PGT.CONDITION.DC20.UNTIL_START_TURN": "Until the Start of Target's Next Turn",
+  "PGT.CONDITION.DC20.UNTIL_END_TURN": "Until the End of Target's Next Turn",
+  "PGT.CONDITION.DC20.REPEATED_KEY": "Repeated Save Key",
+  "PGT.CONDITION.DC20.REPEATED_DC": "Repeated Save DC",
 
   "PGT.ADVENTURERS.TITLE": "Adventurer's Register",
   "PGT.ADVENTURERS.VALUE_NOT_FOUND": "Value not found",
@@ -81,12 +92,18 @@
   "PGT.ADVENTURERS.TAB.SAVE": "Saving Throws",
   "PGT.ADVENTURERS.TAB.SKILL": "Skills",
   "PGT.ADVENTURERS.TAB.ROLLS": "Rolls",
+  "PGT.ADVENTURERS.TAB.LANGUAGES": "Languages",
   "PGT.ADVENTURERS.SELECT_GROUP": "Select Adventuring Group",
   "PGT.ADVENTURERS.ADD_GROUP": "Add Adventuring Group",
   "PGT.ADVENTURERS.REMOVE_GROUP": "Remove Adventuring Group",
   "PGT.ADVENTURERS.REMOVE_FROM_GROUP": "Remove actor from group",
   "PGT.ADVENTURERS.ADD_TO_GROUP": "Add actor to group",
   "PGT.ADVENTURERS.ROLL": "Send Roll Request",
+
+  "PGT.ADVENTURERS.DC20.TAB.ATTRIBUTES": "Attribute Checks",
+  "PGT.ADVENTURERS.DC20.TAB.SAVES": "Saves",
+  "PGT.ADVENTURERS.COMBAT.DC20.ATTACK_MOD": "Attack Modifier",
+  "PGT.ADVENTURERS.COMBAT.DC20.SAVE_DC": "Save DC",
 
   "PGT.ADVENTURERS.ADVANCED.SELECT_ACTOR": "Select Actor to inspect",
   "PGT.ADVENTURERS.ADVANCED.SELECT_PATH": "Select path to inspect",

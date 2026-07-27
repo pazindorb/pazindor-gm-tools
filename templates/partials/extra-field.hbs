@@ -1,0 +1,29 @@
+<div class="form-group">
+  <label>{{localize label}}</label>
+
+  {{#ifCond element '===' "select"}}
+    <select data-cType="{{type}}" data-path="extraFields.{{key}}.value">
+      {{selectOptions options selected=value localize=true blank=""}}
+    </select>
+  {{/ifCond}}
+
+  {{#ifCond element '===' "input"}}
+    <input data-cType="{{type}}" data-path="extraFields.{{key}}.value" value="{{value}}" type="text"/>
+  {{/ifCond}}
+
+  {{#ifCond element '===' "checkbox"}}
+    <input data-cType="{{type}}" data-path="extraFields.{{key}}.value" {{checked value}} type="checkbox"/>
+  {{/ifCond}}
+
+  {{#ifCond element '===' "multi-checkbox"}}
+    <div style="display:flex; justify-content: end;">
+    {{#each elements as |checkbox checkKey|}}
+      <input data-cType="{{../type}}" data-path="extraFields.{{../key}}.elements.{{checkKey}}.value" {{checked checkbox.value}} data-tooltip="{{localize checkbox.label}}" type="checkbox"/>
+    {{/each}}
+    </div>
+  {{/ifCond}}
+
+  {{#if hint}}
+  <p class="hint">{{localize hint}}</p>
+  {{/if}}
+</div>

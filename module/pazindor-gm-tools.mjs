@@ -11,6 +11,7 @@ import { registerKeybindings } from "./configs/keybindings.mjs";
 import { keybindToText } from "./utils.mjs";
 import { gmScreen } from "./dialog/gm-screen.mjs";
 import { openProgressTracker } from "./dialog/progress-tracker.mjs";
+import { dc20Config } from "./systems/dc20.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -22,10 +23,12 @@ Hooks.once("init", async function() {
     restOptions: {},
     onRollRequest: null,
     onRestRequest: null,
+    requestFields: {},
     conditions: {},
     applyCondition: null,
     conditionRollKeys: null,
-    adventurersTabs: null,
+    conditionExtraFields: null,
+    adventurersConfig: null,
     pcActorTypes: ["character"],
     systemId: null,
   }
@@ -38,6 +41,7 @@ Hooks.once("ready", async function() {
   switch (game.system.id) {
     case "dnd5e": dnd5eConfig(); break;
     case "pf2e": pf2eConfig(); break;
+    case "dc20rpg": dc20Config(); break;
   }
   // Refresh controls
   ui.controls.render({reset:true});
@@ -49,6 +53,7 @@ Hooks.once("ready", async function() {
     if (!gmScreen.rendered) return;
     gmScreen.render();
   }
+  return _preloadHandlebarsTemplates();
 });
 
 Hooks.on("gameReady", () => {
@@ -123,3 +128,9 @@ Hooks.on("getSceneControlButtons", (controls) => {
     onToolChange: () => {},
   }
 });
+
+function _preloadHandlebarsTemplates() {
+  return foundry.applications.handlebars.loadTemplates([
+    "modules/pazindor-gm-tools/templates/partials/extra-field.hbs"
+  ]);
+}

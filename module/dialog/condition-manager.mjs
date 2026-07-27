@@ -1,4 +1,5 @@
 import { emitEvent, responseListener } from "../configs/socket.mjs";
+import { mapExtraFieldsToValues } from "../utils.mjs";
 import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
 class ConditionManagerDialog extends BaseDialog {
@@ -9,7 +10,8 @@ class ConditionManagerDialog extends BaseDialog {
 
     this.conditions = conditions;
     this.showAll = false;
-    this.rollKeys = this.options.rollKeys;
+    this.rollKeys = options.rollKeys;
+    this.extraFields = options.extraFields;
     this.rollBefore = {
       askForRoll: false,
       key: "",
@@ -49,6 +51,7 @@ class ConditionManagerDialog extends BaseDialog {
     context.showAll = this.showAll;
     context.canAskForRoll = !!this.rollKeys;
     context.rollKeys = this.rollKeys;
+    context.extraFields = this.extraFields;
     return context;
   }
 
@@ -61,6 +64,7 @@ class ConditionManagerDialog extends BaseDialog {
     event.preventDefault();
     const shouldAskForRoll = this.rollBefore.askForRoll && this.rollBefore.key && this.rollBefore.dc;
     const statusId = target.dataset.statusId;
+    const extraValues = mapExtraFieldsToValues(this.extraFields);
 
     const tokens = PDE.utils.getSelectedTokens();
     for (const token of tokens) {
@@ -69,7 +73,7 @@ class ConditionManagerDialog extends BaseDialog {
 
       // Without asking for roll
       if (!shouldAskForRoll) {
-        PGT.applyCondition(actor, statusId);
+        PGT.applyCondition(actor, statusId, extraValues);
         continue;
       }
       
@@ -85,12 +89,12 @@ class ConditionManagerDialog extends BaseDialog {
         });
         response.then(result => {
           const roll = result.payload;
-          if (!!!roll._total || roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId);
+          if (!!!roll._total || roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId, extraValues);
         })
       }
       else {
         const roll = await PGT.onRollRequest(actor, this.rollBefore.key);
-        if (!!!roll._total || roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId);
+        if (!!!roll._total || roll._total < this.rollBefore.dc) PGT.applyCondition(actor, statusId, extraValues);
       }
     }
   }
@@ -99,7 +103,7 @@ class ConditionManagerDialog extends BaseDialog {
 let conditionsWindow;
 export function openConditionManager() {
   if (!conditionsWindow) {
-    conditionsWindow = new ConditionManagerDialog(PGT.conditions, {rollKeys: PGT.conditionRollKeys});
+    conditionsWindow = new ConditionManagerDialog(PGT.conditions, {rollKeys: PGT.conditionRollKeys, extraFields: PGT.conditionExtraFields});
   }
   if (conditionsWindow.rendered) conditionsWindow.close();
   else conditionsWindow.render(true);

@@ -9,6 +9,7 @@ class RequestDialog extends BaseDialog {
     super(options);
     this.requestType = requestType;
     this.selectOptions = options.selectOptions || {};
+    this.extraFields = options.extraFields || {};
     this.collectMode = "active";
     this._collectAndPrepareActors(options.actors);
     this._prepareDetails();
@@ -65,7 +66,6 @@ class RequestDialog extends BaseDialog {
           icon: "fa-dice",
           label: game.i18n.localize("PGT.REQUEST.ROLL_REQUEST"),
           rollDC: null,
-          rollMode: "",
           tracker: {
             key: "",
             success: "",
@@ -83,7 +83,7 @@ class RequestDialog extends BaseDialog {
         }
         this.isRest = true;
         break;
-    }
+    }   
   }
 
   /** @override */
@@ -133,13 +133,8 @@ class RequestDialog extends BaseDialog {
       scene: "PGT.COLLECT_MODE.SCENE",
       all: "PGT.COLLECT_MODE.ALL_PC"
     }
-    context.rollModes = {
-      publicroll: "CHAT.RollPublic",
-      gmroll: "CHAT.RollPrivate",
-      blindroll: "CHAT.RollBlind",
-      selfroll: "CHAT.RollSelf"
-    };
 
+    context.extraFields = this.extraFields;
     context.collectMode = this.collectMode;
     context.selectOptions = this.selectOptions;
     context.details = this.details;
@@ -163,38 +158,6 @@ class RequestDialog extends BaseDialog {
   //=====================
   //       ACTIONS      =
   //=====================
-  async _onSendRequest(event) {
-    event.preventDefault();
-    this.awaitingResult = true;
-    const selected = event.target.dataset.key;
-
-    const selectedActorIds = [];
-    const notSelectedActors = [];
-    for (const wrapper of Object.values(this.actorSelector)) {
-      if (wrapper.selected) {
-        selectedActorIds.push(combinedKey(wrapper.actor));
-
-        delete wrapper.selected;
-        delete wrapper.selectable;
-        wrapper.request = true;
-      }
-      else notSelectedActors.push(combinedKey(wrapper.actor));
-    }
-
-    for (const combinedKey of notSelectedActors) {
-      delete this.actorSelector[combinedKey];
-    }
-
-    if (this.isRoll) {
-      this._rollRequest(selected, selectedActorIds);
-      this.render();
-    }
-    if (this.isRest) {
-      this._restRequest(selected, selectedActorIds);
-      this.close();
-    }
-  }
-
   async _onSendRestRequest(event, target) {
     event.preventDefault();
     const selected = event.target.dataset.key;
@@ -246,17 +209,27 @@ class RequestDialog extends BaseDialog {
       wrapper.selected = false;
       wrapper.key = key;
       wrapper.label = label;
+      const [options, tooltip] = this.#getRollOptions();
+      wrapper.rollOptions = options;
+      wrapper.rollOptionsTooltip = tooltip;
       if (this.details.rollDC !== null) {
         wrapper.rollDC = this.details.rollDC;
       }
       if (this.details.tracker.key) {
         wrapper.tracker = this.details.tracker;
       }
-      if (this.details.rollMode) {
-        wrapper.rollMode = this.details.rollMode;
-      }
     }
     this.render();
+  }
+
+  #getRollOptions() {
+    const rollOptions = {}
+    let tooltip = "";
+    for (const [key, field] of Object.entries(this.extraFields)) {
+      rollOptions[key] = field.value;
+      if (field.value) tooltip += `${game.i18n.localize(field.label)}: ${field.value}<br>`;
+    }
+    return [rollOptions, tooltip];
   }
 
   async _onSendRollRequest(event, target) {
@@ -293,7 +266,7 @@ class RequestDialog extends BaseDialog {
 
     // If there is no active player GM needs to roll himself
     if (PDE.utils.getPlayersForActor(wrapper.actor).length === 0) {
-      const roll = await PGT.onRollRequest(wrapper.actor, wrapper.key, wrapper.rollMode);
+      const roll = await PGT.onRollRequest(wrapper.actor, wrapper.key, wrapper.rollOptions);
       this.#resolveRollOutcome(wrapper, roll);
     }
 
@@ -302,7 +275,7 @@ class RequestDialog extends BaseDialog {
     emitEvent(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {
       actorId: actorId,
       selected: wrapper.key,
-      rollMode: wrapper.rollMode,
+      options: wrapper.rollOptions,
       options: {}
     });
 
@@ -314,7 +287,7 @@ class RequestDialog extends BaseDialog {
   }
 
   #resolveRollOutcome(wrapper, roll) {
-    if (roll._total == null) {
+    if (roll?._total == null) {
       wrapper.result = "X";
       wrapper.outcome = "fail";
     }
@@ -352,7 +325,7 @@ export function openRollRequest() {
     rollRequestWindow = null;
     return;
   }
-  rollRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions});
+  rollRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {selectOptions: PGT.rollOptions, extraFields: PGT.requestFields?.roll});
   rollRequestWindow.render(true);
 }
 
@@ -363,6 +336,6 @@ export function openRestRequest() {
     restRequestWindow = null;
     return;
   }
-  restRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions});
+  restRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions, extraFields: PGT.requestFields?.rest});
   restRequestWindow.render(true);
 }

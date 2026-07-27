@@ -3,6 +3,7 @@ export function pf2eConfig() {
   PGT.restOptions = restOptions();
   PGT.onRollRequest = rollRequest;
   PGT.onRestRequest = restRequest;
+  PGT.requestFields = requestFields();
   PGT.conditions = conditions();
   PGT.conditionRollKeys = conditionRollKeys();
   PGT.applyCondition = applyCondition;
@@ -41,19 +42,31 @@ export function restRequest(actor, selected) {
   }
 }
 
-export async function rollRequest(actor, selected, rollMode) {
+export async function rollRequest(actor, selected, options={}) {
   const [key, type] = selected.split(".");
-  const rollOptions = rollMode ? {rollMode} : {};
 
   switch(type) {
     case "perception":
-      return await actor.perception.roll(rollOptions);
+      return await actor.perception.roll(options);
 
     case "save":
-      return await actor.saves[key].roll(rollOptions);
+      return await actor.saves[key].roll(options);
 
     case "skill":
-      return await actor.skills[key].roll(rollOptions);
+      return await actor.skills[key].roll(options);
+  }
+}
+
+function requestFields() {
+  return {
+    roll: {
+      messageMode: {
+        element: "select",
+        type: "string",
+        options: CONFIG.ChatMessage.modes,
+        label: "PGT.REQUEST.ROLL_MODE"
+      }
+    }
   }
 }
 

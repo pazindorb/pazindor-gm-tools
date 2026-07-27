@@ -35,6 +35,14 @@
     </div>
     {{/if}}
     {{/if}}
+
+    {{!-- Request extra options --}}
+    {{#if extraFields}}
+    <hr>
+    {{#each extraFields as |field key|}}
+    {{> "modules/pazindor-gm-tools/templates/partials/extra-field.hbs" field key=key }}
+    {{/each}}
+    {{/if}}
   </fieldset>
   
 
