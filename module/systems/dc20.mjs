@@ -1,3 +1,22 @@
+import { keybindToText } from "../utils.mjs";
+import { openDamageCalculator } from "./dc20-custom-tools/dmg-calculator.mjs";
+import { openHelpManager } from "./dc20-custom-tools/help-manager.mjs";
+
+export function dc20Keybindings() {
+  game.keybindings.register("pazindor-gm-tools", "dmgCalculator", {
+    name: "dc20rpg.dialog.dmgCalculator.title",
+    editable: [{key: "KeyD", modifiers: ['Shift']}],
+    onDown: () => {if (game.user.isGM) openDamageCalculator()},
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+  });
+  game.keybindings.register("pazindor-gm-tools", "helpManager", {
+    name: "dc20rpg.dialog.help.title",
+    editable: [{key: "KeyH", modifiers: ['Shift']}],
+    onDown: () => {if (game.user.isGM) openHelpManager()},
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+  });
+}
+
 export function dc20Config() {
   PGT.rollOptions = rollOptions();
   PGT.restOptions = restOptions();
@@ -11,6 +30,7 @@ export function dc20Config() {
   PGT.adventurersConfig = adventurersRegisterConfig();
   PGT.pcActorTypes = ["character"];
   PGT.systemId = "dc20rpg";
+  PGT.customTools = customTools();
 }
 
 //==================================
@@ -183,7 +203,7 @@ function adventurersRegisterConfig() {
 
   const languageFields = []
   for (const [key, label] of Object.entries(CONFIG.DC20RPG.languages)) {
-    languageFields.push({id: `${key}-lang`, label: label, type: "custom", customResolver: _langCustomResolver, key: key})
+    languageFields.push({id: `${key}-lang`, label: label, type: "custom", customResolver: langCustomResolver, key: key})
   }
 
   return {
@@ -253,9 +273,36 @@ function adventurersRegisterConfig() {
   }
 }
 
-function _langCustomResolver(actor, field) {
+function langCustomResolver(actor, field) {
   const mastery = actor?.skillAndLanguage?.languages?.[field.key]?.mastery || 0;
   if (mastery === 1) return `<i style="width: 100%;" class="fa-solid fa-circle-half-stroke" data-tooltip="${game.i18n.localize("dc20rpg.languageLevel.limited")}"></i>`;
   if (mastery === 2) return `<i style="width: 100%;" class="fa-solid fa-circle" data-tooltip="${game.i18n.localize("dc20rpg.languageLevel.fluent")}"></i>`;
   return "";
 }
+
+//==================================
+//          CUSTOM TOOLS           =
+//==================================
+function customTools() {
+  return [
+    {
+      key: "dmgCalculator",
+      name: "dmgCalculator",
+      title: `${game.i18n.localize("dc20rpg.dialog.dmgCalculator.title")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "dmgCalculator"))})`,
+      icon: "fas fa-calculator",
+      button: true,
+      onChange: () => openDamageCalculator(),
+      visible: game.user.isGM
+    },
+    {
+      key: "helpManager",
+      name: "helpManager",
+      title: `${game.i18n.localize("dc20rpg.dialog.help.title")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "helpManager"))})`,
+      icon: "fas fa-dice-d8",
+      button: true,
+      onChange: () => openHelpManager(),
+      visible: game.user.isGM
+    },
+  ]
+}
+

@@ -11,14 +11,13 @@ import { registerKeybindings } from "./configs/keybindings.mjs";
 import { keybindToText } from "./utils.mjs";
 import { gmScreen } from "./dialog/gm-screen.mjs";
 import { openProgressTracker } from "./dialog/progress-tracker.mjs";
-import { dc20Config } from "./systems/dc20.mjs";
+import { dc20Config, dc20Keybindings } from "./systems/dc20.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
   registerHandlebarsHelpers();
   registerKeybindings();
   window.PGT = {
-    // TODO: Add system specific tools
     rollOptions: {},
     restOptions: {},
     onRollRequest: null,
@@ -31,6 +30,10 @@ Hooks.once("init", async function() {
     adventurersConfig: null,
     pcActorTypes: ["character"],
     systemId: null,
+    customTools: []
+  }
+  switch (game.system.id) {
+    case "dc20rpg": dc20Keybindings(); break;
   }
   PGT.CONST = prepareConstants();
 });
@@ -116,17 +119,12 @@ Hooks.on("getSceneControlButtons", (controls) => {
         onChange: () => gmScreen(),
         visible: game.user.isGM
       },
-      init: {
-        name: "init",
-        title: "",
-        icon: "hidden",
-        button: true,
-        onChange: () => {}
-      }
     },
     onChange: (event, active) => {},
     onToolChange: () => {},
   }
+  PGT.customTools.forEach(tool => controls.pazindorGmTools.tools[tool.key] = tool);
+  controls.pazindorGmTools.tools.init = {name: "init", title: "", icon: "hidden", button: true, onChange: () => {}}
 });
 
 function _preloadHandlebarsTemplates() {

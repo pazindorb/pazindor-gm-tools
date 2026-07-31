@@ -139,6 +139,64 @@
       }
     }
   }
+
+  .token-wrapper {
+    max-height: 500px;
+    gap: 0;
+
+    .actor {
+      padding: 8px 6px;
+      font-size: 14px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      border-top: 1px solid var(--color-border-light-2);
+      border-bottom: 1px solid var(--color-border-light-2);
+
+      .wrapper {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+
+        img {
+          min-width: 40px;
+          min-height: 40px;
+          height: 40px;
+          width: 40px;
+          object-position: 50% 0;
+          object-fit: cover;
+          border-radius: 5px;
+          border: 1px solid var(--color-border-light-2);
+        }
+
+        input {
+          border: 0;
+          background-color: transparent;
+          font-family: "Signika";
+          font-size: 16px;
+          margin: 0 5px 0 5px;
+          text-indent: 5px;
+          color: var(--color-text-primary);
+        }
+      }
+
+      &:first-child {
+        border-top: 0;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+      }
+    }
+  }
 }
 
 #adventurers-register {
@@ -812,4 +870,3 @@
 
 
 }
-

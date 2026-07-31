@@ -1,0 +1,22 @@
+<form id="help-manager" class="pgt standard-form {{cssClass}}">
+  <h4 class="divider">{{localize "dc20rpg.dialog.help.title"}}</h4>
+
+  <div class="form-group">
+    <label>{{localize 'dc20rpg.dialog.help.helpDice'}}</label>
+    <select data-cType="string" data-path="dice">
+      {{selectOptions dices selected=dice blank=""}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize 'dc20rpg.dialog.help.duration'}}</label>
+    <select data-cType="string" data-path="duration">
+      {{selectOptions durations selected=duration blank=""}}
+    </select>
+  </div>
+
+  <footer class="form-footer margin-top-5">
+    <button data-action="apply"><i class="fa-solid fa-dice-d8"></i>{{localize "dc20rpg.dialog.help.apply"}}</button>
+    <button data-action="close">{{localize "dc20rpg.dialog.display.close"}}</button>
+  </footer>
+</form>
