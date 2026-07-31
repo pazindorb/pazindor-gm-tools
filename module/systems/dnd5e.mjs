@@ -155,7 +155,7 @@ function adventurersRegisterConfig() {
       id: `${key}-check`, 
       label: `${skill.label}`, 
       type: "value", 
-      path: `system.skills.${key}.mod`, 
+      path: `system.skills.${key}.total`, 
       rollKey: `${key}.skill`
     });
   }
@@ -172,7 +172,7 @@ function adventurersRegisterConfig() {
           {id: "health", icon: "fa-solid fa-heart", label: "PGT.ADVENTURERS.CORE.HEALTH", type: "current-max", pathCurrent: "system.attributes.hp.value", pathMax: "system.attributes.hp.max", editable: "numeric"},
           {id: "ac", icon: "fa-solid fa-shield", label: "PGT.ADVENTURERS.CORE.AC", type: "value", path: "system.attributes.ac.value"},
           {id: "speed", icon: "fa-solid fa-boot-heeled", label: "PGT.ADVENTURERS.CORE.SPEED", type: "value", path: "system.attributes.movement.walk"},
-          {id: "passivePerception", icon: "fa-solid fa-eye", label: "PGT.ADVENTURERS.DND5E.PASSIVE_PERCPETION", type: "value", path: "system.skills.per.passive"},
+          {id: "passivePerception", icon: "fa-solid fa-eye", label: "PGT.ADVENTURERS.DND5E.PASSIVE_PERCPETION", type: "value", path: "system.skills.prc.passive"},
           {id: "passiveInvestigation", icon: "fa-solid fa-magnifying-glass", label: "PGT.ADVENTURERS.DND5E.PASSIVE_INVESTIGATION", type: "value", path: "system.skills.inv.passive"}
         ]
       },
