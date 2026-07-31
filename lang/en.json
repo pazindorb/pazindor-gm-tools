@@ -11,6 +11,10 @@
   "PGT.YES": "Yes",
   "PGT.NO": "No",
 
+  "PGT.CONCENTRATION": "Concentration",
+  "PGT.DEATH": "Death",
+  "PGT.INITIATIVE": "Initiative",
+
   "PGT.MENU.TITLE": "GM Tools",
   "PGT.MENU.ROLL": "Roll Request",
   "PGT.MENU.REST": "Rest Request",

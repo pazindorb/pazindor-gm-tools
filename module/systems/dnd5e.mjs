@@ -24,9 +24,12 @@ function rollOptions() {
   for (const [key, ability] of Object.entries(CONFIG.DND5E.abilities)) {
     rollOptions["DND5E.ABILITY"][`${key}.ability`] = `${ability.label} ${game.i18n.localize("PGT.CHECK")}`;
   }
+  rollOptions["DND5E.ABILITY"][`initiative.initiative`] = `${game.i18n.localize("PGT.INITIATIVE")} ${game.i18n.localize("PGT.CHECK")}`;
   for (const [key, ability] of Object.entries(CONFIG.DND5E.abilities)) {
     rollOptions["DND5E.SAVE"][`${key}.save`] = `${ability.label} ${game.i18n.localize("PGT.SAVE")}`;
   }
+  rollOptions["DND5E.SAVE"][`deathSave.deathSave`] = `${game.i18n.localize("PGT.DEATH")} ${game.i18n.localize("PGT.SAVE")}`;
+  rollOptions["DND5E.SAVE"]["concentration.concentration"] = `${game.i18n.localize("PGT.CONCENTRATION")} ${game.i18n.localize("PGT.CHECK")}`
   for (const [key, skill] of Object.entries(CONFIG.DND5E.skills)) {
     rollOptions["DND5E.SKILL"][`${key}.skill`] = `${skill.label} ${game.i18n.localize("PGT.CHECK")}`;
   }
@@ -67,6 +70,21 @@ async function rollRequest(actor, selected, options={}) {
       const skillCheck = await actor.rollSkill({skill: key}, {}, options);
       if (!skillCheck) return null;
       return skillCheck[0];
+
+    case "concentration": 
+      const rollConfig = options.rollDC != null ? {target: options.rollDC} : {};
+      const concentration = await actor.rollConcentration(rollConfig);
+      if (!concentration) return null;
+      return concentration[0];
+
+    case "deathSave": 
+      const deathSave = await actor.rollDeathSave();
+      if (!deathSave) return null;
+      return deathSave[0];
+
+    case "initiative": 
+      await actor.rollInitiativeDialog({event: options?.event, createCombatants: true, rerollInitiative: true})
+      return {skip: true};
     
     default:
       return null;

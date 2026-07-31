@@ -264,9 +264,12 @@ class RequestDialog extends BaseDialog {
     const actorId = wrapper.actor.id;
     if (!actorId) return;
 
+    const rollOptions = wrapper.rollOptions;
+    rollOptions.rollDC = wrapper.rollDC;
+
     // If there is no active player GM needs to roll himself
     if (PDE.utils.getPlayersForActor(wrapper.actor).length === 0) {
-      const roll = await PGT.onRollRequest(wrapper.actor, wrapper.key, wrapper.rollOptions);
+      const roll = await PGT.onRollRequest(wrapper.actor, wrapper.key, rollOptions);
       this.#resolveRollOutcome(wrapper, roll);
     }
 
@@ -275,7 +278,7 @@ class RequestDialog extends BaseDialog {
     emitEvent(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {
       actorId: actorId,
       selected: wrapper.key,
-      options: wrapper.rollOptions,
+      options: rollOptions,
       options: {}
     });
 
@@ -287,7 +290,11 @@ class RequestDialog extends BaseDialog {
   }
 
   #resolveRollOutcome(wrapper, roll) {
-    if (roll?._total == null) {
+    if (roll?.skip) {
+      wrapper.result = "";
+      wrapper.outcome = "success";
+    }
+    else if (roll?._total == null) {
       wrapper.result = "X";
       wrapper.outcome = "fail";
     }
