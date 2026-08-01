@@ -41,6 +41,7 @@
 
   "PGT.REQUEST.DC20.ADV": "Advantage Level",
   "PGT.REQUEST.DC20.DIS": "Disadvantage Level",
+  "PGT.REQUEST.DC20.MOD": "Modifier",
 
   "PGT.COLLECT_MODE.ACTIVE": "Active Players",
   "PGT.COLLECT_MODE.TARGET": "Targetted Tokens",
@@ -68,6 +69,12 @@
   "PGT.CATEGORY.DC20.BASIC": "Checks & Saves",
   "PGT.CATEGORY.DC20.SKILL": "Skill Check",
   "PGT.CATEGORY.DC20.TRADE": "Trade Check",
+
+  "PGT.CATEGORY.DRAW_STEEL.TESTS": "Characteristic Tests",
+  "PGT.REQUEST.DRAW_STEEL.EDGES": "Edges",
+  "PGT.REQUEST.DRAW_STEEL.BANES": "Banes",
+  "PGT.REQUEST.DRAW_STEEL.BONUSES": "Bonuses / Penalties",
+  "PGT.CONDITION.DRAW_STEEL.EFFECT_END": "Condition Ends",
 
   "PGT.CONDITION_MANAGER.TITLE": "Condition Manager",
   "PGT.CONDITION_MANAGER.CONFIG": "Configuration",

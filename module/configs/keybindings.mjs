@@ -37,7 +37,7 @@ export function registerKeybindings() {
   game.keybindings.register("pazindor-gm-tools", "adventurers", {
     name: "PGT.MENU.ADVENTURERS",
     editable: [{key: "KeyJ", modifiers: []}],
-    onDown: () => {if (game.user.isGM) openAdventurersRegister()},
+    onDown: () => {if (game.user.isGM && PGT.adventurersConfig) openAdventurersRegister()},
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 

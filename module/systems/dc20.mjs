@@ -65,7 +65,7 @@ async function rollRequest(actor, selected, options={}) {
   if (!type) return null;
 
   const rollOptions = {
-    initialRollMenuValue: {adv: (parseInt(options.adv) || 0), dis: (parseInt(options.dis) || 0), modifier: ""},
+    initialRollMenuValue: {adv: (parseInt(options.adv) || 0), dis: (parseInt(options.dis) || 0), modifier: options.mod || ""},
     messageMode: options.rollMode
   }
 
@@ -84,12 +84,6 @@ function restRequest(actor, selected) {
 function requestFields() {
   return {
     roll: {
-      rollMode: {
-        element: "select",
-        type: "string",
-        options: CONFIG.ChatMessage.modes,
-        label: "PGT.REQUEST.ROLL_MODE"
-      },
       adv: {
         element: "input",
         type: "numeric",
@@ -99,6 +93,17 @@ function requestFields() {
         element: "input",
         type: "numeric",
         label: "PGT.REQUEST.DC20.DIS"
+      },
+      mod: {
+        element: "input",
+        type: "string",
+        label: "PGT.REQUEST.DC20.MOD"
+      },
+      rollMode: {
+        element: "select",
+        type: "string",
+        options: CONFIG.ChatMessage.modes,
+        label: "PGT.REQUEST.ROLL_MODE"
       }
     }
   }

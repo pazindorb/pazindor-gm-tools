@@ -90,7 +90,7 @@ class RequestDialog extends BaseDialog {
   static DEFAULT_OPTIONS = {
     id: "actor-request",
     classes: ["pgt themed"],
-    position: {width: "auto"},
+    position: {width: 730},
     window: {
       title: "PGT.REQUEST.SEND",
       icon: "fa-solid fa-window",
@@ -101,7 +101,7 @@ class RequestDialog extends BaseDialog {
   static PARTS = {
     root: {
       template: "modules/pazindor-gm-tools/templates/request-dialog.hbs",
-      scrollable: [".scrollable"]
+      scrollable: [".scrollable", ".scroll-options"]
     }
   };
 
@@ -278,8 +278,7 @@ class RequestDialog extends BaseDialog {
     emitEvent(PGT.CONST.SOCKET.EMIT.ROLL_REQUEST, {
       actorId: actorId,
       selected: wrapper.key,
-      options: rollOptions,
-      options: {}
+      options: rollOptions
     });
 
     response.then(result => {

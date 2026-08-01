@@ -12,6 +12,7 @@ import { keybindToText } from "./utils.mjs";
 import { gmScreen } from "./dialog/gm-screen.mjs";
 import { openProgressTracker } from "./dialog/progress-tracker.mjs";
 import { dc20Config, dc20Keybindings } from "./systems/dc20.mjs";
+import { drawSteelConfig } from "./systems/draw-steel.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -45,6 +46,7 @@ Hooks.once("ready", async function() {
     case "dnd5e": dnd5eConfig(); break;
     case "pf2e": pf2eConfig(); break;
     case "dc20rpg": dc20Config(); break;
+    case "draw-steel": drawSteelConfig(); break;
   }
   // Refresh controls
   ui.controls.render({reset:true});
@@ -109,7 +111,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-book-open-cover",
         button: true,
         onChange: () => openAdventurersRegister(),
-        visible: game.user.isGM
+        visible: !!PGT.adventurersConfig && game.user.isGM
       },
       gmScreen: {
         name: "gmScreen",
