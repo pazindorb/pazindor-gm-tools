@@ -6,4 +6,4 @@ The module contains a set of useful tools for GMs. It includes features such as:
 - Viewing player statistics
 - Customizable GM Screen
 
-The system is configured to support DND5e and PF2e and also provides functions allowing the configuration of additional systems.
+The module includes system adapters for D&D 5e, Pathfinder 2e, DC20, Draw Steel, and Daggerheart. Its adapter interface also allows additional systems to be configured.

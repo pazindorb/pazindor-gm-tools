@@ -168,7 +168,7 @@ function conditionExtraFields() {
     duration: {
       element: "input",
       type: "numeric",
-      label: "PGT.CONDITION.DC20.DURATION"
+      label: "PGT.CONDITION_MANAGER.DURATION"
     },
     repeatedSaveKey: {
       element: "select",

@@ -6,6 +6,7 @@ export function dnd5eConfig() {
   PGT.requestFields = requestFields();
   PGT.conditions = conditions();
   PGT.conditionRollKeys = conditionRollKeys();
+  PGT.conditionExtraFields = conditionExtraFields();
   PGT.applyCondition = applyCondition;
   PGT.adventurersConfig = adventurersRegisterConfig();
   PGT.pcActorTypes = ["character"];
@@ -128,9 +129,17 @@ function conditionRollKeys() {
   return keys;
 }
 
-function applyCondition(actor, statusId) {
+function applyCondition(actor, statusId, extraValues) {
   if (statusId === "exhaustion") CONFIG.ActiveEffect.documentClass._manageExhaustion(_dummyEvent(), actor);
-  else actor.toggleStatusEffect(statusId, {active: true});
+  else actor.toggleStatusEffect(statusId, {active: true}).then(created => {
+    if (created instanceof ActiveEffect && extraValues.duration) {
+      created.update({
+        ["duration.expiry"]: "turnEnd",
+        ["duration.value"]: extraValues.duration,
+        ["duration.units"]: "rounds"
+      })
+    }
+  })
 }
 
 function _dummyEvent() {
@@ -138,6 +147,16 @@ function _dummyEvent() {
     button: 0,
     preventDefault: () => {},
     stopPropagation: () => {},
+  }
+}
+
+function conditionExtraFields() {
+  return {
+    duration: {
+      element: "input",
+      type: "numeric",
+      label: "PGT.CONDITION_MANAGER.DURATION"
+    }
   }
 }
 

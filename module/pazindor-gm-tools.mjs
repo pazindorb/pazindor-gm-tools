@@ -13,6 +13,7 @@ import { gmScreen } from "./dialog/gm-screen.mjs";
 import { openProgressTracker } from "./dialog/progress-tracker.mjs";
 import { dc20Config, dc20Keybindings } from "./systems/dc20.mjs";
 import { drawSteelConfig } from "./systems/draw-steel.mjs";
+import { daggerheartConfig } from "./systems/daggerhart.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -47,6 +48,7 @@ Hooks.once("ready", async function() {
     case "pf2e": pf2eConfig(); break;
     case "dc20rpg": dc20Config(); break;
     case "draw-steel": drawSteelConfig(); break;
+    case "daggerheart": daggerheartConfig(); break;
   }
   // Refresh controls
   ui.controls.render({reset:true});

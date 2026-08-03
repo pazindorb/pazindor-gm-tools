@@ -339,10 +339,12 @@
   flex-direction: column;
   border-radius: 5px;
   border: 2px solid var(--color-tabs-border);
+  max-width: 80px;
 }
 #condition-manager .conditions-wrapper .condition label {
   padding: 5px;
   font-size: 12px;
+  overflow: hidden;
 }
 #condition-manager .conditions-wrapper .condition img {
   padding: 5px;
