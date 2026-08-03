@@ -1,7 +1,7 @@
 import { prepareConstants } from "./configs/constant.mjs";
 import { openAdventurersRegister } from "./dialog/adventurers-register.mjs";
 import { openConditionManager } from "./dialog/condition-manager.mjs";
-import { openRestRequest, openRollRequest } from "./dialog/request-dialog.mjs";
+import { openRestRequest, openRollListener, openRollRequest } from "./dialog/request-dialog.mjs";
 import { registerHandlebarsHelpers } from "./configs/handlebars.mjs";
 import { registerModuleSettings } from "./configs/settings.mjs";
 import { registerModuleSocket } from "./configs/socket.mjs";
@@ -32,7 +32,8 @@ Hooks.once("init", async function() {
     adventurersConfig: null,
     pcActorTypes: ["character"],
     systemId: null,
-    customTools: []
+    customTools: [],
+    extractRollFromMessage: (message) => message.rolls[0]
   }
   switch (game.system.id) {
     case "dc20rpg": dc20Keybindings(); break;
@@ -82,6 +83,14 @@ Hooks.on("getSceneControlButtons", (controls) => {
         button: true,
         onChange: () => openRollRequest(),
         visible: !!PGT.onRollRequest && game.user.isGM 
+      },
+      listener: {
+        name: "rollListener",
+        title: `${game.i18n.localize("PGT.MENU.ROLL_LISTENER")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "rollListener"))})`,
+        icon: "fas fa-ear-listen",
+        button: true,
+        onChange: () => openRollListener(),
+        visible: game.user.isGM
       },
       rest: {
         name: "rest",

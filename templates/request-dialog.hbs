@@ -15,6 +15,10 @@
   {{/ifCond}}
   {{/unless}} {{/if}}
 
+  {{#if rollListener}}
+    <button class="button" data-cType="activable" data-path="details.listening">{{#if details.listening}}{{localize "PGT.ROLL_LISTENER.STOP"}}{{else}}{{localize "PGT.ROLL_LISTENER.START"}}{{/if}}</button>
+  {{/if}}
+
   <fieldset class="actor-wrapper box-wrapper scrollable">
   {{#if hasActors}} 
     {{#each actorSelector as |wrapper combinedKey|}}
@@ -43,10 +47,66 @@
       <span>{{localize "PGT.REQUEST.NO_ACTOR.REST"}}</span>
       {{/if}}
     {{else}}
-    <span>{{localize "PGT.REQUEST.NO_ACTOR.RESULT"}}</span>
+    {{#unless rollListener}}
+    <span>{{localize "PGT.REQUEST.AWAITING_RESULT"}}</span>
+    {{/unless}}
+    {{#if details.listening}}
+    <span>{{localize "PGT.REQUEST.ROLL_LISTENER_AWAIT"}}</span>
+    {{/if}}
     {{/unless}}
   {{/if}}
   </fieldset>
+
+  {{!-- ROLL LISTNER --}}
+  {{#if rollListener}}
+  <h4 class="divider">{{details.label}}</h4>
+  <fieldset class="box-wrapper scrollable scroll-options" style="max-height: 200px;">
+    <div class="form-group">
+      <label>{{localize 'PGT.ROLL_LISTENER.ACCEPT_FIRST'}}</label>
+      <div class="form-fields">
+        <input type="checkbox" data-cType="activable" data-path="details.acceptFirstOnly" {{checked details.acceptFirstOnly}}/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize 'PGT.ROLL_LISTENER.PC_ONLY'}}</label>
+      <div class="form-fields">
+        <input type="checkbox" data-cType="activable" data-path="details.pcOnly" {{checked details.pcOnly}}/>
+      </div>
+    </div>
+
+    <div class="form-group fixed-input">
+      <label>{{localize "PGT.REQUEST.ROLL_DC"}}</label>
+      <input type="number" data-path="details.rollDC" value="{{details.rollDC}}" data-cType="numeric-nullable"/>
+    </div>
+
+    {{!-- Progress Tracker --}}
+    {{#if details.rollDC}} {{#if progressTrackers}}
+    <div class="form-group">
+      <label>{{localize "PGT.REQUEST.PROGRES_TRACKER"}}</label>
+      <select data-cType="string" data-path="details.tracker.key">
+        {{selectOptions progressTrackers selected=details.tracker.key localize=true blank=""}}
+      </select>
+    </div>
+
+    {{#if details.tracker.key}}
+    <div class="form-group">
+      <label>{{localize "PGT.REQUEST.PROGRES_TRACKER_SUCCESS"}}</label>
+      <select data-cType="string" data-path="details.tracker.success">
+        {{selectOptions progressTypes selected=details.tracker.success localize=true blank=""}}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "PGT.REQUEST.PROGRES_TRACKER_FAIL"}}</label>
+      <select data-cType="string" data-path="details.tracker.fail">
+        {{selectOptions progressTypes selected=details.tracker.fail localize=true blank=""}}
+      </select>
+    </div>
+    {{/if}}
+    {{/if}} {{/if}}
+  </fieldset>
+  {{/if}}
 
   {{!-- ROLL REQUEST --}}
   {{#if rollRequest}}

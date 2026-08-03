@@ -12,7 +12,7 @@ class RequestDialog extends BaseDialog {
     this.extraFields = options.extraFields || {};
     this.collectMode = "active";
     this._collectAndPrepareActors(options.actors);
-    this._prepareDetails();
+    this._prepareDetails(options);
   }
 
   _collectAndPrepareActors(actors) {
@@ -58,14 +58,14 @@ class RequestDialog extends BaseDialog {
     return game.scenes.active.tokens.filter(token => token.actor).map(token => token.actor);
   }
 
-  _prepareDetails() {
+  _prepareDetails(options) {
     const emitTypes = PGT.CONST.SOCKET.EMIT;
     switch(this.requestType) {
       case emitTypes.ROLL_REQUEST:
         this.details = {
           icon: "fa-dice",
           label: game.i18n.localize("PGT.REQUEST.ROLL_REQUEST"),
-          rollDC: null,
+          rollDC: options.rollDC || null,
           tracker: {
             key: "",
             success: "",
@@ -82,6 +82,25 @@ class RequestDialog extends BaseDialog {
           rollDC: null,
         }
         this.isRest = true;
+        break;
+
+      case emitTypes.ROLL_LISTENER:
+        this.details = {
+          icon: "fa-ear-listen",
+          label: game.i18n.localize("PGT.REQUEST.ROLL_LISTENER"),
+          rollDC: options.rollDC || null,
+          acceptFirstOnly: true,
+          pcOnly: false,
+          listening: false,
+          tracker: {
+            key: "",
+            success: "",
+            fail: ""
+          }
+        }
+        this.awaitingResult = true;
+        this.isListener = true;
+        this.actorSelector = {};
         break;
     }   
   }
@@ -140,6 +159,7 @@ class RequestDialog extends BaseDialog {
     context.details = this.details;
     context.rollRequest = context.hasActors && this.isRoll && !this.awaitingResult;
     context.restRequest = context.hasActors && this.isRest;
+    context.rollListener = this.isListener;
     context.isRoll = this.isRoll;
     context.awaitingResult = this.awaitingResult;
     return context;
@@ -322,6 +342,25 @@ class RequestDialog extends BaseDialog {
     delete wrapper.request;
     this.render();
   }
+
+  async onRollListened(message) {
+    if (!this.details.listening) return;
+
+    const actor = message.speakerActor;
+    const roll = PGT.extractRollFromMessage(message);
+    if (roll?._total == null || !actor) return;
+
+    const rollDC = this.details.rollDC;
+    const key = combinedKey(actor);
+
+    if (this.details.pcOnly && !PGT.pcActorTypes.includes(actor.type)) return;
+    if (this.actorSelector[key] && this.details.acceptFirstOnly) return;
+    if (!this.actorSelector[key]) this.actorSelector[key] = {actor: actor};
+
+    if (this.details.rollDC) this.actorSelector[key].rollDC = this.details.rollDC;
+    if (this.details.tracker) this.actorSelector[key].tracker = this.details.tracker;
+    this.#resolveRollOutcome(this.actorSelector[key], roll);
+  }
 }
 
 let rollRequestWindow;
@@ -345,3 +384,18 @@ export function openRestRequest() {
   restRequestWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.REST_REQUEST, {selectOptions: PGT.restOptions, extraFields: PGT.requestFields?.rest});
   restRequestWindow.render(true);
 }
+
+let rollListenerWindow;
+export function openRollListener() {
+  if (rollListenerWindow?.rendered) {
+    rollListenerWindow.close();
+    rollListenerWindow = null;
+    return;
+  }
+  rollListenerWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_LISTENER, {actors: []});
+  rollListenerWindow.render(true);
+}
+
+Hooks.on("createChatMessage", (message) => {
+  if (rollListenerWindow?.rendered && message.isRoll) rollListenerWindow.onRollListened(message)
+});

@@ -31,6 +31,11 @@ export function dc20Config() {
   PGT.pcActorTypes = ["character"];
   PGT.systemId = "dc20rpg";
   PGT.customTools = customTools();
+  PGT.extractRollFromMessage = (message) => {
+    const winner = message.winningRoll;
+    winner._total = winner.total
+    return winner;
+  };
 }
 
 //==================================

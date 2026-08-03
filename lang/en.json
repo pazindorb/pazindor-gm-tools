@@ -23,10 +23,17 @@
   "PGT.MENU.TRACKER": "Progress Tracker",
   "PGT.MENU.GM_SCREEN": "Game Master Screen",
 
+  "PGT.ROLL_LISTENER.ACCEPT_FIRST": "Accept Only First Roll",
+  "PGT.ROLL_LISTENER.STOP": "Stop Listener",
+  "PGT.ROLL_LISTENER.START": "Start Listening for Rolls",
+  "PGT.REQUEST.ROLL_LISTENER": "Configure Listener",
+  "PGT.ROLL_LISTENER.PC_ONLY": "Accept only Player Character Rolls", 
+
   "PGT.REQUEST.SELECT_ACTORS": "Select Actors",
   "PGT.REQUEST.REST_REQUEST": "Select Rest",
   "PGT.REQUEST.ROLL_REQUEST": "Select and Configure Roll",
-  "PGT.REQUEST.SEND": "Send Request",
+  "PGT.REQUEST.SEND": "Send/Await Request",
+  "PGT.REQUEST.ROLL_LISTENER_AWAIT": "Waiting for Rolls...",
   "PGT.REQUEST.AWAITING_RESULT": "Awaiting Roll Result",
   "PGT.REQUEST.ROLL_RESULT": "Roll Result",
   "PGT.REQUEST.ROLL_DC": "Roll DC",
