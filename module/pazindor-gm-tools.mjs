@@ -84,7 +84,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         onChange: () => openRollRequest(),
         visible: !!PGT.onRollRequest && game.user.isGM 
       },
-      listener: {
+      rollListener: {
         name: "rollListener",
         title: `${game.i18n.localize("PGT.MENU.ROLL_LISTENER")} (${keybindToText(game.keybindings.get("pazindor-gm-tools", "rollListener"))})`,
         icon: "fas fa-ear-listen",

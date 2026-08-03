@@ -18,7 +18,8 @@ export function pf2eConfig() {
 export function rollOptions() {
   const rollOptions = {
     ["PF2E.BASIC"]: {},
-    ["PF2E.SKILL"]: {}
+    ["PF2E.SKILL"]: {},
+    ["PF2E.ACTION"]: pf2eActionOptions()
   };
   rollOptions["PF2E.BASIC"]["perception.perception"] = `${game.i18n.localize("PF2E.PerceptionLabel")} ${game.i18n.localize("PGT.CHECK")}`;
   for (const [key, save] of Object.entries(CONFIG.PF2E.saves)) {
@@ -28,6 +29,34 @@ export function rollOptions() {
     rollOptions["PF2E.SKILL"][`${key}.skill`] = `${game.i18n.localize(skill.label)} ${game.i18n.localize("PGT.CHECK")}`;
   }
   return rollOptions;
+}
+
+function pf2eActionOptions() {
+  const options = {
+    "treatWounds.action": game.i18n.localize("PF2E.Actions.TreatWounds.Label"),
+    "battleMedicine.action": game.i18n.localize("PGT.REQUEST.PF2E.BATTLE_MEDICINE"),
+    "earnIncome.action": game.i18n.localize("PF2E.Actions.EarnIncome.Title"),
+    "encouragingWords.action": game.i18n.localize("PF2E.Actions.EncouragingWords.Title"),
+    "recovery.action": game.i18n.localize("PF2E.Check.Specific.Recovery")
+  };
+
+  for (const action of game.pf2e.actions.values()) {
+    if (action.section !== "skill" || typeof action.preview !== "function") continue;
+
+    const label = game.i18n.localize(action.name);
+    const variants = [...action.variants.values()];
+    if (variants.length <= 1) {
+      options[`${action.slug}.action`] = label;
+      continue;
+    }
+
+    for (const variant of variants) {
+      const variantLabel = variant.name ? game.i18n.localize(variant.name) : variant.slug;
+      options[`${action.slug}|${variant.slug}.action`] = `${label} - ${variantLabel}`;
+    }
+  }
+
+  return options;
 }
 
 export function restOptions() {
@@ -54,7 +83,53 @@ export async function rollRequest(actor, selected, options={}) {
 
     case "skill":
       return await actor.skills[key].roll(options);
+
+    case "action":
+      return await actionRoll(actor, key, options);
   }
+}
+
+async function actionRoll(actor, key, options) {
+  if (key === "treatWounds") {
+    await game.pf2e.actions.treatWounds({actors: [actor]});
+    return {skip: true};
+  }
+
+  if (key === "battleMedicine") {
+    const {rollDC, ...rollOptions} = options;
+    return await actor.skills.medicine.roll({
+      ...rollOptions,
+      dc: {value: Number.isFinite(rollDC) ? rollDC : 15, visible: true},
+      extraRollOptions: ["action:battle-medicine"],
+      label: game.i18n.localize("PGT.REQUEST.PF2E.BATTLE_MEDICINE"),
+      traits: ["healing", "manipulate"]
+    });
+  }
+
+  if (key === "earnIncome") {
+    game.pf2e.actions.earnIncome(actor);
+    return {skip: true};
+  }
+
+  if (key === "encouragingWords") {
+    game.pf2e.actions.encouragingWords({actors: [actor]});
+    return {skip: true};
+  }
+
+  if (key === "recovery") {
+    return await actor.rollRecovery();
+  }
+
+  const [slug, variant] = key.split("|");
+  const action = game.pf2e.actions.get(slug);
+  if (!action) return null;
+
+  const results = await action.use({
+    actors: [actor],
+    difficultyClass: Number.isFinite(options.rollDC) ? options.rollDC : undefined,
+    variant: variant || undefined
+  });
+  return results?.[0]?.roll ?? {skip: true};
 }
 
 function requestFields() {

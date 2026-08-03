@@ -17,6 +17,7 @@
 
   "PGT.MENU.TITLE": "GM Tools",
   "PGT.MENU.ROLL": "Roll Request",
+  "PGT.MENU.ROLL_LISTENER": "Roll Listener",
   "PGT.MENU.REST": "Rest Request",
   "PGT.MENU.CONDITION": "Condition Manager",
   "PGT.MENU.ADVENTURERS": "Adventurer's Register",
@@ -71,6 +72,8 @@
 
   "PGT.CATEGORY.PF2E.BASIC": "Perception & Saves",
   "PGT.CATEGORY.PF2E.SKILL": "Skill Checks",
+  "PGT.CATEGORY.PF2E.ACTION": "Skill Actions",
+  "PGT.REQUEST.PF2E.BATTLE_MEDICINE": "Battle Medicine",
   "PGT.REST.PF2E.REST": "Start Rest",
 
   "PGT.CATEGORY.DC20.BASIC": "Checks & Saves",
