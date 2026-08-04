@@ -145,11 +145,17 @@
   "PGT.TRACKER.ADD_TRACKER": "Add new Tracker",
   "PGT.TRACKER.OPEN_TO_PLAYERS": "Open Tracker for Players",
   "PGT.TRACKER.RESET_TRACKER": "Reset Tracker",
+  "PGT.TRACKER.FINISH_TRACKER": "Finish Tracking",
   "PGT.TRACKER.INCREASE_COUNTER": "Increase Counter",
   "PGT.TRACKER.REDUCE_COUNTER": "Reduce Counter",
   "PGT.TRACKER.CONFIG_TRACKER": "Configure Tracker",
   "PGT.TRACKER.VISIBLE_TO_PLAYERS": "Show Tracker to Players",
   "PGT.TRACKER.DELETE_TRACKER": "Delete Tracker",
+
+  "PGT.TRACKER.DC20.INCREASE_COUNTER": "Increase Counter (Each 5 + Crit)",
+  "PGT.TRACKER.DC20.REDUCE_COUNTER": "Reduce Counter (Each 5 + Crit)",
+  "PGT.TRACKER.DC20.INCREASE_COUNTER_ONCE": "Increase Counter (Once)",
+  "PGT.TRACKER.DC20.REDUCE_COUNTER_ONCE": "Reduce Counter (Once)",
 
   "PGT.TRACKER_CONFIG.TITLE": "Tracker Configuration",
   "PGT.TRACKER_CONFIG.INITIALIZE_ERROR": "Progress Tracker isn't initialized. Open it pressing 'V' button before making any changes.",
@@ -165,6 +171,8 @@
   "PGT.TRACKER_CONFIG.FULL_ICON": "Tracker symbol (full)",
   "PGT.TRACKER_CONFIG.EMPTY_COLOR": "Tracker color (empty)",
   "PGT.TRACKER_CONFIG.FULL_COLOR": "Tracker color (full)",
+  "PGT.TRACKER_CONFIG.MACRO": "After Finish Macro",
+  "PGT.TRACKER_CONFIG.QUICK_MACRO": "Open Quick Macro Creator",
 
   "PGT.GM_SCREEN.CLOSE": "Close",
   "PGT.GM_SCREEN.HEADER": "Game Master Screen",

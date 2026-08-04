@@ -1,3 +1,12 @@
+export function handleProgressTrackerOnRollOutcomeDefault(trackerKey, rollRequest, roll) {
+    let action = "none";
+    if (rollRequest.outcome === "success" && rollRequest.tracker.success) action = rollRequest.tracker.success;
+    if (rollRequest.outcome === "fail" && rollRequest.tracker.fail) action = rollRequest.tracker.fail;
+
+    if (action === "increase") window.trackerWindow.increase(trackerKey, rollRequest.actor.uuid);
+    if (action === "reduce") window.trackerWindow.reduce(trackerKey, rollRequest.actor.uuid);
+}
+
 export function keybindToText(keybind) {
   if (!keybind) return "";
   if (!keybind[0]) return "";

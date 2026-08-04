@@ -23,6 +23,9 @@ export function dc20Config() {
   PGT.onRollRequest = rollRequest;
   PGT.onRestRequest = restRequest;
   PGT.requestFields = requestFields();
+  PGT.extractRollFromMessage = extractRollFromMessage;
+  PGT.handleProgressTrackerOnRollOutcome = handleProgressTrackerOnRollOutcome;
+  PGT.progressTrackerOptions = progressTrackerOptions();
   PGT.conditions = conditions();
   PGT.conditionRollKeys = conditionRollKeys();
   PGT.applyCondition = applyCondition;
@@ -31,11 +34,6 @@ export function dc20Config() {
   PGT.pcActorTypes = ["character"];
   PGT.systemId = "dc20rpg";
   PGT.customTools = customTools();
-  PGT.extractRollFromMessage = (message) => {
-    const winner = message.winningRoll;
-    winner._total = winner.total
-    return winner;
-  };
 }
 
 //==================================
@@ -111,6 +109,64 @@ function requestFields() {
         label: "PGT.REQUEST.ROLL_MODE"
       }
     }
+  }
+}
+
+function extractRollFromMessage(message) {
+  const winner = message.winningRoll;
+  winner._total = winner.total
+  return winner;
+};
+
+function handleProgressTrackerOnRollOutcome(trackerKey, rollRequest, roll) {
+  const degreeOfSucces = Math.floor((roll.total - rollRequest.rollDC)/5);
+
+  if (degreeOfSucces < 0) {
+     _modifyTracker(trackerKey, rollRequest.tracker.fail, Math.abs(degreeOfSucces), roll.fail, rollRequest.actor.uuid);
+  }
+  else {
+    _modifyTracker(trackerKey, rollRequest.tracker.success, degreeOfSucces + 1, roll.crit, rollRequest.actor.uuid);
+  }
+}
+
+async function _modifyTracker(key, type, times, crit, actorUuid) {
+  switch (type) {
+    case "increase":
+      window.trackerWindow.increase(key, actorUuid);
+      break;
+
+    case "reduce":
+      window.trackerWindow.reduce(key, actorUuid);
+      break;
+
+    case "increaseEach5":
+      for (let i = 0; i < times; i++) {
+        await window.trackerWindow.increase(key, actorUuid);
+      }
+      if (crit) {
+        await window.trackerWindow.increase(key, actorUuid);
+        await window.trackerWindow.increase(key, actorUuid);
+      }
+      break;
+
+    case "reduceEach5":
+      for (let i = 0; i < times; i++) {
+        await window.trackerWindow.reduce(key, actorUuid);
+      }
+      if (crit) {
+        await window.trackerWindow.reduce(key, actorUuid);
+        await window.trackerWindow.reduce(key, actorUuid);
+      }
+      break;
+  }
+}
+
+function progressTrackerOptions() {
+  return {
+    increaseEach5: game.i18n.localize("PGT.TRACKER.DC20.INCREASE_COUNTER"),
+    reduceEach5: game.i18n.localize("PGT.TRACKER.DC20.REDUCE_COUNTER"),
+    increase: game.i18n.localize("PGT.TRACKER.DC20.INCREASE_COUNTER_ONCE"), 
+    reduce: game.i18n.localize("PGT.TRACKER.DC20.REDUCE_COUNTER_ONCE")
   }
 }
 

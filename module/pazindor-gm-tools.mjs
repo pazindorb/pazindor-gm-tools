@@ -8,7 +8,7 @@ import { registerModuleSocket } from "./configs/socket.mjs";
 import { pf2eConfig } from "./systems/pf2e.mjs";
 import { dnd5eConfig } from "./systems/dnd5e.mjs";
 import { registerKeybindings } from "./configs/keybindings.mjs";
-import { keybindToText } from "./utils.mjs";
+import { handleProgressTrackerOnRollOutcomeDefault, keybindToText } from "./utils.mjs";
 import { gmScreen } from "./dialog/gm-screen.mjs";
 import { openProgressTracker } from "./dialog/progress-tracker.mjs";
 import { dc20Config, dc20Keybindings } from "./systems/dc20.mjs";
@@ -25,6 +25,8 @@ Hooks.once("init", async function() {
     onRollRequest: null,
     onRestRequest: null,
     requestFields: {},
+    handleProgressTrackerOnRollOutcome: handleProgressTrackerOnRollOutcomeDefault,
+    progressTrackerOptions: {increase: game.i18n.localize("PGT.TRACKER.INCREASE_COUNTER"), reduce: game.i18n.localize("PGT.TRACKER.REDUCE_COUNTER")},
     conditions: {},
     applyCondition: null,
     conditionRollKeys: null,

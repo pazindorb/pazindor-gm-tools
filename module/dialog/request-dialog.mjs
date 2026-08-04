@@ -142,10 +142,7 @@ class RequestDialog extends BaseDialog {
     context.noActorSelected = Object.values(this.actorSelector).filter(actor => actor.selected).length === 0;
 
     context.progressTrackers = this.#collectProgressTrackers();
-    context.progressTypes = {
-      increase: "PGT.TRACKER.INCREASE_COUNTER",
-      reduce: "PGT.TRACKER.REDUCE_COUNTER"
-    }
+    context.progressTypes = PGT.progressTrackerOptions;
     context.collectModes = {
       active: "PGT.COLLECT_MODE.ACTIVE",
       target: "PGT.COLLECT_MODE.TARGET",
@@ -321,23 +318,14 @@ class RequestDialog extends BaseDialog {
       wrapper.result = roll._total;
       let outcome = "success";
       if (wrapper.rollDC != null) {
-        outcome = roll._total >= wrapper.rollDC ? "success" : "fail";
+        wrapper.outcome = roll._total >= wrapper.rollDC ? "success" : "fail";
 
         // Resolve Progress Tracker changes
         if (wrapper.tracker) {
           const trackerExist = window.trackerWindow.has(wrapper.tracker.key);
-          if (trackerExist) {
-            let action = "none";
-            if (wrapper.tracker.success && outcome === "success") action = wrapper.tracker.success;
-            if (wrapper.tracker.fail && outcome === "fail") action = wrapper.tracker.fail;
-
-            if (action === "increase") window.trackerWindow.increase(wrapper.tracker.key);
-            if (action === "reduce") window.trackerWindow.reduce(wrapper.tracker.key);
-          }
+          if (trackerExist) PGT.handleProgressTrackerOnRollOutcome(wrapper.tracker.key, wrapper, roll);
         }
       }
-
-      wrapper.outcome = outcome;
     }
     delete wrapper.request;
     this.render();

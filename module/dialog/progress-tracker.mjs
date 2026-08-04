@@ -21,7 +21,7 @@ class ProgressTracker extends BaseDialog {
   static DEFAULT_OPTIONS = {
     id: "progress-tracker",
     position: {
-      width: 350,
+      width: 450,
       height: 250,
       left: 0,
     },
@@ -46,6 +46,7 @@ class ProgressTracker extends BaseDialog {
     initialized.actions.revert = this._onRevert;
     initialized.actions.visible = this._onVisible;
     initialized.actions.openForPlayers = this._onOpenForPlayers;
+    initialized.actions.finishTracker = this._onFinishTracker;
     return initialized;
   }
 
@@ -99,6 +100,8 @@ class ProgressTracker extends BaseDialog {
       emptyIcon: "fa-square far",
       fullColor: "#d4c6ae",
       emptyColor: "#d4c6ae",
+      macro: "",
+      actionSources: []
     }
     new TrackerConfig(newTracker, foundry.utils.randomID()).render(true)
   }
@@ -120,15 +123,21 @@ class ProgressTracker extends BaseDialog {
     if (!tracker) return;
 
     tracker.value = tracker.countdown ? tracker.max : 0;
+    tracker.actionSources = [];
     this.updateTracker();
   }
 
   _onProgress(event, target) {
-    this.increase(target.dataset.key);
+    this.increase(target.dataset.key, "manual");
   }
 
   _onRevert(event, target) {
-    this.reduce(target.dataset.key);
+    this.reduce(target.dataset.key, "manual");
+  }
+
+  async _onFinishTracker(event, target) {
+    await this.finishTracker(target.dataset.key);
+    this._onResetTracker(event, target);
   }
 
   _onVisible(event, target) {
@@ -143,22 +152,24 @@ class ProgressTracker extends BaseDialog {
     emitEvent(PGT.CONST.SOCKET.EMIT.OPEN_TRACKER, {});
   }
 
-  async increase(key) {
+  async increase(key, source) {
     const tracker = this.get(key);
     if (!tracker) return;
 
     tracker.value += 1;
-    if (tracker.value == tracker.max && !tracker.countdown && tracker.visible) this.displayAnnouncement(tracker);
+    if (source) tracker.actionSources.push({type: "increase", source: source});
+    if (tracker.value == tracker.max && !tracker.countdown) this.finishTracker(key);
     if (tracker.max) tracker.value = Math.min(tracker.value, tracker.max);
     await this.updateTracker();
   }
 
-  async reduce(key) {
+  async reduce(key, source) {
     const tracker = this.get(key);
     if (!tracker) return;
 
     tracker.value -= 1;
-    if (tracker.value == 0 && tracker.countdown && tracker.visible) this.displayAnnouncement(tracker);
+    if (source) tracker.actionSources.push({type: "reduce", source: source});
+    if (tracker.value == 0 && tracker.countdown) this.finishTracker(key);
     tracker.value = Math.max(tracker.value, 0);
     await this.updateTracker();
   }
@@ -174,9 +185,35 @@ class ProgressTracker extends BaseDialog {
     this.render();
   }
 
-  displayAnnouncement(tracker) {
-    if (!tracker.announcement) return;
+  async finishTracker(key) {
+    const tracker = this.get(key);
+    this.#displayAnnouncement(tracker);
+    await this.#runPostFinishMacro(tracker);
+  }
+
+  #displayAnnouncement(tracker) {
+    if (!tracker.announcement || !tracker.visible) return;
     PDE.announce(tracker.announcement, 3000, {style: tracker.announcementStyle});
+  }
+
+  async #runPostFinishMacro(tracker) {
+    // Create Macro 
+    const macro = new Macro({
+      name: tracker.label,
+      type: "script",
+      img: tracker.img,
+      command: tracker.macro
+    });
+
+    // Run Macro
+    const scope = {
+      tracker: tracker,
+      giveItemToActor: giveItemToActor,
+      increaseActions: getActions(tracker, "increase"),
+      reduceActions: getActions(tracker, "reduce")
+    }
+    macro.params = scope;
+    await macro.execute(scope);
   }
 }
 
@@ -186,4 +223,44 @@ export function openProgressTracker(force=false, skipRender=false) {
   }
   if (window.trackerWindow.rendered && !force) window.trackerWindow.close();
   else if (!skipRender) window.trackerWindow.render(true);
+}
+
+
+//=====================================
+//=           MACRO HELPERS           =
+//=====================================
+async function giveItemToActor(actorUuid, itemUuid) {
+  if (actorUuid === "manual") return;
+
+  const item = await fromUuid(itemUuid);
+  const actor = await fromUuid(actorUuid);
+
+  if (!item) {
+    console.error(`[PGT: Progress Tracker] Item with uuid ${itemUuid} not found`);
+    return;
+  }
+  if (!actor) {
+    console.error(`[PGT: Progress Tracker] Actor with uuid ${actorUuid} not found`);
+    return;
+  }
+  PDE.crud.gmCreate(item.toObject(), {parent: actor}, CONFIG.Item.documentClass);
+}
+
+function getActions(tracker, type) {
+  if (!tracker?.actionSources) return new Map();
+
+  const collected = new Map();
+  for (const action of tracker.actionSources) {
+    if (action.type !== type) continue;
+
+    const source = action.source;
+    if (collected.has(source)) {
+      const currentValue = collected.get(source);
+      collected.set(source, currentValue + 1);
+    }
+    else {
+      collected.set(source, 1);
+    }
+  }
+  return collected;
 }

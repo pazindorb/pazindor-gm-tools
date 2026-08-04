@@ -611,9 +611,9 @@
   top: auto !important;
   overflow: visible;
   max-height: 250px;
-  max-width: 350px;
+  max-width: 450px;
   height: 250px;
-  width: 350px;
+  width: 450px;
 }
 #progress-tracker .window-header {
   display: none;
@@ -683,8 +683,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 90px;
-  min-width: 90px;
+  max-width: 120px;
+  min-width: 120px;
   gap: 2px;
   flex-flow: wrap;
   margin-left: 4px;

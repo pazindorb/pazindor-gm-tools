@@ -85,6 +85,17 @@
     </div>
   </div>
 
+  {{!-- Macro --}}
+  <div class="form-group">
+    <label style="display: flex; align-items: center; gap: 0.5rem;">
+      <span>{{localize "PGT.TRACKER_CONFIG.MACRO"}}</span>
+      <button type="button" data-action="quickMacro" data-tooltip="{{localize "PGT.TRACKER_CONFIG.QUICK_MACRO"}}" style="flex: 0 0 auto; width: auto;"><i class="fa-solid fa-code"></i></button>
+    </label>
+    <div class="form-fields">
+      <textarea data-path="tracker.macro" data-cType="string" rows="8">{{tracker.macro}}</textarea>
+    </div>
+  </div>
+
   <footer class="form-footer margin-top-5">
     <button data-action="save"><i class="fa-solid fa-floppy-disk"></i> {{localize "PGT.SAVE"}}</button>
   </footer>

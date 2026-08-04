@@ -32,6 +32,7 @@ export class TrackerConfig extends BaseDialog {
     const initialized = super._initializeApplicationOptions(options);
     initialized.actions.save = this._onSave;
     initialized.actions.pickImage = this._onPickImage;
+    initialized.actions.quickMacro = this._onQuickMacro;
     return initialized;
   }
 
@@ -65,6 +66,22 @@ export class TrackerConfig extends BaseDialog {
     window.trackerWindow.progressTracker.trackers[this.key] = this.tracker;
     window.trackerWindow.updateTracker();
     this.close();
+  }
+
+  async _onQuickMacro(event, target) {
+    const type = await PDE.InputDialog.select("Select Quick Macro", {grantItem: "Grant Item to Actors"});
+    if (type === "grantItem") await this.#grantItemMacro();
+  }
+
+  async #grantItemMacro() {
+    const action = await PDE.InputDialog.select("Select Action", {increase: "Increase", reduce: "Reduce"});
+    if (!action) return;
+
+    const itemUuid = await PDE.InputDialog.open("drop", {header: "Drop Item Here"});
+    if (!itemUuid?.[0] || !itemUuid[0].includes("Item.")) return; 
+
+    this.tracker.macro = `${action}Actions.keys().forEach(actorUuid => giveItemToActor(actorUuid, "${itemUuid}"));`
+    this.render();
   }
 
   //=====================
