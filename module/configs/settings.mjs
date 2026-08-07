@@ -17,38 +17,26 @@ export function registerModuleSettings() {
     scope: "user",
     config: false,
     default: [{
-      name: "Main Actors",
-      type: "actor",
-      records: []
-    },
-    {
       name: "Main",
       type: "basic",
-      grid: {
-        col1: {
-          row1: "",
-          row2: "",
-          width1: 1,
-          width2: 1,
-          height: 1,
-        },
-        col2: {
-          row1: "",
-          row2: "",
-          width1: 1,
-          width2: 1,
-          height: 1,
-        },
-        col3: {
-          row1: "",
-          row2: "",
-          width1: 1,
-          width2: 1,
-          height: 1,
-        }
-      }
+      gridColumns: 3,
+      cells: [
+        {id: "main-1", x: 1, y: 1, width: 1, height: 1, uuid: ""},
+        {id: "main-2", x: 2, y: 1, width: 1, height: 1, uuid: ""},
+        {id: "main-3", x: 3, y: 1, width: 1, height: 1, uuid: ""},
+        {id: "main-4", x: 1, y: 2, width: 1, height: 1, uuid: ""},
+        {id: "main-5", x: 2, y: 2, width: 1, height: 1, uuid: ""},
+        {id: "main-6", x: 3, y: 2, width: 1, height: 1, uuid: ""}
+      ]
     }],
     type: Array
+  });
+
+  game.settings.register("pazindor-gm-tools", "gmScreenMigrationVersion", {
+    scope: "user",
+    config: false,
+    default: 0,
+    type: Number
   });
 
   game.settings.register("pazindor-gm-tools", "progressTracker", {

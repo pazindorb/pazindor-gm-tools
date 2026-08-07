@@ -175,6 +175,7 @@
   "PGT.TRACKER_CONFIG.QUICK_MACRO": "Open Quick Macro Creator",
 
   "PGT.GM_SCREEN.CLOSE": "Close",
+  "PGT.GM_SCREEN.CLOSING": "Closing GM Screen...",
   "PGT.GM_SCREEN.HEADER": "Game Master Screen",
   "PGT.GM_SCREEN.ADD_TAB": "Add new tab",
   "PGT.GM_SCREEN.DELETE_TAB": "Delete this tab",
@@ -183,21 +184,18 @@
   "PGT.GM_SCREEN.CLEAR_DOCUMENT": "Remove linked document",
   "PGT.GM_SCREEN.EDIT_MODE": "Enable/Disable Edit Mode",
   "PGT.GM_SCREEN.CELL_TIP": "Drop Document here...",
-  "PGT.GM_SCREEN.ACTOR_NOT_EXIST": "Actor doesn't exist",
+  "PGT.GM_SCREEN.LOADING_DOCUMENT": "Loading document...",
+  "PGT.GM_SCREEN.DOCUMENT_UNAVAILABLE": "Document is unavailable",
+  "PGT.GM_SCREEN.DOCUMENT_LOAD_FAILED": "Document could not be rendered",
+  "PGT.GM_SCREEN.UNTITLED_TAB": "Untitled",
 
   "PGT.GM_SCREEN.CREATE_HEADER": "Create new tab",
   "PGT.GM_SCREEN.TAB_NAME": "Tab name",
-  "PGT.GM_SCREEN.TAB_TYPE": "Tab type",
-  "PGT.GM_SCREEN.TAB_TYPE_ACTOR": "Actor Tab",
-  "PGT.GM_SCREEN.TAB_TYPE_BASIC": "Basic Tab",
-  "PGT.GM_SCREEN.WRONG_TAB_TYPE" : "Incorrect tab type",
-
   "PGT.GM_SCREEN.CONFIGURE_HEADER": "Configure tab",
-  "PGT.GM_SCREEN.COL1_WIDTH_1": "Column 1 Row 1 width",
-  "PGT.GM_SCREEN.COL2_WIDTH_1": "Column 2 Row 1 width",
-  "PGT.GM_SCREEN.COL1_WIDTH_2": "Column 1 Row 2 width",
-  "PGT.GM_SCREEN.COL2_WIDTH_2": "Column 2 Row 2 width",
-  "PGT.GM_SCREEN.COL1_HEIGHT": "Column 1 height",
-  "PGT.GM_SCREEN.COL2_HEIGHT": "Column 2 height",
-  "PGT.GM_SCREEN.COL3_HEIGHT": "Column 3 height"
+  "PGT.GM_SCREEN.EDIT_LAYOUT": "Edit grid layout",
+  "PGT.GM_SCREEN.EDIT_LAYOUT_HINT": "Use + to merge neighbouring cells and - to split them again.",
+  "PGT.GM_SCREEN.MERGE_RIGHT": "Merge with the cell on the right",
+  "PGT.GM_SCREEN.MERGE_DOWN": "Merge with the cell below",
+  "PGT.GM_SCREEN.UNMERGE": "Unmerge this cell",
+  "PGT.GM_SCREEN.MERGE_OCCUPIED": "Move or remove one of the documents before merging two occupied cells."
 }

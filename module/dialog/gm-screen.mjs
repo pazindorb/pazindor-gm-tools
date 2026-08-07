@@ -1,13 +1,17 @@
 import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
+
 export class GmScreen extends BaseDialog {
-  BASIC_TYPES = ["JournalEntry", "RollTable", "JournalEntryPage"]
+  SUPPORTED_DOCUMENT_TYPES = ["JournalEntry", "RollTable", "JournalEntryPage", "Cards",  "Item"]
 
   constructor(options = {}) {
     super(options);
     this.tabs = game.settings.get("pazindor-gm-tools", "gmScreenTabs");
     this.editable = false;
     this.index = 0;
-    this._prepareTabs();
+    this._basicRenderId = 0;
+    this._closing = false;
+    this.configuring = false;
+    this.#prepareTabs();
   }
 
   /** @override */
@@ -29,21 +33,40 @@ export class GmScreen extends BaseDialog {
   /** @override */
   static PARTS = {
     root: {
-      template: "modules/pazindor-gm-tools/templates/gm-screen.hbs",
-      scrollable: [".scrollable"]
+      template: "modules/pazindor-gm-tools/templates/gm-screen.hbs"
     }
   };
 
-  _prepareTabs() {
+  #prepareTabs() {
+    if (!this.tabs.length) this.tabs.push(this.#createBasicTab("Main"));
+    for (const tab of this.tabs) tab.basic = [];
+  }
+
+  #createBasicTab(name) {
+    return {
+      name,
+      type: "basic",
+      gridColumns: 3,
+      basic: [],
+      cells: this.#createDefaultCells()
+    };
+  }
+
+  #getPersistentTabs() {
+    const tabs = [];
     for (const tab of this.tabs) {
-      if (tab.type === "actor") {
-        if (tab.actorSheetA) tab.actorSheetA = null;
-        if (tab.actorSheetB) tab.actorSheetB = null;
-      }
-      if (tab.type === "basic") {
-        tab.basic = [];
-      }
+      tabs.push({
+        name: tab.name,
+        type: tab.type,
+        gridColumns: 3,
+        cells: foundry.utils.deepClone(tab.cells)
+      });
     }
+    return tabs;
+  }
+
+  #saveTabs() {
+    return game.settings.set("pazindor-gm-tools", "gmScreenTabs", this.#getPersistentTabs());
   }
 
   _initializeApplicationOptions(options) {
@@ -54,6 +77,9 @@ export class GmScreen extends BaseDialog {
     initialized.actions.deleteTab = this._onTabDelete;
     initialized.actions.clearTab = this._onClearTab;
     initialized.actions.editMode = this._onEditMode;
+    initialized.actions.mergeCell = this._onMergeCell;
+    initialized.actions.unmergeCell = this._onUnmergeCell;
+    initialized.actions.finishLayout = this._onFinishLayout;
     return initialized;
   }
 
@@ -67,58 +93,25 @@ export class GmScreen extends BaseDialog {
     context.tabs = foundry.utils.deepClone(this.tabs);
     context.selectedIndex = this.index;
     context.selectedTab = foundry.utils.deepClone(this.selectedTab);
-    if (context.selectedTab.type === "actor") this._prepareActorTab(context);
-    if (context.selectedTab.type === "basic") this._prepareBasicTab(context);
+    context.configuring = this.configuring;
+    this.#prepareBasicTab(context);
 
     return context;
   }
 
-  _prepareActorTab(context) {
-    let actorContentWidth = this.selectedTab.actorSheetA?.position?.width || 5;
-    if (this.selectedTab.actorSheetB && this.selectedTab.renderActorB) {
-      actorContentWidth += (this.selectedTab.actorSheetB?.position?.width || 0) + 45;
-    }
-    context.selectedTab.actorContentWidth = actorContentWidth;
-
-    for (const actor of context.selectedTab.records) {
-      if (actor.uuid === this.selectedTab.actorSheetA?.actor?.uuid) actor.active = "activeA";
-      if (this.selectedTab.renderActorB && actor.uuid === this.selectedTab.actorSheetB?.actor?.uuid) actor.active = "activeB";
-    }
-  }
-
-  _prepareBasicTab(context) {
-    const grid = Object.entries(this.selectedTab.grid);
-    const cells = [];
-    let counter = 0;
-
-    // Row 1
-    for (const [colKey, column] of grid) {
-      if (counter < 3) {
-        cells.push({
-          colspan: column.width1,
-          rowspan: column.height,
-          key: `${colKey}#row1`
-        });
-      }
-      counter += column.width1;
-    }
-
-    // Row 2
-    counter = 0;
-    for (const [colKey, column] of grid) {
-      if (column.height === 2) {
-        column.width2 = column.width1;
-      }
-      if (counter < 3 && column.height === 1) {
-        cells.push({
-          colspan: column.width2,
-          rowspan: column.height,
-          key: `${colKey}#row2`
-        });
-      }
-      counter += column.width2;
-    }
-    context.selectedTab.cells = cells;
+  #prepareBasicTab(context) {
+    context.selectedTab.cells = this.selectedTab.cells.map(cell => ({
+      ...foundry.utils.deepClone(cell),
+      key: cell.id,
+      columnStart: cell.x,
+      rowStart: cell.y,
+      colspan: cell.width,
+      rowspan: cell.height,
+      occupied: Boolean(cell.uuid),
+      mergeRight: Boolean(this.#getMergeGroup(cell, "right")),
+      mergeDown: Boolean(this.#getMergeGroup(cell, "down")),
+      canUnmerge: Boolean(cell.children?.length || cell.width > 1 || cell.height > 1)
+    }));
   }
 
   //=====================
@@ -129,7 +122,9 @@ export class GmScreen extends BaseDialog {
     if (isNaN(index)) return;
 
     if (this.index === index) return;
-    this._closeTab();
+    this.#closeTab();
+    if (this.configuring) this.#saveTabs();
+    this.configuring = false;
     this.index = index;
     this.render();
   }
@@ -141,229 +136,144 @@ export class GmScreen extends BaseDialog {
         {
           type: "input",
           label: game.i18n.localize("PGT.GM_SCREEN.TAB_NAME"),
-        },
-        {
-          type: "select",
-          label: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE"),
-          options: {
-            basic: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE_BASIC"), 
-            actor: game.i18n.localize("PGT.GM_SCREEN.TAB_TYPE_ACTOR")
-          }
         }
       ]
     });
     if (!answers) return;
-    if (!answers[1]) {
-      ui.notifications.error(game.i18n.localize("PGT.GM_SCREEN.WRONG_TAB_TYPE"));
-      return;
-    }
-
-    const config = {
-      name: answers[0],
-      records: [],
-      type: answers[1]
-    }
-
-    switch(answers[1]) {
-
-      case "actor": 
-        config.actorSheetA = null,
-        config.actorSheetB = null,
-        config.renderActorB = false
-        break;
-
-      case "basic":
-        config.grid = {
-          col1: {
-            row1: "",
-            row2: "",
-            width1: 1,
-            width2: 1,
-            height: 1,
-          },
-          col2: {
-            row1: "",
-            row2: "",
-            width1: 1,
-            width2: 1,
-            height: 1,
-          },
-          col3: {
-            row1: "",
-            row2: "",
-            width1: 1,
-            width2: 1,
-            height: 1,
-          }
-        }
-        break;
-    }
-
-    this.tabs.push(config);
+    this.tabs.push(this.#createBasicTab(answers[0] || game.i18n.localize("PGT.GM_SCREEN.UNTITLED_TAB")));
+    this.#saveTabs();
     this.render();
   }
 
   async _onTabConfig() {
-    if (this.selectedTab.type !== "basic") return;
-
-    const answers = await PDE.InputDialog.create("input", {
-      header: game.i18n.localize("PGT.GM_SCREEN.CONFIGURE_HEADER"),
-      inputs: [
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL1_WIDTH_1"),
-          preselected: this.selectedTab.grid.col1.width1
-        },
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL1_WIDTH_2"),
-          preselected: this.selectedTab.grid.col1.width2
-        },
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL1_HEIGHT"),
-          preselected: this.selectedTab.grid.col1.height
-        },
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL2_WIDTH_1"),
-          preselected: this.selectedTab.grid.col2.width1
-        },
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL2_WIDTH_2"),
-          preselected: this.selectedTab.grid.col2.width2
-        },
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL2_HEIGHT"),
-          preselected: this.selectedTab.grid.col2.height
-        },
-        {
-          type: "input",
-          label: game.i18n.localize("PGT.GM_SCREEN.COL3_HEIGHT"),
-          preselected: this.selectedTab.grid.col3.height
-        },
-      ]
-    })
-    if (!answers) return;
-
-    this.selectedTab.grid.col1.width1 = this._parseOrDefault(answers[0], 1);
-    this.selectedTab.grid.col1.width2 = this._parseOrDefault(answers[1], 1);
-    this.selectedTab.grid.col1.height = this._parseOrDefault(answers[2], 1);
-    this.selectedTab.grid.col2.width1 = this._parseOrDefault(answers[3], 1);
-    this.selectedTab.grid.col2.width2 = this._parseOrDefault(answers[4], 1);
-    this.selectedTab.grid.col2.height = this._parseOrDefault(answers[5], 1);
-    this.selectedTab.grid.col3.height = this._parseOrDefault(answers[6], 1);
+    this.#closeTab();
+    this.configuring = true;
     this.render();
   }
 
-  _parseOrDefault(value, def) {
-    const parsed = parseInt(value);
-    if (isNaN(parsed)) return def;
-    return parsed;
+  _onFinishLayout() {
+    this.configuring = false;
+    this.#saveTabs();
+    this.render();
+  }
+
+  _onMergeCell(event, target) {
+    const cell = this.selectedTab.cells.find(item => item.id === target.dataset.cellId);
+    const direction = target.dataset.direction;
+    const neighbors = this.#getMergeGroup(cell, direction);
+    if (!cell || !neighbors?.length) return;
+
+    const group = [cell, ...neighbors];
+    if (group.filter(item => item.uuid).length > 1) {
+      ui.notifications.warn(game.i18n.localize("PGT.GM_SCREEN.MERGE_OCCUPIED"));
+      return;
+    }
+
+    const children = foundry.utils.deepClone(group);
+    const merged = {
+      id: cell.id,
+      x: Math.min(...group.map(item => item.x)),
+      y: Math.min(...group.map(item => item.y)),
+      width: direction === "right" ? cell.width + neighbors[0].width : cell.width,
+      height: direction === "down" ? cell.height + neighbors[0].height : cell.height,
+      uuid: group.find(item => item.uuid)?.uuid ?? "",
+      children
+    };
+    const removedIds = new Set(group.map(item => item.id));
+    this.selectedTab.cells = this.selectedTab.cells.filter(item => !removedIds.has(item.id));
+    this.selectedTab.cells.push(merged);
+    this.render();
+  }
+
+  _onUnmergeCell(event, target) {
+    const cell = this.selectedTab.cells.find(item => item.id === target.dataset.cellId);
+    if (!cell) return;
+
+    let children = foundry.utils.deepClone(cell.children ?? []);
+    if (!children.length) children = this.#splitCell(cell);
+    if (!children.length) return;
+    if (cell.uuid && !children.some(item => item.uuid)) children[0].uuid = cell.uuid;
+
+    this.selectedTab.cells = this.selectedTab.cells.filter(item => item.id !== cell.id);
+    this.selectedTab.cells.push(...children);
+    this.render();
+  }
+
+  #getMergeGroup(cell, direction) {
+    if (!cell) return null;
+    const cells = this.selectedTab.cells;
+    let neighbors;
+    if (direction === "right") {
+      neighbors = cells.filter(item => item.x === cell.x + cell.width
+        && item.y >= cell.y && item.y + item.height <= cell.y + cell.height);
+      if (!neighbors.length || new Set(neighbors.map(item => item.width)).size > 1) return null;
+      const covered = neighbors.reduce((sum, item) => sum + item.height, 0);
+      return covered === cell.height ? neighbors : null;
+    }
+    if (direction === "down") {
+      neighbors = cells.filter(item => item.y === cell.y + cell.height
+        && item.x >= cell.x && item.x + item.width <= cell.x + cell.width);
+      if (!neighbors.length || new Set(neighbors.map(item => item.height)).size > 1) return null;
+      const covered = neighbors.reduce((sum, item) => sum + item.width, 0);
+      return covered === cell.width ? neighbors : null;
+    }
+    return null;
+  }
+
+  #splitCell(cell) {
+    if (cell.height > 1) {
+      return [
+        this.#createCell(cell.x, cell.y, cell.width, 1, cell.uuid),
+        this.#createCell(cell.x, cell.y + 1, cell.width, cell.height - 1)
+      ];
+    }
+    if (cell.width > 1) {
+      const leftWidth = Math.floor(cell.width / 2);
+      return [
+        this.#createCell(cell.x, cell.y, leftWidth, cell.height, cell.uuid),
+        this.#createCell(cell.x + leftWidth, cell.y, cell.width - leftWidth, cell.height)
+      ];
+    }
+    return [];
   }
 
   _onClearTab() {
-    if (this.selectedTab.type !== "basic") return;
-
-    this._closeTab();
-    const grid = this.selectedTab.grid;
-    grid.col1.row1 = "";
-    grid.col1.row2 = "";
-    grid.col2.row1 = "";
-    grid.col2.row2 = "";
-    grid.col3.row1 = "";
-    grid.col3.row2 = "";
+    this.#closeTab();
+    for (const cell of this.selectedTab.cells) this.#setCellUuid(cell, "");
+    this.#saveTabs();
+    this.render();
   }
 
   _onEditMode() {
-    if (this.selectedTab.type !== "basic") return;
-
     this.editable = !this.editable;
-    this._closeTab();
+    this.#closeTab();
     this.render();
   }
 
   _onTabDelete() {
-    this._closeTab();
-    delete this.tabs.splice(this.index, 1);
+    this.#closeTab();
+    this.tabs.splice(this.index, 1);
     this.index = 0;
-    this.render();
-  }
-
-  _onRemoveRecord(ix) {
-    const index = parseInt(ix);
-    if (isNaN(index)) return;
-    delete this.selectedTab.records.splice(index, 1);
-    this.render();
-  }
-
-  _onMouseDown(event) {
-    let dataset = event.target.dataset;
-    if (!dataset?.action) dataset = event.target.parentElement?.dataset;
-    if (dataset?.action === "removeRecord") {
-      this._onRemoveRecord(dataset.index);
-    }
-    else {
-      super._onMouseDown(event)
-    }
-  }
-
-  _onActivable(path, which, dataset) {
-    if (this.selectedTab.type === "actor") return this._openActorSheet(which, dataset);
-    super._onActivable(path, which, dataset);
-  }
-
-  async _openActorSheet(which, dataset) {
-    const index = parseInt(dataset.index);
-    if (isNaN(index)) return;
-
-    const record = this.selectedTab.records[index];
-    const actor = await fromUuid(record.uuid);
-    if (!actor) {
-      ui.notifications.error(game.i18n.localize("PGT.GM_SCREEN.ACTOR_NOT_EXIST"));
-      return;
-    }
-    if (which === 1) {
-      if (this.selectedTab.actorSheetA) this.selectedTab.actorSheetA.close();
-      if (this.selectedTab.actorSheetA?.actor?.uuid === actor.uuid) this.selectedTab.actorSheetA = null;
-      else this.selectedTab.actorSheetA = actor.sheet;
-    }
-    if (which === 3) {
-      if (this.selectedTab.actorSheetB) this.selectedTab.actorSheetB.close();
-      if (this.selectedTab.actorSheetB?.actor?.uuid === actor.uuid) this.selectedTab.actorSheetB = null;
-      else this.selectedTab.actorSheetB = actor.sheet;
-    }
+    this.#saveTabs();
     this.render();
   }
 
   async _onDrop(event) {
     const object = await super._onDrop(event);
 
-    if (this.selectedTab.type === "actor" && object.type === "Actor") {
-      const actor = await fromUuid(object.uuid);
-      if (!actor) return;
-
-      this.selectedTab.records.push({
-        uuid: actor.uuid,
-        name: actor.name,
-        img: actor.img
-      });
-      this.render();
-    }
-
-    if (this.selectedTab.type === "basic" && this.BASIC_TYPES.includes(object.type)) {
-      const key = this._getBasicDropKey(event);
+    if (this.SUPPORTED_DOCUMENT_TYPES.includes(object.type)) {
+      const key = this.#getBasicDropKey(event);
       if (!key) return;
-      const [col, row] = key.split("#");
-      this._removeUuidIfAlreadyExist(object.uuid);
-      this.selectedTab.grid[col][row] = object.uuid;
+      this.#removeUuidIfAlreadyExist(object.uuid);
+      const cell = this.selectedTab.cells.find(item => item.id === key);
+      if (!cell) return;
+      this.#setCellUuid(cell, object.uuid);
+      this.#saveTabs();
       this.render();
     }
   }
 
-  _getBasicDropKey(event) {
+  #getBasicDropKey(event) {
     const directCell = event.target?.closest?.(".cell");
     if (directCell?.dataset?.key) return directCell.dataset.key;
 
@@ -380,7 +290,7 @@ export class GmScreen extends BaseDialog {
     return null;
   }
 
-  _activateBasicSheetClearButton(sheetElement, key) {
+  #activateBasicSheetClearButton(sheetElement, key) {
     if (!sheetElement) return;
 
     sheetElement.querySelector(".gm-screen-clear-document")?.remove();
@@ -392,139 +302,76 @@ export class GmScreen extends BaseDialog {
     button.addEventListener("click", event => {
       event.preventDefault();
       event.stopPropagation();
-      this._clearBasicDocument(key);
+      button.remove();
+      this.#clearBasicDocument(key);
     });
     sheetElement.appendChild(button);
   }
 
-  _clearBasicDocument(key) {
-    const [col, row] = key.split("#");
-    if (!this.selectedTab.grid?.[col]) return;
-
-    const uuid = this.selectedTab.grid[col][row];
+  #clearBasicDocument(key) {
+    const cell = this.selectedTab.cells.find(item => item.id === key);
+    if (!cell) return;
+    const uuid = cell.uuid;
     const droppedDocument = this.selectedTab.basic.find(document => document.uuid === uuid);
-    droppedDocument?.sheet?.close();
-    this.selectedTab.grid[col][row] = "";
+    if (droppedDocument?.sheet) this.#closeEmbeddedSheet(droppedDocument.sheet);
+    this.#setCellUuid(cell, "");
+    this.#saveTabs();
     this.render();
   }
 
-  _removeUuidIfAlreadyExist(uuid) {
-    const grid = this.selectedTab.grid;
-    if (grid.col1.row1 === uuid) grid.col1.row1 = "";
-    if (grid.col1.row2 === uuid) grid.col1.row2 = "";
-    if (grid.col2.row1 === uuid) grid.col2.row1 = "";
-    if (grid.col2.row2 === uuid) grid.col2.row2 = "";
-    if (grid.col3.row1 === uuid) grid.col3.row1 = "";
-    if (grid.col3.row2 === uuid) grid.col3.row2 = "";
+  #removeUuidIfAlreadyExist(uuid) {
+    for (const cell of this.selectedTab.cells) {
+      if (cell.uuid === uuid) this.#setCellUuid(cell, "");
+    }
+  }
+
+  #setCellUuid(cell, uuid) {
+    const previousUuid = cell.uuid;
+    cell.uuid = uuid;
+    if (!cell.children?.length) return;
+
+    const target = cell.children.find(child => child.uuid === previousUuid) ?? cell.children[0];
+    for (const child of cell.children) this.#setCellUuid(child, child === target ? uuid : "");
   }
 
   //=====================
   //       RENDER       =
   //=====================
   async render(force=false, options={}) {
-    this._preRenerOperations();
+    this.#prepareRender();
     const app = await super.render(force, options);
-
-    switch (this.selectedTab.type) {
-      case "actor": 
-        const shouldRenderActorB = this._shouldRenderActorB();
-        if (shouldRenderActorB !== this.selectedTab.renderActorB) {
-          this.selectedTab.renderActorB = shouldRenderActorB;
-          this.render(); // In that case we need to render again
-        }
-        this._renderActorSheets();
-        break;
-
-      case "basic":
-        this._renderBasic();
-        break;
-    }
-
+    if (!this.configuring) this.#renderBasic();
     return app;
   }
 
-  _preRenerOperations() {
+  #prepareRender() {
     this.selectedTab = this.tabs[this.index];
     if (!this.selectedTab) {
       this.selectedTab = this.tabs[0];
       this.index = 0;
 
       if (!this.selectedTab) {
-        this.tabs.push({
-          name: "Main Actors",
-          records: [],
-          type: "actor"
-        });
+        this.tabs.push(this.#createBasicTab("Main"));
         this.selectedTab = this.tabs[0];
       }
     }
   }
 
-  _shouldRenderActorB() {
-    if (!this.selectedTab.actorSheetB) return false;
-    const screenWidth = this.element.clientWidth;
-    const actorAWidth = this.selectedTab.actorSheetA?.position?.width || 0;
-    const actorBWidth = this.selectedTab.actorSheetB?.position?.width || 0;
-
-    const shouldRender = screenWidth - 200 > actorAWidth + actorBWidth;
-    if (!shouldRender && this.selectedTab.actorSheetB?.rendered) this.selectedTab.actorSheetB.close();
-    return shouldRender;
-  }
-
-  async _renderActorSheets() {
-    if (!this.element) return;
-    if (!this.selectedTab.actorSheetA && this.selectedTab.actorSheetB) {
-      this.selectedTab.actorSheetA = this.selectedTab.actorSheetB;
-      this.selectedTab.actorSheetB = null;
-    }
-    if (!this.selectedTab.actorSheetA) return;
-
-    // Render Actor A
-    const screenWidth = this.element.clientWidth;
-    const actorAWidth = this.selectedTab.actorSheetA.position.width;
-    const options = {
-      position: {
-        left: screenWidth - actorAWidth - 5,
-        top: 60,
-      },
-    }
-
-    this.selectedTab.actorSheetA.render(true, foundry.utils.deepClone(options));
-    const elementA = await waitForRender(this.selectedTab.actorSheetA);
-    if (elementA.classList) {
-      elementA.classList.add("gm-screen-embeded");
-    }
-    else {
-      elementA.addClass("gm-screen-embeded");
-      this.selectedTab.actorSheetA.setPosition(options.position);
-    }
-
-    // Render Actor B
-    if (!this.selectedTab.renderActorB) return;
-    const actorBWidth = this.selectedTab.actorSheetB.position.width;
-    options.position.left -= (actorBWidth + 45);
-
-    this.selectedTab.actorSheetB.render(true, foundry.utils.deepClone(options));
-    const elementB = await waitForRender(this.selectedTab.actorSheetB);
-    if (elementB.classList) {
-      elementB.classList.add("gm-screen-embeded");
-    }
-    else {
-      elementB.addClass("gm-screen-embeded");
-      this.selectedTab.actorSheetB.setPosition(options.position);
-    }
-  }
-
-  async _renderBasic() {
+  async #renderBasic() {
     if (!this.element) return;
 
+    const renderId = ++this._basicRenderId;
+    const tab = this.selectedTab;
     const basic = []
     const cells = this.element.querySelectorAll(".cell");
     for (const cell of cells) {
-      const [col, row] = cell.dataset.key.split("#");
-      const uuid = this.selectedTab.grid[col][row];
+      const cellConfig = tab.cells.find(item => item.id === cell.dataset.key);
+      const uuid = cellConfig?.uuid;
       const document = await fromUuid(uuid);
-      if (!document) continue;
+      if (!document) {
+        if (uuid) this.#setBasicCellStatus(cell, "unavailable");
+        continue;
+      }
 
       const rect = cell.getBoundingClientRect();
       const options = {
@@ -535,21 +382,34 @@ export class GmScreen extends BaseDialog {
           height: rect.height - 4
         }
       }
-      document.sheet.render(true, options);
-      const element = await waitForRender(document.sheet);
+      const element = await renderAndWait(document.sheet, options);
+      if (!element) {
+        this.#setBasicCellStatus(cell, "failed");
+        continue;
+      }
+      if (renderId !== this._basicRenderId || this.selectedTab !== tab) {
+        if (this.configuring || !this.#tabContainsUuid(this.selectedTab, document.uuid)) {
+          this.#closeEmbeddedSheet(document.sheet);
+        }
+        continue;
+      }
       const sheetElement = element.classList ? element : element[0];
+      if (!sheetElement) continue;
+      sheetElement.classList.remove("gm-screen-sheet-closing");
+      sheetElement.classList.add("gm-screen-basic-document");
       if (element.classList) {
-        document.sheet.element.classList.add("gm-screen-embeded");
-        if (!this.editable) document.sheet.element.classList.add("edit-locked");
-        document.sheet.element.style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
+        sheetElement.classList.add("gm-screen-embeded");
+        sheetElement.classList.toggle("edit-locked", !this.editable);
       }
       else {
         element.addClass("gm-screen-embeded");
-        if (!this.editable) element.addClass("edit-locked");
-        element[0].style.cssText += `min-width: ${rect.width - 4}px !important; min-height: ${rect.height - 4}px !important; max-width: ${rect.width - 4}px !important; max-height: ${rect.height - 4}px !important;`;
+        element.toggleClass("edit-locked", !this.editable);
         document.sheet.setPosition(options.position);
       }
-      this._activateBasicSheetClearButton(sheetElement, cell.dataset.key);
+      sheetElement.style.setProperty("--gm-screen-document-width", `${rect.width - 4}px`);
+      sheetElement.style.setProperty("--gm-screen-document-height", `${rect.height - 4}px`);
+      this.#setBasicCellStatus(cell, "ready");
+      this.#activateBasicSheetClearButton(sheetElement, cell.dataset.key);
 
       // Journal Page - disable editor
       if (!this.editable) {
@@ -560,29 +420,88 @@ export class GmScreen extends BaseDialog {
       basic.push(document);
     }
 
-    this.selectedTab.basic = basic
+    if (renderId === this._basicRenderId && this.selectedTab === tab) tab.basic = basic;
+  }
+
+  #setBasicCellStatus(cell, status) {
+    if (!cell?.isConnected) return;
+    cell.dataset.status = status;
+    const loader = cell.querySelector(".cell-loading");
+    if (!loader) return;
+
+    const icon = loader.querySelector("i");
+    const label = loader.querySelector("span");
+    if (status === "ready") {
+      loader.hidden = true;
+      return;
+    }
+
+    loader.hidden = false;
+    icon.className = status === "loading"
+      ? "fa-solid fa-spinner fa-spin"
+      : "fa-solid fa-triangle-exclamation";
+    const localizationKey = status === "unavailable"
+      ? "PGT.GM_SCREEN.DOCUMENT_UNAVAILABLE"
+      : "PGT.GM_SCREEN.DOCUMENT_LOAD_FAILED";
+    label.textContent = game.i18n.localize(localizationKey);
+  }
+
+  #tabContainsUuid(tab, uuid) {
+    if (tab?.type !== "basic") return false;
+    return tab.cells.some(cell => cell.uuid === uuid);
   }
 
   async close() {
-    this._closeTab();
-    game.settings.set("pazindor-gm-tools", "gmScreenTabs", this.tabs);
-    return super.close();
+    if (this._closing) return;
+    this._closing = true;
+    this.#showClosingOverlay();
+    this._basicRenderId++;
+    try {
+      await this.#closeTab();
+      await this.#saveTabs();
+      return await super.close();
+    }
+    finally {
+      this._closing = false;
+    }
   }
 
-  _closeTab() {
-    if (this.selectedTab.type === "actor") {
-      if (this.selectedTab.actorSheetA) {
-        this.selectedTab.actorSheetA.close();
-        if (game.system.id === "pf2e") this.selectedTab.actorSheetA = null;
-      }
-      if (this.selectedTab.actorSheetB) {
-        this.selectedTab.actorSheetB.close();
-        if (game.system.id === "pf2e") this.selectedTab.actorSheetB = null;
-      }
+  #showClosingOverlay() {
+    const content = this.element?.querySelector("#gm-screen-content");
+    if (!content) return;
+    content.setAttribute("aria-busy", "true");
+    const overlay = content.querySelector(".gm-screen-closing-overlay");
+    if (overlay) overlay.hidden = false;
+  }
+
+  #closeTab() {
+    this._basicRenderId++;
+    const documents = this.selectedTab.basic ?? [];
+    this.selectedTab.basic = [];
+    return Promise.allSettled(documents.map(document => this.#closeEmbeddedSheet(document.sheet)));
+  }
+
+  #closeEmbeddedSheet(sheet) {
+    const element = sheet?.element?.classList ? sheet.element : sheet?.element?.[0];
+    element?.querySelector(".gm-screen-clear-document")?.remove();
+    element?.classList.add("gm-screen-sheet-closing");
+    try {
+      return Promise.resolve(sheet?.close());
     }
-    if (this.selectedTab.type === "basic") {
-      this.selectedTab.basic.forEach(document => document.sheet.close());
+    catch (error) {
+      return Promise.reject(error);
     }
+  }
+
+  #createCell(x, y, width, height, uuid = "") {
+    return {id: foundry.utils.randomID(), x, y, width, height, uuid};
+  }
+
+  #createDefaultCells() {
+    return [
+      this.#createCell(1, 1, 1, 1), this.#createCell(2, 1, 1, 1), this.#createCell(3, 1, 1, 1),
+      this.#createCell(1, 2, 1, 1), this.#createCell(2, 2, 1, 1), this.#createCell(3, 2, 1, 1)
+    ];
   }
 }
 
@@ -595,13 +514,29 @@ export function gmScreen() {
   else gmScreenWindow.render(true);
 }
 
-function waitForRender(app) {
+function renderAndWait(app, options) {
   return new Promise(resolve => {
+    let settled = false;
+    const finish = html => {
+      if (settled) return;
+      settled = true;
+      Hooks.off("render" + app.constructor.name, hook);
+      clearTimeout(timeout);
+      resolve(html ?? app.element ?? null);
+    };
     const hook = Hooks.on("render" + app.constructor.name, (app2, html) => {
-      if (app === app2) {
-        Hooks.off("render" + app.constructor.name, hook);
-        resolve(html);
-      }
+      if (app === app2) finish(html);
     });
+    const timeout = setTimeout(() => finish(app.element), 5000);
+    try {
+      const result = app.render(true, options);
+      if (result?.then) result.then(() => {
+        if (app.element) finish(app.element);
+      }).catch(() => finish(null));
+    }
+    catch (error) {
+      console.error("Pazindor GM Tools | Failed to render embedded sheet", error);
+      finish(null);
+    }
   });
 }

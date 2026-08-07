@@ -1,44 +1,67 @@
 <form id="gm-screen-content" class="pgt standard-form {{cssClass}}">
+  <div class="gm-screen-closing-overlay" role="status" aria-live="assertive" hidden>
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    <span>{{localize "PGT.GM_SCREEN.CLOSING"}}</span>
+  </div>
   <h4 class="divider">{{localize "PGT.GM_SCREEN.HEADER"}}</h4>
   <div class="menu-buttons">
     <div class="left-menu">
       <div class="menu-button add-tab" data-action="addTab" data-tooltip="{{localize 'PGT.GM_SCREEN.ADD_TAB'}}"><i class="fa-solid fa-plus-large fa-lg"></i></div>
       <div class="menu-button delete-tab" data-action="deleteTab" data-tooltip="{{localize 'PGT.GM_SCREEN.DELETE_TAB'}}"><i class="fa-solid fa-trash fa-lg"></i></div>
-      {{#ifCond selectedTab.type '===' "basic"}}
       <div class="menu-button config-tab" data-action="configTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CONFIG_TAB'}}"><i class="fa-solid fa-gear fa-lg"></i></div>
       <div class="menu-button clear-tab" data-action="clearTab" data-tooltip="{{localize 'PGT.GM_SCREEN.CLEAR_TAB'}}"><i class="fa-solid fa-broom-wide fa-lg"></i></div>
       <div class="menu-button edit-mode {{#if editable}}editable{{/if}}" data-action="editMode" data-tooltip="{{localize 'PGT.GM_SCREEN.EDIT_MODE'}}"><i class="fa-solid fa-pen-to-square fa-lg"></i></div>
-      {{/ifCond}}
     </div>
 
     <div class="menu-button close" data-action="close" data-tooltip="{{localize 'PGT.GM_SCREEN.CLOSE'}}"><i class="fa-solid fa-x fa-lg"></i></div>
   </div>
   
   <div class="content">
-  {{#ifCond selectedTab.type '===' "actor"}}
-  <div class="selector scrollable">
-    {{#each selectedTab.records as |actor index|}}
-    <div class="actor {{actor.active}}" data-cType="activable" data-index="{{index}}">
-      <img src="{{actor.img}}"/>
-      <input readonly value="{{actor.name}}"/>
-      <div class="menu-button remove-record" data-action="removeRecord" data-index="{{index}}">
-        <i class="fa-solid fa-trash fa-lg"></i>
+  {{!-- Config --}}
+  {{#if configuring}}
+  <section class="grid-config" aria-labelledby="gm-screen-grid-config-title">
+    <header>
+      <h2 id="gm-screen-grid-config-title">{{localize "PGT.GM_SCREEN.EDIT_LAYOUT"}}</h2>
+      <p>{{localize "PGT.GM_SCREEN.EDIT_LAYOUT_HINT"}}</p>
+    </header>
+    <div class="layout-editor">
+      {{#each selectedTab.cells as |cell|}}
+      <div class="layout-edit-cell {{#if cell.occupied}}occupied{{/if}}" style="grid-column: {{cell.columnStart}} / span {{cell.colspan}}; grid-row: {{cell.rowStart}} / span {{cell.rowspan}};">
+        <span><i class="fa-solid {{#if cell.occupied}}fa-book-open{{else}}fa-grid-2{{/if}}"></i></span>
+        {{#if cell.mergeRight}}
+        <button type="button" class="cell-layout-action merge-right" data-action="mergeCell" data-cell-id="{{cell.id}}" data-direction="right" data-tooltip="{{localize 'PGT.GM_SCREEN.MERGE_RIGHT'}}"><i class="fa-solid fa-plus"></i></button>
+        {{/if}}
+        {{#if cell.mergeDown}}
+        <button type="button" class="cell-layout-action merge-down" data-action="mergeCell" data-cell-id="{{cell.id}}" data-direction="down" data-tooltip="{{localize 'PGT.GM_SCREEN.MERGE_DOWN'}}"><i class="fa-solid fa-plus"></i></button>
+        {{/if}}
+        {{#if cell.canUnmerge}}
+        <button type="button" class="cell-layout-action unmerge" data-action="unmergeCell" data-cell-id="{{cell.id}}" data-tooltip="{{localize 'PGT.GM_SCREEN.UNMERGE'}}"><i class="fa-solid fa-minus"></i></button>
+        {{/if}}
       </div>
+      {{/each}}
     </div>
-    {{/each}}
-  </div>
-  <div style="min-width:{{selectedTab.actorContentWidth}}px"></div>
-  {{/ifCond}}
+    <button type="button" class="grid-config-finish" data-action="finishLayout">
+      <i class="fa-solid fa-check"></i> {{localize "PGT.CONFIRM"}}
+    </button>
+  </section>
+  {{else}}
 
-  {{#ifCond selectedTab.type '===' "basic"}}
+  {{!-- Display --}}
   <div class="basic-table">
     {{#each selectedTab.cells}}
-    <div class="cell" style="grid-column: span {{colspan}}; grid-row: span {{rowspan}};" data-key="{{key}}">
+    <div class="cell {{#if occupied}}occupied{{/if}}" style="grid-column: {{columnStart}} / span {{colspan}}; grid-row: {{rowStart}} / span {{rowspan}};" data-key="{{key}}" {{#if occupied}}data-status="loading"{{/if}}>
+      {{#if occupied}}
+      <div class="cell-loading" role="status" aria-live="polite">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>{{localize 'PGT.GM_SCREEN.LOADING_DOCUMENT'}}</span>
+      </div>
+      {{else}}
       <span>{{localize 'PGT.GM_SCREEN.CELL_TIP'}}</span>
+      {{/if}}
     </div>
     {{/each}}
   </div>
-  {{/ifCond}} 
+  {{/if}}
   </div>
 
   <div class="tab-selector">
