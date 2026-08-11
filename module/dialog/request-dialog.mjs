@@ -93,9 +93,9 @@ class RequestDialog extends BaseDialog {
           pcOnly: false,
           listening: false,
           tracker: {
-            key: "",
-            success: "",
-            fail: ""
+            key: options.trackerKey || "",
+            success: options.trackerSuccess || "",
+            fail: options.trackerFail || ""
           }
         }
         this.awaitingResult = true;
@@ -374,13 +374,13 @@ export function openRestRequest() {
 }
 
 let rollListenerWindow;
-export function openRollListener() {
+export function openRollListener(preconfig={}) {
   if (rollListenerWindow?.rendered) {
     rollListenerWindow.close();
     rollListenerWindow = null;
     return;
   }
-  rollListenerWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_LISTENER, {actors: []});
+  rollListenerWindow = new RequestDialog(PGT.CONST.SOCKET.EMIT.ROLL_LISTENER, {actors: [], ...preconfig});
   rollListenerWindow.render(true);
 }
 

@@ -151,6 +151,7 @@
   "PGT.TRACKER.CONFIG_TRACKER": "Configure Tracker",
   "PGT.TRACKER.VISIBLE_TO_PLAYERS": "Show Tracker to Players",
   "PGT.TRACKER.DELETE_TRACKER": "Delete Tracker",
+  "PGT.TRACKER.TRIGGER_LISTENER": "Trigger Roll Listener",
 
   "PGT.TRACKER.DC20.INCREASE_COUNTER": "Increase Counter (Each 5 + Crit)",
   "PGT.TRACKER.DC20.REDUCE_COUNTER": "Reduce Counter (Each 5 + Crit)",

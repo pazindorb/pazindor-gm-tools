@@ -1,4 +1,5 @@
 import { emitEvent } from "../configs/socket.mjs";
+import { openRollListener } from "./request-dialog.mjs";
 import { TrackerConfig } from "./tracker-config.mjs";
 import { BaseDialog } from "/modules/pazindor-dev-essentials/module/dialog/base-dialog.mjs";
 
@@ -47,6 +48,7 @@ class ProgressTracker extends BaseDialog {
     initialized.actions.visible = this._onVisible;
     initialized.actions.openForPlayers = this._onOpenForPlayers;
     initialized.actions.finishTracker = this._onFinishTracker;
+    initialized.actions.listener = this._onTriggerListener;
     return initialized;
   }
 
@@ -139,6 +141,20 @@ class ProgressTracker extends BaseDialog {
     await this.finishTracker(target.dataset.key);
     this._onResetTracker(event, target);
   }
+  
+  async _onTriggerListener(event, target) {
+    const inputs = [
+      { type: "input",  label: game.i18n.localize("PGT.REQUEST.ROLL_DC") },
+      { type: "select",  label: game.i18n.localize("PGT.REQUEST.PROGRES_TRACKER_SUCCESS"), options: PGT.progressTrackerOptions },
+      { type: "select",  label: game.i18n.localize("PGT.REQUEST.PROGRES_TRACKER_FAIL"), options: PGT.progressTrackerOptions }
+    ];
+    const result = await PDE.InputDialog.open("input", {inputs: inputs, header: game.i18n.localize("PGT.REQUEST.ROLL_LISTENER")} )
+    if (!result) return;
+    const [dc, success, fail] = result;
+    if (!parseInt(dc)) return;
+
+    openRollListener({rollDC: parseInt(dc), trackerKey: target.dataset.key, trackerSuccess: success, trackerFail: fail});
+  }
 
   _onVisible(event, target) {
     const tracker = this.get(target.dataset.key);
@@ -208,7 +224,7 @@ class ProgressTracker extends BaseDialog {
     // Run Macro
     const scope = {
       tracker: tracker,
-      giveItemToActor: giveItemToActor,
+      giveItemsToActor: giveItemsToActor,
       increaseActions: getActions(tracker, "increase"),
       reduceActions: getActions(tracker, "reduce")
     }
@@ -229,21 +245,22 @@ export function openProgressTracker(force=false, skipRender=false) {
 //=====================================
 //=           MACRO HELPERS           =
 //=====================================
-async function giveItemToActor(actorUuid, itemUuid) {
+async function giveItemsToActor(actorUuid, uuids=[]) {
   if (actorUuid === "manual") return;
-
-  const item = await fromUuid(itemUuid);
   const actor = await fromUuid(actorUuid);
-
-  if (!item) {
-    console.error(`[PGT: Progress Tracker] Item with uuid ${itemUuid} not found`);
-    return;
-  }
   if (!actor) {
     console.error(`[PGT: Progress Tracker] Actor with uuid ${actorUuid} not found`);
     return;
   }
-  PDE.crud.gmCreate(item.toObject(), {parent: actor}, CONFIG.Item.documentClass);
+
+  uuids.forEach(async itemUuid => {
+    const item = await fromUuid(itemUuid);
+    if (!item) {
+      console.error(`[PGT: Progress Tracker] Item with uuid ${itemUuid} not found`);
+      return;
+    }
+    PDE.crud.gmCreate(item.toObject(), {parent: actor}, CONFIG.Item.documentClass);
+  })
 }
 
 function getActions(tracker, type) {

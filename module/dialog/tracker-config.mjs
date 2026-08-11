@@ -77,10 +77,16 @@ export class TrackerConfig extends BaseDialog {
     const action = await PDE.InputDialog.select("Select Action", {increase: "Increase", reduce: "Reduce"});
     if (!action) return;
 
-    const itemUuid = await PDE.InputDialog.open("drop", {header: "Drop Item Here"});
-    if (!itemUuid?.[0] || !itemUuid[0].includes("Item.")) return; 
+    const itemUuids = await PDE.InputDialog.open("drop", {header: "Drop Item Here"});
+    if (!itemUuids?.[0]) return; 
 
-    this.tracker.macro = `${action}Actions.keys().forEach(actorUuid => giveItemToActor(actorUuid, "${itemUuid}"));`
+    const uuidArray = [];
+    for (const uuid of itemUuids) {
+      if (uuid.includes("Item.") && !uuid.includes("ActiveEffect.")) uuidArray.push(`"${uuid}"`);
+    }
+    const uuids = `[${uuidArray.join(",")}]`
+
+    this.tracker.macro = `${action}Actions.keys().forEach(actorUuid => giveItemsToActor(actorUuid, ${uuids}));`
     this.render();
   }
 
