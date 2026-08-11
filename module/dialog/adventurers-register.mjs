@@ -123,7 +123,7 @@ export class AdventurersRegister extends BaseDialog {
       const value = object[key];
       const path = prefix ? `${prefix}.${key}` : key;
 
-      if (value?.documentName === "Actor") {
+      if (["Actor", "Item", "ActiveEffect"].includes(value?.documentName)) {
         continue;
       }
       if (value != null && typeof value === 'object' && !Array.isArray(value)) {
