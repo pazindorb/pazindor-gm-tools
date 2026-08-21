@@ -316,7 +316,7 @@ class RequestDialog extends BaseDialog {
     }
     else {
       wrapper.result = roll._total;
-      let outcome = "success";
+      wrapper.outcome = "success";
       if (wrapper.rollDC != null) {
         wrapper.outcome = roll._total >= wrapper.rollDC ? "success" : "fail";
 
