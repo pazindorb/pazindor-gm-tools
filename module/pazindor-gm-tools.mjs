@@ -14,7 +14,6 @@ import { openProgressTracker } from "./dialog/progress-tracker.mjs";
 import { dc20Config, dc20Keybindings } from "./systems/dc20.mjs";
 import { drawSteelConfig } from "./systems/draw-steel.mjs";
 import { daggerheartConfig } from "./systems/daggerhart.mjs";
-import { migrateGmScreenTabs } from "./migrations/gm-screen.mjs";
 
 Hooks.once("init", async function() {
   registerModuleSettings();
@@ -46,7 +45,6 @@ Hooks.once("init", async function() {
 
 Hooks.once("ready", async function() {
   registerModuleSocket();
-  await migrateGmScreenTabs();
 
   switch (game.system.id) {
     case "dnd5e": dnd5eConfig(); break;
